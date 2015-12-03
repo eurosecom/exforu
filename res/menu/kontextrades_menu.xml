@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:id="@+id/modify"
+            android:icon="@drawable/ic_action_good"
+            android:title="@string/modify"/>
+
+        <item android:id="@+id/close"
+            android:icon="@drawable/xmark_lred_icon"
+            android:title="@string/close"/>
+        
+        <item android:id="@+id/modifyall"
+            android:icon="@drawable/ic_action_good"
+            android:title="@string/modifyall"/>
+
+        <item android:id="@+id/closeall"
+            android:icon="@drawable/xmark_lred_icon"
+            android:title="@string/closeall"/>
+
+
+</menu>

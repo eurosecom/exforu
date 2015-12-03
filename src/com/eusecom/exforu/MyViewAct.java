@@ -68,20 +68,40 @@ public class MyViewAct extends View {
         {
           //Log.i("Value of element "+i,tropenList.get(i));
           
-        	int iidruh = Integer.parseInt(trdruhList.get(i));
-            
+        	int iidruh = 0;
+        	try{
+        	iidruh=Integer.parseInt(trdruhList.get(i));
+        	}
+            catch (NullPointerException nullPointer)
+            {
+            	System.out.println("NPE MyViewAct.java" +  nullPointer);
+            }
+        	
             switch(iidruh) {
             case 0:
             	p.setColor(Color.BLUE);
             	break;
             case 1:
-            	p.setColor(Color.RED);
+            	int color1 = getResources().getColor(R.color.OrangeRed);
+            	p.setColor(color1);
+            	//p.setColor(Color.RED);
             	break;
             case 3:
-            	p.setColor(Color.LTGRAY);
+            	int color3 = getResources().getColor(R.color.yellow);
+            	p.setColor(color3);
             	break;
             case 4:
-            	p.setColor(Color.LTGRAY);
+            	int color4 = getResources().getColor(R.color.yellow);
+            	p.setColor(color4);
+            	break;
+            case 5:
+            	int color5 = getResources().getColor(R.color.lightbrown);
+            	p.setColor(color5);
+            	//p.setColor(Color.LTGRAY);
+            	break;
+            case 6:
+            	int color6 = getResources().getColor(R.color.lightbrown);
+            	p.setColor(color6);
             	break;
     		}
             	
@@ -89,7 +109,14 @@ public class MyViewAct extends View {
             	
           p.setStrokeWidth(10);
 
+          try{
           tropend = Double.parseDouble(tropenList.get(i));
+          }
+          catch (NullPointerException nullPointer)
+          {
+          	System.out.println("NPE MyViewAct.java" +  nullPointer);
+          }
+          
           tropend2=((tropend-minx)/(maxx-minx))*cv.getWidth();
           tropenx = (int) (tropend2);
           cv.drawLine(tropenx, 0, tropenx, cv.getHeight(), p);

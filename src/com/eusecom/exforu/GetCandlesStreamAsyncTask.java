@@ -3,8 +3,10 @@ package com.eusecom.exforu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import pro.xstore.api.sync.Credentials;
@@ -76,6 +78,10 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  private SQLiteDatabase db3=null;
  private Activity mActivity;
  
+ 	String candl, buse, trade;
+	private SQLiteDatabase db71=null;
+	private Cursor constantsCursor71=null;
+ 
  GetCandlesStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
 		 , String symbol, int repeat){
@@ -93,17 +99,23 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  @Override
  protected Void doInBackground(Void... params) {
 
+	    
 	vystuptxt=""; vystuptxt2="";
 	
 	//Log.d("AsyncTask", "AsyncTask is running");
 	
 	 try {
         
-        // Create new connector
+		 // Create new connector
 		 if( accountx.equals("0")) {
 			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
 			 connector = new SyncAPIConnector(ServerEnum.DEMO);
-		 }else{
+		 }
+		 if( accountx.equals("2")) {
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+			 connector = new SyncAPIConnector(ServerEnum.DEMO);
+		 }
+		 if( accountx.equals("1")) {
 			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
 			 connector = new SyncAPIConnector(ServerEnum.REAL); 
 		 }
@@ -142,6 +154,29 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 					double balance=balanceRecord.getBalance();
 					double equity=balanceRecord.getEquity();
 					myDoSomethingCallBack.doChangeUI3(balance, equity);
+					
+					db71=(new DatabaseTemp(mActivity)).getWritableDatabase();
+					constantsCursor71=db71.rawQuery("SELECT _ID, candl "+
+							"FROM temppar WHERE _id > 0 ORDER BY _id DESC ",
+							null);
+				    constantsCursor71.moveToFirst();
+				    candl = constantsCursor71.getString(constantsCursor71.getColumnIndex("candl"));
+				    constantsCursor71.close();
+				    db71.close();
+				    Log.d("Async candl 2", candl);
+				    if( candl.equals("0")) {
+				    	try {
+				    		connector.unsubscribePrice(symbolget);
+							connector.unsubscribeBalance();
+						} catch (APICommunicationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+
+						connector.disconnectStream();
+						System.out.println("Stream disconnected.");
+				    }
 				}
 				
 				@Override
@@ -182,7 +217,8 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
             if( periodxy.equals("M30")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M30; unixTimeod = unixTime - 180000000; }
             if( periodxy.equals("H1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_H1; unixTimeod = unixTime - 360000000; }
             if( periodxy.equals("H4")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_H4; unixTimeod = unixTime - 1440000000; }
-            if( periodxy.equals("D1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; unixTimeod = unixTime - 8640000000L; }
+            //200 dni
+            if( periodxy.equals("D1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; unixTimeod = unixTime - 17280000000L; }
             if( periodxy.equals("W1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_W1; unixTimeod = unixTime - 60480000000L; }
             if( periodxy.equals("MN1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_MN1; unixTimeod = unixTime - 241920000000L; }
 

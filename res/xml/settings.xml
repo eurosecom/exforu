@@ -58,6 +58,41 @@
         android:summary="@string/streamf_summary"
         android:title="@string/streamf_title" />
     
+    <EditTextPreference
+        android:key="comment1"
+        android:defaultValue="com1"
+        android:enabled="true"
+        android:summary="@string/comment_summary"
+        android:title="@string/comment1_title" />
+    
+    <EditTextPreference
+        android:key="comment2"
+        android:defaultValue="com2"
+        android:enabled="true"
+        android:summary="@string/comment_summary"
+        android:title="@string/comment2_title" />
+    
+    <EditTextPreference
+        android:key="comment3"
+        android:defaultValue="com3"
+        android:enabled="true"
+        android:summary="@string/comment_summary"
+        android:title="@string/comment3_title" />
+    
+    <EditTextPreference
+        android:key="favlot"
+        android:defaultValue="0.1"
+        android:enabled="true"
+        android:summary="@string/startlot_summary"
+        android:title="@string/startlot_title" />
+    
+    <EditTextPreference
+        android:key="steplot"
+        android:defaultValue="0.01"
+        android:enabled="true"
+        android:summary="@string/steplot_summary"
+        android:title="@string/steplot_title" />
+    
     
 
 </PreferenceScreen>

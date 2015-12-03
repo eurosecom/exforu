@@ -37,6 +37,7 @@
 		<activity android:name="com.eusecom.exforu.LearningActivity" android:label="@string/app_name"> </activity>
 		<activity android:name="com.eusecom.exforu.TestNecoActivity" android:label="@string/app_name"> </activity>
 		<activity android:name="com.eusecom.exforu.MakeTradeActivity" android:label="@string/app_name"> </activity>
+		<activity android:name="com.eusecom.exforu.EditTradeActivity" android:label="@string/app_name"> </activity>
     </application>
 
 </manifest>

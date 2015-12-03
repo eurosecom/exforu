@@ -15,6 +15,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +57,7 @@ public class EXforUActivity extends ActionBarActivity {
 	int favx=0;
 	int positionx=0;
 	private SQLiteDatabase db7=null;
+	String myfavpair;
 
 
 	@Override
@@ -68,7 +70,7 @@ public class EXforUActivity extends ActionBarActivity {
 		setSupportActionBar(mToolbar);
 		
 		db7=(new DatabaseTemp(this)).getWritableDatabase();        
-        String UpdateSql7 = "UPDATE temppar SET favact='0' WHERE _id > 0 ";
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
    	 	db7.execSQL(UpdateSql7);
    	 	db7.close();
 
@@ -80,6 +82,9 @@ public class EXforUActivity extends ActionBarActivity {
 		
 
         favx = constantsCursor2.getCount();
+        constantsCursor2.moveToFirst();
+        myfavpair=constantsCursor2.getString(constantsCursor2.getColumnIndex("pair2"));
+        Log.i("myfavpair ", myfavpair);
         constantsCursor2.close();
 
 		Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -322,7 +327,7 @@ public class EXforUActivity extends ActionBarActivity {
 	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
 	        	Intent i = new Intent(this, LearningActivity.class);
 	        	Bundle extras = new Bundle();
-                extras.putString("pairx", "EURUSD");
+                extras.putString("pairx", myfavpair);
                 extras.putInt("whatspage", 0);
                 i.putExtras(extras);                
                 startActivity(i);

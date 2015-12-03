@@ -149,6 +149,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 	int repeat=60000;
 	String repeats="60";
 	String favact;
+	SyncAPIConnector connector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +168,12 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         if( accountx.equals("0")) {
         	useridl=Long.valueOf(SettingsActivity.getUserId(this));
         	userpsws=SettingsActivity.getUserPsw(this);
-        }else{
+        }
+        if( accountx.equals("2")) {
+        	useridl=Long.valueOf(SettingsActivity.getUserId(this));
+        	userpsws=SettingsActivity.getUserPsw(this);
+        }
+        if( accountx.equals("1")) {
         	useridl=Long.valueOf(SettingsActivity.getUserIdr(this));
         	userpsws=SettingsActivity.getUserPswr(this);
         }
@@ -178,7 +184,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         btnAgain.setText(repeats);
         
         db7=(new DatabaseTemp(this)).getWritableDatabase();        
-        String UpdateSql7 = "UPDATE temppar SET favact='1' WHERE _id > 0 ";
+        String UpdateSql7 = "UPDATE temppar SET favact='1', candl='0', buse='0', trade='0' WHERE _id > 0 ";
    	 	db7.execSQL(UpdateSql7);
 
         
@@ -430,7 +436,18 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         	 try {
                  
                  // Create new connector
-                 SyncAPIConnector connector = new SyncAPIConnector(ServerEnum.DEMO);
+        		 if( accountx.equals("0")) {
+        			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+        			 connector = new SyncAPIConnector(ServerEnum.DEMO);
+        		 }
+        		 if( accountx.equals("2")) {
+        			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+        			 connector = new SyncAPIConnector(ServerEnum.DEMO);
+        		 }
+        		 if( accountx.equals("1")) {
+        			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
+        			 connector = new SyncAPIConnector(ServerEnum.REAL); 
+        		 }
                  
                  // Create new credentials
                  // TODO: Insert your credentials

@@ -19,6 +19,11 @@ public class SettingsActivity extends android.preference.PreferenceActivity {
 	public static final String STREAMF = "streamf";
 	public static final String ACCOUNTX = "accountx";
 	public static final String PERIODX = "periodx";
+	public static final String COMMENT1 = "comment1";
+	public static final String COMMENT2 = "comment2";
+	public static final String COMMENT3 = "comment3";
+	public static final String STARTLOT = "startlot";
+	public static final String STEPLOT = "steplot";
 	
 	
 	@Override
@@ -60,6 +65,25 @@ public class SettingsActivity extends android.preference.PreferenceActivity {
 		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(STREAMF, "60");
 	}
 	
+	public static String getComment1(Context ctx){
+		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(COMMENT1, "com1");
+	}
+	
+	public static String getComment2(Context ctx){
+		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(COMMENT2, "com2");
+	}
+	
+	public static String getComment3(Context ctx){
+		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(COMMENT3, "com3");
+	}
+	
+	public static String getStartlot(Context ctx){
+		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(STARTLOT, "0.1");
+	}
+	
+	public static String getSteplot(Context ctx){
+		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(STEPLOT, "0.01");
+	}
 
 	
 } 

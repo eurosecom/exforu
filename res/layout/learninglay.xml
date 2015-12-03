@@ -5,6 +5,15 @@
     android:orientation="vertical">
     
     <include layout="@layout/toolbar_learning"/>
+    
+    <TextView
+        android:id="@+id/idpage"
+		android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textSize="15sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
 
     <android.support.v4.view.ViewPager
    android:id="@+id/vpPager"

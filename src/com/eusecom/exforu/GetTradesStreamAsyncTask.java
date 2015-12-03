@@ -3,8 +3,10 @@ package com.eusecom.exforu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import pro.xstore.api.sync.Credentials;
@@ -67,6 +69,11 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  
  private SQLiteDatabase db6=null;
  private Activity mActivity;
+ private SQLiteDatabase db61=null;
+ 
+ String candl, buse, trade;
+ private SQLiteDatabase db72=null;
+ private Cursor constantsCursor72=null;
  
  GetTradesStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
@@ -84,18 +91,23 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 
  @Override
  protected Void doInBackground(Void... params) {
-
+	    
 	vystuptxt=""; vystuptxt2="";
 	
 	//Log.d("AsyncTask", "AsyncTask is running");
 	
 	 try {
         
-        // Create new connector
+		 // Create new connector
 		 if( accountx.equals("0")) {
 			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
 			 connector = new SyncAPIConnector(ServerEnum.DEMO);
-		 }else{
+		 }
+		 if( accountx.equals("2")) {
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+			 connector = new SyncAPIConnector(ServerEnum.DEMO);
+		 }
+		 if( accountx.equals("1")) {
 			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
 			 connector = new SyncAPIConnector(ServerEnum.REAL); 
 		 }
@@ -138,6 +150,30 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 					double balance=balanceRecord.getBalance();
 					double equity=balanceRecord.getEquity();
 					myDoSomethingCallBack.doChangeUI3(balance, equity);
+					
+					db72=(new DatabaseTemp(mActivity)).getWritableDatabase();
+					constantsCursor72=db72.rawQuery("SELECT _ID, trade "+
+							"FROM temppar WHERE _id > 0 ORDER BY _id DESC ",
+							null);
+				    constantsCursor72.moveToFirst();
+				    trade = constantsCursor72.getString(constantsCursor72.getColumnIndex("trade"));
+				    constantsCursor72.close();
+				    db72.close();
+				    Log.d("Async trade 2", trade);
+				    if( trade.equals("0")) {
+				    	try {
+				    		connector.unsubscribePrice(symbolget);
+							connector.unsubscribeTrades();
+							connector.unsubscribeBalance();
+						} catch (APICommunicationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+
+						connector.disconnectStream();
+						System.out.println("Stream disconnected.");
+				    }
 				}
 				
 				@Override
@@ -148,7 +184,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				@Override
 				public void receiveTickRecord(STickRecord tickRecord) {
 
-					System.out.println("Stream tick record: " + tickRecord);
+					//System.out.println("Stream tick record: " + tickRecord);
 					double bidp=tickRecord.getBid();
 					double askp=tickRecord.getAsk();
 					double sprd=tickRecord.getSpreadTable();
@@ -235,6 +271,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  @Override
  protected void onPostExecute(Void result) {
   super.onPostExecute(result);
+  myDoSomethingCallBack.doChangeUIpost("1");
  
  }
  
@@ -257,15 +294,19 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  
  	protected void getTradesAgain(){
 
+ 		System.out.println("getTradesAgain " + "to sqllite");
+ 		String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
+ 		String ccoment=""; String tpx=""; String slx="";
+ 		db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
+        db6.delete("trades", "_ID > 0", null);
+        
+ 		if( accountx.equals("0") || accountx.equals("1") ) {
+ 			 		
  		try {
  			
- 		System.out.println("getTradesAgain " + "to sqllite");
-
- 		String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
+ 		
         TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
-        //System.out.println("tradesresponse " + tradesresponse.toString());
-        db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
-        db6.delete("trades", "_ID > 0", null);
+        System.out.println("tradesresponse " + tradesresponse.toString());        
         
         for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
 
@@ -279,6 +320,9 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
         	symbolt=tradesx.getSymbol() + ""; 
         	timet=tradesx.getOpen_time() + "";
         	cmdt=tradesx.getCmd() + "";
+        	ccoment=tradesx.getCustomComment() + "";
+        	tpx=tradesx.getTp() + "";
+        	slx=tradesx.getSl() + "";
         	
             ContentValues cv6=new ContentValues();
     		
@@ -288,13 +332,15 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
     		cv6.put("iorder", ordert);
     		cv6.put("isymbol", symbolt);
     		cv6.put("idruh", cmdt);
+    		cv6.put("imemo", ccoment);
+    		cv6.put("itp", tpx);
+    		cv6.put("isl", slx);
     		
 
     		db6.insert("trades", "time", cv6);
 
            }            
-           db6.close();
-           
+                      
  		}
            // Catch errors
  	     catch (APICommandConstructionException e) {
@@ -314,6 +360,59 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  	    	 myDoSomethingCallBack.doChangeUIerr(errors);
  	         e.printStackTrace();
  	     } 
+ 		
+ 									}
+ 		if( accountx.equals("2") )  {
+ 			
+ 			try{
+ 		    		db61=(new DatabaseModels(mActivity)).getWritableDatabase();
+ 		    		Cursor c = db61.rawQuery("select iopen, ivolume, iorder, isymbol, itime, idruh, imemo, itp, isl from models where iorder >= 0 ORDER BY iorder ;", null);
+ 		    		if(c.moveToFirst()){    		
+ 		    			while(!c.isAfterLast()) 
+ 		    			{
+ 		    			ordert = c.getString(0);
+ 		    			
+ 		    			opent=c.getString(0); 
+ 		    			volumet=c.getString(1); 
+ 		    			ordert=c.getString(2); 
+ 		    			symbolt=c.getString(3); 
+ 		    			timet=c.getString(4);
+ 		    			cmdt=c.getString(5);
+ 		    			ccoment=c.getString(6);
+ 		    			tpx=c.getString(7);
+ 		    			slx=c.getString(8);
+
+ 		    	    	ContentValues cv61=new ContentValues();
+ 		    	    	System.out.println("ordert " +  ordert);
+ 		    	    	
+ 		    	    	cv61.put("itime", timet);
+ 		    	    	cv61.put("iopen", opent);
+ 		    	    	cv61.put("ivolume", volumet);
+ 		    	    	cv61.put("iorder", ordert);
+ 		    	    	cv61.put("isymbol", symbolt);
+ 		    	    	cv61.put("idruh", cmdt);
+ 		    	    	cv61.put("imemo", ccoment);
+ 		    	    	cv61.put("itp", tpx);
+ 		    	    	cv61.put("isl", slx);
+
+ 		    	   		db6.insert("trades", "itime", cv61);
+ 
+ 		    	   		c.moveToNext();
+ 		    			}
+ 		    	}
+ 		    	c.close();
+ 		    	db61.close();
+ 		    	
+ 			 	}
+ 				catch (NullPointerException nullPointer)
+ 				{
+            	System.out.println("NPE GetTradesStreamAsyncTsk.java" +  nullPointer);
+ 				}
+ 			
+ 									}
+ 		
+ 		db6.close();
+ 			
 
  	}//gettradesagain
 

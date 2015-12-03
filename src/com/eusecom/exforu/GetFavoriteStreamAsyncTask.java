@@ -77,25 +77,21 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	vystuptxt=""; vystuptxt2="";
 	
-	db7=(new DatabaseTemp(mActivity)).getWritableDatabase();
-    
-    constantsCursor7=db7.rawQuery("SELECT _ID, favact "+
-			"FROM temppar WHERE _id > 0 ORDER BY _id DESC ",
-			null);
-    constantsCursor7.moveToFirst();
-    favact = constantsCursor7.getString(constantsCursor7.getColumnIndex("favact"));
-    Log.d("Async favact 1 ", favact);
-	
 	Log.d("AsyncTask", "AsyncTask is running");
 	
 	 try {
         
-        // Create new connector
+		 // Create new connector
 		 if( accountx.equals("0")) {
-			 System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
 			 connector = new SyncAPIConnector(ServerEnum.DEMO);
-		 }else{
-			 System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
+		 }
+		 if( accountx.equals("2")) {
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+			 connector = new SyncAPIConnector(ServerEnum.DEMO);
+		 }
+		 if( accountx.equals("1")) {
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
 			 connector = new SyncAPIConnector(ServerEnum.REAL); 
 		 }
         
@@ -134,12 +130,14 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 					double equity=balanceRecord.getEquity();
 					myDoSomethingCallBack.doChangeUI3(balance, equity);
 					
+					db7=(new DatabaseTemp(mActivity)).getWritableDatabase();
 					constantsCursor7=db7.rawQuery("SELECT _ID, favact "+
 							"FROM temppar WHERE _id > 0 ORDER BY _id DESC ",
 							null);
 				    constantsCursor7.moveToFirst();
 				    favact = constantsCursor7.getString(constantsCursor7.getColumnIndex("favact"));
-					favact = constantsCursor7.getString(constantsCursor7.getColumnIndex("favact"));
+				    constantsCursor7.close();
+				    db7.close();
 				    Log.d("Async favact 2", favact);
 				    if( favact.equals("0")) {
 				    	try {

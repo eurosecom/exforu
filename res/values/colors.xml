@@ -13,6 +13,14 @@
  <color name="black_overlay">#66000000</color>
  <color name="white">#FFFF</color>
  <color name="modrozelena">#0099cc</color>
+ <color name="lightbrown">#bea28a</color>
+ <color name="Pink">#FFC0CB</color>
+ <color name="DarkRed">#8B0000</color>
+ <color name="purple">#800080</color>
+ <color name="OrangeRed">#FF4500</color>
+ <color name="LightGrey">#D3D3D3</color>
+ <color name="yellow">#FFFF00</color>
+ 
  <drawable name="white">#FFFFFF</drawable>
  <drawable name="yellow">#FFFF00</drawable>
  <drawable name="fuchsia">#FF00FF</drawable>

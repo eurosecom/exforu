@@ -9,22 +9,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +37,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.eusecom.exforu.GetCandlesStreamAsyncTask.DoSomething;
-
 import com.eusecom.exforu.animators.BaseItemAnimator;
 import com.eusecom.exforu.animators.FadeInAnimator;
 import com.eusecom.exforu.animators.FadeInDownAnimator;
@@ -54,6 +57,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 	long useridl;
 	String accountx;
 	int repeat=60000;
+	int whatspage;
 	
 	GetCandlesStreamAsyncTask GetCandlesStreamAsyncTask;
 	
@@ -125,15 +129,17 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 	
 	private SQLiteDatabase db8=null;
 	private Cursor constantsCursor8=null;
+	private SQLiteDatabase db7=null;
 	
 	
     // newInstance constructor for creating fragment with arguments
-    public static CandlesFragment newInstance(int page, String pairx, String implessx) {
+    public static CandlesFragment newInstance(int page, String pairx, String implessx, int whatspagex) {
     	CandlesFragment fragmentCandles = new CandlesFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
         args.putString("pairx", pairx);
         args.putString("importantless", implessx);
+        args.putInt("whatspagex", whatspagex);
         fragmentCandles.setArguments(args);
         return fragmentCandles;
     }
@@ -175,6 +181,8 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         page = getArguments().getInt("page", 0);
         pair = getArguments().getString("pairx");
         impless = getArguments().getString("importantless");
+        whatspage = getArguments().getInt("whatspagex", 0);
+        System.out.println("whatspage: " + whatspage);
         
         accountx=SettingsActivity.getAccountx(getActivity());
         periodxy =SettingsActivity.getPeriodx(getActivity());
@@ -182,16 +190,19 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         if( accountx.equals("0")) {
         	useridl=Long.valueOf(SettingsActivity.getUserId(getActivity()));
         	userpsws=SettingsActivity.getUserPsw(getActivity());
-        }else{
+        }
+        if( accountx.equals("2")) {
+        	useridl=Long.valueOf(SettingsActivity.getUserId(getActivity()));
+        	userpsws=SettingsActivity.getUserPsw(getActivity());
+        }
+        if( accountx.equals("1")) {
         	useridl=Long.valueOf(SettingsActivity.getUserIdr(getActivity()));
         	userpsws=SettingsActivity.getUserPswr(getActivity());
         }
 
         db4=(new DatabaseCandles(getActivity())).getWritableDatabase();
     	readSqlCandles();
-    	
-    	db8=(new DatabaseTrades(getActivity())).getWritableDatabase();
-    	
+
     	//System.out.println("openlist: " + myopenList.toString());
 
         IntentFilter filter = new IntentFilter(ACTION_INTENT);
@@ -231,8 +242,66 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         timea = Long.valueOf(mytimeList.get(0));
         updateViewact();
         
-        //mytimeList.remove(0); myopenList.remove(0); mycloseList.remove(0);
-	 	//myhighList.remove(0); mylowList.remove(0);
+        viewact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            	String mesx=""; String popis=""; 
+            	SpannableStringBuilder builder = new SpannableStringBuilder();
+            	
+            	//Toast.makeText(getActivity(), "Click ActView ", Toast.LENGTH_LONG).show();
+            	for (int i=0;i < tropenList.size();i++)
+                {
+            		int iidruh = Integer.parseInt(trdruhList.get(i));
+                    
+                    switch(iidruh) {
+                    case 0:
+                    	popis="Buy open ";
+
+                    	break;
+                    case 1:
+                    	popis="Sell open ";
+
+                    	break;
+                    case 3:
+                    	popis="TP Buy open ";
+
+                    	break;
+                    case 4:
+                    	popis="TP Sell open ";
+
+                    	break;                    	
+                    case 5:
+                    	popis="SL Buy open ";
+
+                    	break;
+                    case 6:
+                    	popis="SL Sell open ";
+
+                    	break;
+            		}
+                    
+                    String riadok = popis + " " + tropenList.get(i) + "\n";
+                    SpannableString redSpannable= new SpannableString(riadok);
+                    redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, riadok.length(), 0);
+                    builder.append(redSpannable);
+                    mesx += redSpannable.toString();
+            		
+                }
+
+            	new AlertDialog.Builder(getActivity())
+                .setMessage(mesx)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) { 
+                      
+                    }
+                 })
+
+                 .show();
+                
+            	
+            }
+        });
         
         recyclerView = (RecyclerView) view.findViewById(R.id.candlesrv);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -253,6 +322,13 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         
     }//oncreateview
     
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        
+        
+    }
+    
     
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -266,6 +342,22 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
                 	
                 	GetCandlesStreamAsyncTask.execute();
                 }
+                if( whatspage == 2 ) {
+                	db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
+                    String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='1', trade='0' WHERE _id > 0 ";
+               	 	db7.execSQL(UpdateSql7);
+               	 	db7.close();
+                	((LearningActivity)getActivity()).switchFragment(1); 
+                	}
+                if( whatspage == 3 ) {
+                	db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
+                    String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='1' WHERE _id > 0 ";
+               	 	db7.execSQL(UpdateSql7);
+               	 	db7.close();
+                	((LearningActivity)getActivity()).switchFragment(2); 
+                	}
+                whatspage=0;
+                
             	} catch (NullPointerException ex) {
 
             	}
@@ -276,6 +368,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     @Override
     public void doChangeUI4(final double bidp, final double askp, final double sprd, final long timeax) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -293,6 +386,12 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 
 		    }
 		});
+    	
+    	}
+        catch (NullPointerException nullPointer)
+        {
+        	System.out.println("NPE CandlesFragment.java" +  nullPointer);
+        }
      
     }
     
@@ -423,8 +522,6 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 		
 		constantsCursor3.close();
 		db4.close();
-		constantsCursor8.close();
-		db8.close();
 
 		if (isOnline()) 
         {
@@ -453,6 +550,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     @SuppressLint("SimpleDateFormat")
 	public boolean readtrades() {
     	
+    	db8=(new DatabaseTrades(getActivity())).getWritableDatabase();
     	
     	tropenList=new ArrayList<String>(); trdruhList=new ArrayList<String>();
 
@@ -460,7 +558,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     		
     		//read items except act price idruh=2
         	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh " +
-    				"FROM  trades WHERE idruh != '2' ORDER BY iopen DESC ",
+    				"FROM  trades WHERE idruh != '2' AND iopen > 0 ORDER BY iopen DESC ",
     				null);
     		
             constantsCursor8.moveToFirst();
@@ -478,14 +576,19 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     	    // There's no way to avoid getting this if saveInstanceState has already been called.
     		}
     	
-    		//constantsCursor8.close();
-    		//db8.close();
     	
     		if( trdruhList.size() == 0 ) {
-    			tropenList.add("1.0");
     			trdruhList.add("0");
     		}
+    		if( tropenList.size() == 0 ) {
+    			tropenList.add("1");
+    		}
+    		Log.d("tropenList", tropenList.toString());
+    		Log.d("trdruhList", trdruhList.toString());
     	
+    		constantsCursor8.close();
+    		db8.close();
+    		
         return false;
     }
     //read trades
@@ -597,13 +700,20 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     
     @Override
 	public void onPauseFragment() {
-				
+
+    	if( whatspage == 0 )
+    	{
+    	db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
+   	 	db7.execSQL(UpdateSql7);
+   	 	db7.close();
+    	}
+    	whatspage=0;
+   	 	
 		    	 Log.i("CandlesFragment", "onPauseFragment()");
 		    	 Toast.makeText(getActivity(), "onPauseFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
 		    	 constantsCursor3.close();
 		 		 db4.close();
-		 		 constantsCursor8.close();
-		 		 db8.close();
 		 		 
 
 		 		if (isOnline()) 
@@ -618,10 +728,14 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 	public void onResumeFragment() {
 		Log.i("CandlesFragment", "onResumeFragment()");
 		Toast.makeText(getActivity(), "onResumeFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
+		
+		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='1', buse='0', trade='0' WHERE _id > 0 ";
+   	 	db7.execSQL(UpdateSql7);
+   	 	db7.close();
 
 			db4=(new DatabaseCandles(getActivity())).getWritableDatabase();
 			readSqlCandles();
-			db8=(new DatabaseTrades(getActivity())).getWritableDatabase();
     	
 			LinkedList<String> listget = new LinkedList<String>();
 			String symbolget = pair;
@@ -629,6 +743,10 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 
 			GetCandlesStreamAsyncTask = new GetCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);	        
             GetCandlesStreamAsyncTask.execute();
+            
+            //if( whatspage == 2 ) { ((LearningActivity)getActivity()).switchFragment(1); }
+            //if( whatspage == 3 ) { ((LearningActivity)getActivity()).switchFragment(2); }
+            //whatspage=0;
 
 	}
 	

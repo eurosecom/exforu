@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+
 /**
  * Created by Wasabeef on 2015/01/03.
  * Used by EuroSecom
@@ -33,6 +34,9 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
     private List<String> miOrder;
     private List<String> miSymbol;
 	private List<String> miDruh;
+	private List<String> miComent;
+	private List<String> miTp;
+	private List<String> miSl;
     
 	private double actprice;
 	private double actprics;
@@ -40,10 +44,19 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
     @SuppressWarnings("unused")
 	private String periodxy="D1";
     
+    interface DoSomething2 {
 
-    public TradesFragAdapter(Context context, List<String> timex, List<String> iopenPrice, 
+        void doChangeItem(String itemx, String druhx, String orderx, String ivolx, String ipricex,
+        		String icommx, String itpx, String islx );
+        }
+
+        DoSomething2 myDoSomething2CallBack;
+    
+
+    public TradesFragAdapter(DoSomething2 callback, Context context, List<String> timex, List<String> iopenPrice, 
     		List<String> iVolume, List<String> iOrder, List<String> iSymbol
-    		, List<String> iDruh, double actpricex, double actpricesx, double actpricebx, String period) {
+    		, List<String> iDruh, double actpricex, double actpricesx, double actpricebx
+    		, String period, List<String> iComent, List<String> iTp, List<String> iSl) {
         mContext = context;
         mTime = timex;
         miopenPrice = iopenPrice;
@@ -54,7 +67,11 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         actprice=actpricex;
         actprics=actpricesx;
         actpricb=actpricebx;
-        periodxy=period;
+        periodxy=period;        
+        miComent = iComent;
+        miTp = iTp;
+        miSl = iSl;
+        myDoSomething2CallBack = callback;
     }
 
     @Override
@@ -77,7 +94,18 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         	System.out.println("NPE " +  nullPointer);
         }
         holder.iorder.setText(miOrder.get(position));
-        holder.isymbol.setText(miSymbol.get(position));
+        String comentx="";
+        try{
+        	comentx=miComent.get(position);       	
+            }
+            catch (NullPointerException nullPointer)
+            {
+            	System.out.println("NPE " +  nullPointer);
+            }
+        if(comentx != null && !comentx.isEmpty()){}else{comentx="-";}
+        if(comentx.length() <= 0 ) { comentx="-"; }
+        comentx = comentx + " " + miSymbol.get(position);
+        holder.isymbol.setText(comentx);
         
         
         long dv = Long.valueOf(mTime.get(position));
@@ -88,7 +116,15 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         holder.itime.setText(vv);
         
         double volumed=Double.parseDouble(miVolume.get(position));
-        double vopenpd=Double.parseDouble(miopenPrice.get(position));
+        
+        double vopenpd=0d;
+        try{
+        vopenpd=Double.parseDouble(miopenPrice.get(position));
+        }
+        catch (NullPointerException nullPointer)
+        {
+        	System.out.println("NPE " +  nullPointer);
+        }
         double pricedifd=0d;
 
         int iidruh = Integer.parseInt(miDruh.get(position));
@@ -110,18 +146,58 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         break;
         
         case 2:
+        		holder.iorder.setVisibility(View.GONE);
+        		holder.iprofit.setVisibility(View.GONE);
+        		holder.ivolume.setVisibility(View.GONE);
+        		holder.txtvolume.setVisibility(View.INVISIBLE);
+        		
         		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightgreen) );
             	holder.iorder.setText(miOrder.get(position)+ " Actual Price");
             	pricedifd=0;
         break;
         
         case 3:
-    		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightbraun) );
-        	holder.iorder.setText(miOrder.get(position)+ " TP");
+        	holder.iorder.setVisibility(View.GONE);
+        	holder.iprofit.setVisibility(View.GONE);
+        	holder.itime.setVisibility(View.INVISIBLE);
+        	
+    		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_yellow) );
+        	holder.iorder.setText(miOrder.get(position)+ " TP Buy");
+        	pricedifd=0;
+        break;
+        
+        case 4:
+        	holder.iorder.setVisibility(View.GONE);
+        	holder.iprofit.setVisibility(View.GONE);
+        	holder.itime.setVisibility(View.INVISIBLE);
+        	
+    		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_yellow) );
+        	holder.iorder.setText(miOrder.get(position)+ " TP Sell");
+        	pricedifd=0;
+        break;
+        
+        case 5:
+        	holder.iorder.setVisibility(View.GONE);
+        	holder.iprofit.setVisibility(View.GONE);
+        	holder.itime.setVisibility(View.INVISIBLE);
+        	
+    		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightbrown) );
+        	holder.iorder.setText(miOrder.get(position)+ " SL Buy");
+        	pricedifd=0;
+        break;
+        
+        case 6:
+        	holder.iorder.setVisibility(View.GONE);
+        	holder.iprofit.setVisibility(View.GONE);
+        	holder.itime.setVisibility(View.INVISIBLE);
+        	
+    		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightbrown) );
+        	holder.iorder.setText(miOrder.get(position)+ " SL Sell");
         	pricedifd=0;
         break;
 		}
-        
+ 
+        if( actprice > 0 ) {
         //System.out.println("actprice " + actprice);
         double profitd=100000*pricedifd*volumed;
         double profitd2=profitd/actprice;
@@ -129,21 +205,65 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         String profits=profitd2 + "";
         holder.iprofit.setText(profits);
         
+        }//end of priceb > 0
+        
         setAnimation(holder.relLayout, position);
 
         
         holder.setClickListener(new TradesFragAdapter.ViewHolder.ClickListener() {
             public void onClick(View v, int pos, boolean isLongClick) {
+            	
+            	String idruhx = "9"; String iorderx = "0"; String ivolumex = "0"; String ipricex = "0"; String icommx = "";
+            	String itpx = ""; String islx = "";
+            	try{
+            	idruhx = miDruh.get(pos);
+            	iorderx = miOrder.get(pos);
+            	ivolumex = miVolume.get(pos);
+            	ipricex = miopenPrice.get(pos);
+            	icommx = miComent.get(pos);
+            	itpx = miTp.get(pos);
+            	islx = miSl.get(pos);
+            	}
+            	catch (Exception e)
+                {
+                	System.out.println("Exception " +  e);
+                }
+            	
                 if (isLongClick) {
          
                     // View v at position pos is long-clicked.
-                	//String poslx = pos + "";
-                	Toast.makeText(mContext, "longclick ", Toast.LENGTH_SHORT).show();
+                	String poslx = pos + "";
+                	Toast.makeText(mContext, "longclick " + poslx, Toast.LENGTH_SHORT).show();
+                	if(idruhx.equals("0") || idruhx.equals("1") ) {
+                	myDoSomething2CallBack.doChangeItem(poslx, idruhx, iorderx, ivolumex, ipricex, icommx, itpx, islx);
+                	System.out.println("...context is called");
+                		try{
+                		v.showContextMenu();
+                        }
+                        catch (NullPointerException nullPointer)
+                        {
+                        	System.out.println("NPE showContextMenu" +  nullPointer);
+                        }
+                		
+                	}
+                	
                 	
                 } else {
                     // View v at position pos is clicked.
-                	//String possx = pos + "";
+                	String poslx = pos + "";
                 	Toast.makeText(mContext, "shortclick ", Toast.LENGTH_SHORT).show();
+                	if(idruhx.equals("0") || idruhx.equals("1") ) {
+                	myDoSomething2CallBack.doChangeItem(poslx, idruhx, iorderx, ivolumex, ipricex, icommx, itpx, islx);
+                	System.out.println("...context is called");
+                		try{
+                		v.showContextMenu();
+                        }
+                        catch (NullPointerException nullPointer)
+                        {
+                        	System.out.println("NPE showContextMenu" +  nullPointer);
+                        }
+                		
+                	}
                 }
             }
         });
@@ -183,6 +303,7 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         public TextView itime;
         public TextView iprofit;
         public RelativeLayout relLayout;
+        public TextView txtvolume;
         //public MyView viewx;
         
         private ClickListener clickListener;
@@ -198,6 +319,8 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
             iprofit = (TextView) itemView.findViewById(R.id.iprofit);
             
             relLayout = (RelativeLayout) itemView.findViewById(R.id.relLayout);
+            
+            txtvolume = (TextView) itemView.findViewById(R.id.txtvolume);
             
             //viewx = (MyView) itemView.findViewById(R.id.viewx);
 

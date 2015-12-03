@@ -3,8 +3,10 @@ package com.eusecom.exforu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import pro.xstore.api.sync.Credentials;
@@ -69,6 +71,10 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  private SQLiteDatabase db6=null;
  private Activity mActivity;
  
+ String candl, buse, trade;
+ private SQLiteDatabase db72=null;
+ private Cursor constantsCursor72=null;
+ 
  GetBuySellStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
 		 , String symbol, int repeat){
@@ -92,11 +98,16 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 	
 	 try {
         
-        // Create new connector
+		 // Create new connector
 		 if( accountx.equals("0")) {
 			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
 			 connector = new SyncAPIConnector(ServerEnum.DEMO);
-		 }else{
+		 }
+		 if( accountx.equals("2")) {
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+			 connector = new SyncAPIConnector(ServerEnum.DEMO);
+		 }
+		 if( accountx.equals("1")) {
 			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
 			 connector = new SyncAPIConnector(ServerEnum.REAL); 
 		 }
@@ -135,6 +146,29 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 					double balance=balanceRecord.getBalance();
 					double equity=balanceRecord.getEquity();
 					myDoSomethingCallBack.doChangeUI3(balance, equity);
+					
+					db72=(new DatabaseTemp(mActivity)).getWritableDatabase();
+					constantsCursor72=db72.rawQuery("SELECT _ID, buse "+
+							"FROM temppar WHERE _id > 0 ORDER BY _id DESC ",
+							null);
+				    constantsCursor72.moveToFirst();
+				    buse = constantsCursor72.getString(constantsCursor72.getColumnIndex("buse"));
+				    constantsCursor72.close();
+				    db72.close();
+				    Log.d("Async buse 2", buse);
+				    if( buse.equals("0")) {
+				    	try {
+				    		connector.unsubscribePrice(symbolget);
+							connector.unsubscribeBalance();
+						} catch (APICommunicationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+
+						connector.disconnectStream();
+						System.out.println("Stream disconnected.");
+				    }
 				}
 				
 				@Override

@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -24,7 +26,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -32,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eusecom.exforu.GetTradesStreamAsyncTask.DoSomething;
+import com.eusecom.exforu.TradesFragAdapter.DoSomething2;
 
 import com.eusecom.exforu.animators.BaseItemAnimator;
 import com.eusecom.exforu.animators.FadeInAnimator;
@@ -40,7 +46,9 @@ import com.eusecom.exforu.animators.FadeInLeftAnimator;
 import com.eusecom.exforu.animators.FadeInRightAnimator;
 import com.eusecom.exforu.animators.FadeInUpAnimator;
 
-public class TradesFragment extends Fragment implements DoSomething, FragmentLifecycle {
+
+
+public class TradesFragment extends Fragment implements DoSomething, DoSomething2, FragmentLifecycle {
 
 	@SuppressWarnings("unused")
 	private int page;
@@ -100,15 +108,19 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 	private List<String> mysymbolList = new ArrayList<String>();
 	private List<String> mytimeList = new ArrayList<String>();
 	private List<String> mydruhList = new ArrayList<String>();
+	private List<String> mycomentList = new ArrayList<String>();
+	private List<String> mytpList = new ArrayList<String>();
+	private List<String> myslList = new ArrayList<String>();
 
 	String periodxy="D1";
 	double openda;
 	double closeda;
-	double actpricex=1.09;
-	double actprices=1.092;
-	double actpriceb=1.088;
+	double actpricex=0;
+	double actprices=0;
+	double actpriceb=0;
 
     private SQLiteDatabase db5=null;
+    private SQLiteDatabase db6=null;
 	private Cursor constantsCursor3=null;
 	public MyViewAct viewact;
 	
@@ -116,7 +128,11 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
     TextView actprice;
     TextView actbalance;
 	TextView actprofit;
-
+	
+	private SQLiteDatabase db7=null;
+	String senditem, senddruh, sendvolume, sendprice, sendcomm;
+	Long sendorder;
+	String sendtp="0", sendsl="0";
 
     // newInstance constructor for creating fragment with arguments
     public static TradesFragment newInstance(int page, String pairx, String implessx) {
@@ -173,12 +189,16 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
         if( accountx.equals("0")) {
         	useridl=Long.valueOf(SettingsActivity.getUserId(getActivity()));
         	userpsws=SettingsActivity.getUserPsw(getActivity());
-        }else{
+        }
+        if( accountx.equals("2")) {
+        	useridl=Long.valueOf(SettingsActivity.getUserId(getActivity()));
+        	userpsws=SettingsActivity.getUserPsw(getActivity());
+        }
+        if( accountx.equals("1")) {
         	useridl=Long.valueOf(SettingsActivity.getUserIdr(getActivity()));
         	userpsws=SettingsActivity.getUserPswr(getActivity());
         }
-
-        db5=(new DatabaseTrades(getActivity())).getWritableDatabase();
+        
     	readSqlTrades();
     	
     	//System.out.println("openlist: " + myopenList.toString());
@@ -214,13 +234,13 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 
     	recyclerView.setLayoutManager(mLayoutManager);
     	//recyclerView.setItemAnimator(new FadeInAnimator());
-    	adapter = new TradesFragAdapter(getActivity(), mytimeList, myopenList, myvolumeList, myorderList,
-    			mysymbolList, mydruhList, actpricex, actprices, actpriceb, periodxy);
+    	adapter = new TradesFragAdapter(TradesFragment.this, getActivity(), mytimeList, myopenList, myvolumeList, myorderList,
+    			mysymbolList, mydruhList, actpricex, actprices, actpriceb, periodxy, mycomentList, mytpList, myslList);
     	recyclerView.setAdapter(adapter);
     	recyclerView.setItemAnimator(new FadeInRightAnimator());
     	recyclerView.getItemAnimator().setAddDuration(300);
     	recyclerView.getItemAnimator().setRemoveDuration(300);
-    
+    	registerForContextMenu(recyclerView);
 
         return view;
         
@@ -248,6 +268,31 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
     }
     
     @Override
+    public void doChangeItem(final String itemx, final String idruhx, final String iorderx
+    		, final String ivolumex, final String ipricex, final String icommx, final String itpx, final String islx) {
+
+    	getActivity().runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+		    	 
+		    	 if (isOnline()) 
+		            {
+		    			GetTradesStreamAsyncTask.exit();
+		    			GetTradesStreamAsyncTask.cancel(true);
+		            }
+		    	 sendValueToAct("C", 3);
+
+		    	 senditem=itemx; senddruh=idruhx; sendorder=Long.parseLong(iorderx); 
+		    	 sendvolume=ivolumex; sendprice=ipricex; sendcomm=icommx;
+		    	 sendtp=itpx; sendsl=islx;
+		    	 Toast.makeText(getActivity(), "sendstrx " + itemx, Toast.LENGTH_SHORT).show();
+
+		    }
+		});
+     
+    }
+    
+    @Override
     public void doChangeUI4(final double bidp, final double askp, final double sprd, final long timeax) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
     	getActivity().runOnUiThread(new Runnable() {
@@ -259,8 +304,10 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 		         
 		         actpricex=askp; actprices=askp; actpriceb=bidp;
 		         
+		         try{
+		         db6=(new DatabaseTrades(getActivity())).getWritableDatabase();
 		         //insert actual price
-		         db5.delete("trades", "idruh = '2' ", null);
+		         db6.delete("trades", "idruh = '2' ", null);
 		         ContentValues cv5=new ContentValues();		    		
 		    		cv5.put("itime", timeax);
 		    		cv5.put("iopen", askp);
@@ -268,7 +315,16 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 		    		cv5.put("iorder", "0");
 		    		cv5.put("isymbol", pair);
 		    		cv5.put("idruh", "2");
-		    	 db5.insert("trades", "time", cv5);
+		    		cv5.put("itp", "0");
+		    		cv5.put("isl", "0");
+		    		cv5.put("imemo", " ");
+		    	 db6.insert("trades", "itime", cv5);
+		    	 db6.close();
+		         }
+                 catch (NullPointerException nullPointer)
+                 {
+                 	System.out.println("NPE TradesFragment.java" +  nullPointer);
+                 }
 		    		
 		         
 		         myopenList=new ArrayList<String>(); myvolumeList=new ArrayList<String>(); 
@@ -278,8 +334,9 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 		    	 readSqlTrades();
 		         
 		         
-		         adapter = new TradesFragAdapter(getActivity(), mytimeList, myopenList
-		    	    		, myvolumeList, myorderList, mysymbolList, mydruhList, actpricex, actprices, actpriceb, periodxy);
+		         adapter = new TradesFragAdapter(TradesFragment.this, getActivity(), mytimeList, myopenList
+		    	    		, myvolumeList, myorderList, mysymbolList, mydruhList, actpricex, actprices
+		    	    		, actpriceb, periodxy, mycomentList, mytpList, myslList);
 		    	 recyclerView.setAdapter(adapter);
 		    	 recyclerView.setItemAnimator(new FadeInRightAnimator());
 		    	 recyclerView.getItemAnimator().setAddDuration(300);
@@ -345,8 +402,9 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 
 		    	 	readSqlTrades();
 
-		    	 	adapter = new TradesFragAdapter(getActivity(), mytimeList, myopenList
-		    	    		, myvolumeList, myorderList, mysymbolList, mydruhList, actpricex, actprices, actpriceb, periodxy);
+		    	 	adapter = new TradesFragAdapter(TradesFragment.this, getActivity(), mytimeList, myopenList
+		    	    		, myvolumeList, myorderList, mysymbolList, mydruhList, actpricex
+		    	    		, actprices, actpriceb, periodxy, mycomentList, mytpList, myslList);
 		    	    recyclerView.setAdapter(adapter);
 		    	    recyclerView.setItemAnimator(new FadeInRightAnimator());
 		    	    recyclerView.getItemAnimator().setAddDuration(300);
@@ -378,19 +436,33 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 		     @Override
 		     public void run() {
 
-
+		    	 sendValueToAct("C", 3);
+		    	 
 		    }
 		});
 
     }
-    
+
+    //sending values from fragment to activity
+  	protected void sendValueToAct(String value, int xxsp) {
+          // it has to be the same name as in the fragment
+          Intent intent = new Intent("com.eusecom.exforu.action.UI_UPDATE_AGAIN");
+          Bundle dataBundle = new Bundle();
+          dataBundle.putInt("UI_XXSP", xxsp);
+          dataBundle.putString("UI_VALUE", value);
+          intent.putExtras(dataBundle);
+          
+          Log.d("change again", "I am at sendValueToAct.");
+          LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+          
+        
+      }
     
     @Override
 	public void onDestroy() {
 		super.onDestroy();
 		
 		constantsCursor3.close();
-		db5.close();
 
 		if (isOnline()) 
         {
@@ -433,49 +505,161 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
     //update readSqlTrades
     public boolean readSqlTrades() {
 
+    	try{
+    	db5=(new DatabaseTrades(getActivity())).getWritableDatabase();
+    	
     	myopenList=new ArrayList<String>(); myvolumeList=new ArrayList<String>(); 
 	 	myorderList=new ArrayList<String>(); mysymbolList=new ArrayList<String>(); 
 	 	mytimeList=new ArrayList<String>(); mydruhList=new ArrayList<String>();
+	 	mycomentList=new ArrayList<String>(); mytpList=new ArrayList<String>();
+	 	myslList=new ArrayList<String>();
 	 	
-    	try {
     		
-    	//sum TP and SL	
-    	String amount;
+    	//sum TP za Buys	
+    	String amount="0"; String tpprice="0"; String slprice="0"; String memox=" ";
     	db5.delete("trades", "idruh = '3' ", null);
-    	Cursor c = db5.rawQuery("select sum(ivolume) from trades where idruh = '0' GROUP BY idruh;", null);
-    	if(c.moveToFirst())
-    	    amount = c.getString(0);
-    	else
-    	    amount = "0";
+    	Cursor c = db5.rawQuery("select sum(ivolume), itp, imemo from trades where idruh = '0' GROUP BY imemo,itp;", null);
+    	double amountd3 = 0;
+    	if(c.moveToFirst()){    		
+    		while(!c.isAfterLast()) 
+    		{
+    			amount = c.getString(0);
+    			tpprice = c.getString(1);
+    			memox = c.getString(2);
+    			
+    			if (tpprice == null ) {tpprice="0";}
+    	    	amountd3 = Double.parseDouble(tpprice);
+    	    	if(amountd3 > 0 ) {
+    	    	ContentValues cv51=new ContentValues(); 
+    	   		cv51.put("itime", "0");
+    	   		cv51.put("iopen", tpprice);
+    	   		cv51.put("ivolume", amount);
+    	   		cv51.put("iorder", "0");
+    	   		cv51.put("isymbol", pair);
+    	   		cv51.put("idruh", "3");
+    	   		cv51.put("itp", "0");
+    			cv51.put("isl", "0");
+    			cv51.put("imemo", memox);
+    	   		db5.insert("trades", "itime", cv51);
+    	    	}
+    	    
+    	    c.moveToNext();
+    		}
+    	    
+    	}
     	c.close();
-    	
-    	ContentValues cv51=new ContentValues();		    		
-   		cv51.put("itime", "0");
-   		cv51.put("iopen", "1.12");
-   		cv51.put("ivolume", amount);
-   		cv51.put("iorder", "0");
-   		cv51.put("isymbol", pair);
-   		cv51.put("idruh", "3");
-   		db5.insert("trades", "time", cv51);
-    	
-    	Cursor c2 = db5.rawQuery("select sum(ivolume) from trades where idruh = '1' GROUP BY idruh;", null);
-    	if(c2.moveToFirst())
-    	    amount = c2.getString(0);
-    	else
-    	    amount = "0";
+    	 	
+   		//sum TP za Sells
+    	amount="0"; tpprice="0"; slprice="0"; memox=" ";
+   		db5.delete("trades", "idruh = '4' ", null);
+    	Cursor c2 = db5.rawQuery("select sum(ivolume), itp, imemo  from trades where idruh = '1' GROUP BY imemo,itp;", null);
+    	double amountd4 = 0;
+    	if(c2.moveToFirst()){    		
+    		while(!c2.isAfterLast()) 
+    		{
+    			amount = c2.getString(0);
+    			tpprice = c2.getString(1);
+    			//Log.i("c2", c2.getString(1));
+    			memox = c2.getString(2);
+    			
+    			if (tpprice == null ) {tpprice="0";}
+    	    	amountd4 = Double.parseDouble(tpprice);
+    	    	if(amountd4 > 0 ) {
+    	    	ContentValues cv52=new ContentValues(); 
+    	   		cv52.put("itime", "0");
+    	   		cv52.put("iopen", tpprice);
+    	   		cv52.put("ivolume", amount);
+    	   		cv52.put("iorder", "0");
+    	   		cv52.put("isymbol", pair);
+    	   		cv52.put("idruh", "4");
+    	   		cv52.put("itp", "0");
+    			cv52.put("isl", "0");
+    			cv52.put("imemo", memox);
+    	   		db5.insert("trades", "itime", cv52);
+    	    	}
+    			
+    	    
+    	    c2.moveToNext();
+    		}
+    	    
+    	}
     	c2.close();
     	
-        ContentValues cv52=new ContentValues();		    		
-   		cv52.put("itime", "0");
-   		cv52.put("iopen", "1.12");
-   		cv52.put("ivolume", amount);
-   		cv52.put("iorder", "0");
-   		cv52.put("isymbol", pair);
-   		cv52.put("idruh", "3");
-   		db5.insert("trades", "time", cv52);
+    	
+   		
+   		//sum SL za Buys
+    	amount="0"; tpprice="0"; slprice="0"; memox=" ";
+    	db5.delete("trades", "idruh = '5' ", null);
+    	Cursor c3 = db5.rawQuery("select sum(ivolume), isl, imemo  from trades where idruh = '0' GROUP BY imemo,isl;", null);
+    	double amountd5 = 0;
+    	if(c3.moveToFirst()){    		
+    		while(!c3.isAfterLast()) 
+    		{
+    			amount = c3.getString(0);
+    			slprice = c3.getString(1);
+    			memox = c3.getString(2);
+    			
+    			if (slprice == null ) {slprice="0";}
+    	    	amountd5 = Double.parseDouble(slprice);
+    	    	if(amountd5 > 0d ) { 
+    	    	ContentValues cv53=new ContentValues(); 
+    	   		cv53.put("itime", "0");
+    	   		cv53.put("iopen", slprice);
+    	   		cv53.put("ivolume", amount);
+    	   		cv53.put("iorder", "0");
+    	   		cv53.put("isymbol", pair);
+    	   		cv53.put("idruh", "5");
+    	   		cv53.put("itp", "0");
+    			cv53.put("isl", "0");
+    			cv53.put("imemo", memox);
+    	   		db5.insert("trades", "itime", cv53);
+    	    	}
+    	    
+    	    c3.moveToNext();
+    		}
+    	    
+    	}
+    	c3.close();
+
+   		//sum SL za Sells
+    	amount="0"; tpprice="0"; slprice="0"; memox=" ";
+   		db5.delete("trades", "idruh = '6' ", null);
+    	Cursor c4 = db5.rawQuery("select sum(ivolume), isl, imemo from trades where idruh = '1' GROUP BY imemo,isl;", null);
+    	double amountd6 = 0;
+    	if(c4.moveToFirst()){    		
+    		while(!c4.isAfterLast()) 
+    		{
+    			amount = c4.getString(0);
+    			slprice = c4.getString(1);
+    			//Log.i("c4", c4.getString(1));
+    			memox = c4.getString(2);
+    			
+    			if (slprice == null ) {slprice="0";}
+    	    	amountd6 = Double.parseDouble(slprice);
+    	    	if(amountd6 > 0d ) {
+    	        ContentValues cv54=new ContentValues();		    		
+    	   		cv54.put("itime", "0");
+    	   		cv54.put("iopen", slprice);
+    	   		cv54.put("ivolume", amount);
+    	   		cv54.put("iorder", "0");
+    	   		cv54.put("isymbol", pair);
+    	   		cv54.put("idruh", "6");
+    	   		cv54.put("itp", "0");
+    			cv54.put("isl", "0");
+    			cv54.put("imemo", memox);
+    	   		db5.insert("trades", "itime", cv54);
+    	    	}
+    	    
+    	    c4.moveToNext();
+    		}
+    	    
+    	}
+    	c4.close();
+    	
+    	
     	
     	//read items	
-    	constantsCursor3=db5.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh " +
+    	constantsCursor3=db5.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh, imemo, itp, isl " +
 				"FROM  trades WHERE _id >= 0 ORDER BY iopen DESC ",
 				null);
 		
@@ -488,7 +672,16 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
         	mysymbolList.add(constantsCursor3.getString(constantsCursor3.getColumnIndex("isymbol")));
         	mytimeList.add(constantsCursor3.getString(constantsCursor3.getColumnIndex("itime")));
         	mydruhList.add(constantsCursor3.getString(constantsCursor3.getColumnIndex("idruh")));
+        	mytpList.add(constantsCursor3.getString(constantsCursor3.getColumnIndex("itp")));
+        	myslList.add(constantsCursor3.getString(constantsCursor3.getColumnIndex("isl")));
+        	
+        	String imemox=constantsCursor3.getString(constantsCursor3.getColumnIndex("imemo"));
 
+        	if (imemox != null ) {}else{ imemox="-"; }
+        	if (imemox.isEmpty()) {imemox="-";}
+        	//imemox="xx";
+        	mycomentList.add(imemox);
+        	
         	constantsCursor3.moveToNext();
         }
 
@@ -506,7 +699,12 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
         	mysymbolList.add("0.0");
         	mytimeList.add(unixtimes);
         	mydruhList.add("0");
+        	mycomentList.add("x");
+        	mytpList.add("0");
+        	myslList.add("0");
         }
+        
+        db5.close();
         
         return false;
     }
@@ -524,9 +722,12 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
    	public void onPauseFragment() {
    		Log.i("TradesFragment", "onPauseFragment()");
    		Toast.makeText(getActivity(), "onPauseFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show();
-   		constantsCursor3.close();
-		db5.close();
 
+   		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
+   	 	db7.execSQL(UpdateSql7);
+   	 	db7.close();
+   	 	
 		if (isOnline()) 
         {
 			GetTradesStreamAsyncTask.exit();
@@ -538,8 +739,12 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
    	public void onResumeFragment() {
    		Log.i("TradesFragment", "onResumeFragment()");
    		Toast.makeText(getActivity(), "onResumeFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show();
-   		
-   		db5=(new DatabaseTrades(getActivity())).getWritableDatabase();
+   		   	
+   		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='1' WHERE _id > 0 ";
+   	 	db7.execSQL(UpdateSql7);
+   	 	db7.close();
+   	 	
     	readSqlTrades();
 
     	LinkedList<String> listget = new LinkedList<String>();
@@ -549,5 +754,105 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 		GetTradesStreamAsyncTask = new GetTradesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);
 		GetTradesStreamAsyncTask.execute();
    	}
+   	
+   	//oncontextmenu
+    @Override 
+    public void onCreateContextMenu(ContextMenu menu, View v,
+    ContextMenu.ContextMenuInfo menuInfo) {
+    super.onCreateContextMenu(menu, v, menuInfo);
+
+
+    	String name2="position " + sendorder;
+
+    menu.setHeaderTitle( name2 );
+    
+    MenuInflater inflater = getActivity().getMenuInflater();
+    inflater.inflate(R.menu.kontextrades_menu, menu);
+    
+
+    }
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+    
+    	case R.id.modify:
+
+    		Toast.makeText(getActivity(), "edit click " + senditem, Toast.LENGTH_SHORT).show();
+
+    		Intent ie = new Intent(getActivity(), EditTradeActivity.class);
+            Bundle extrase = new Bundle();
+            //can to change itp, isl
+            if(senddruh.equals("0")) { extrase.putString("xtrade", "5"); }
+            if(senddruh.equals("1")) { extrase.putString("xtrade", "6"); }
+            extrase.putString("pairx", pair);
+            extrase.putString("ivolume", sendvolume);
+            extrase.putString("iprice", sendprice);
+            extrase.putString("itp", sendtp);
+            extrase.putString("isl", sendsl);
+            extrase.putString("icomm", sendcomm);
+            extrase.putLong("iorder", sendorder);
+            ie.putExtras(extrase);
+            startActivity(ie);
+            getActivity().finish();
+            
+            break;
+    
+        
+        case R.id.close:
+        	
+        	Toast.makeText(getActivity(), "delete click " + senditem, Toast.LENGTH_SHORT).show();
+        	
+        	new AlertDialog.Builder(getActivity())
+			.setTitle(getString(R.string.closetrade) + " " + sendorder)
+			.setMessage(getString(R.string.wantclose))
+			.setPositiveButton(R.string.textyes,
+													new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+															int whichButton) {
+					
+					
+					Intent iu = new Intent(getActivity(), MakeTradeActivity.class);
+		            Bundle extrasu = new Bundle();
+		            //have to set ivolume, iorder is position, icomm may be empty
+		            if(senddruh.equals("0")) { extrasu.putString("xtrade", "3"); }
+		            if(senddruh.equals("1")) { extrasu.putString("xtrade", "4"); }
+		            extrasu.putString("pairx", pair);
+		            extrasu.putString("ivolume", sendvolume);
+		            extrasu.putString("itp", "0");
+		            extrasu.putString("isl", "0");
+		            extrasu.putString("icomm", sendcomm);
+		            extrasu.putString("iprice", "0");
+		            //it's position 
+		            extrasu.putLong("iorder", sendorder);
+		            iu.putExtras(extrasu);
+		            startActivity(iu);
+		            getActivity().finish();
+					
+					
+					
+					
+				}
+			})
+			.setNegativeButton(R.string.textno,
+													new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+															int whichButton) {
+					// ignore, just dismiss
+					
+				}
+			})
+			.show();
+            
+        	
+            
+            break;
+
+        }
+
+        return super.onContextItemSelected(item);
+    }
+    //koniec oncontextmenu
 
 }

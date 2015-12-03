@@ -57,15 +57,16 @@ public class LearningActivity extends FragmentActivity {
 	static String nazless;
 	static String importantless="";
 	static String pairx;
-	int whatspage;
+	static int whatspage;
     
-    TextView title;
+    TextView title, idpage;
     Spinner spinner;
     Button btnAgain;
     int repeat=60000;
     
     int currentPosition = 0;
 	int changeorient = 0;
+	
 	private SQLiteDatabase db7=null;
 
 	@Override
@@ -74,10 +75,10 @@ public class LearningActivity extends FragmentActivity {
         setContentView(R.layout.learninglay);
         
         db7=(new DatabaseTemp(this)).getWritableDatabase();        
-        String UpdateSql7 = "UPDATE temppar SET favact='0' WHERE _id > 0 ";
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='1', buse='0', trade='0' WHERE _id > 0 ";
    	 	db7.execSQL(UpdateSql7);
    	 	db7.close();
-        
+   	 	
         if (isOnline()) 
         {
         Intent i = getIntent();        
@@ -87,6 +88,7 @@ public class LearningActivity extends FragmentActivity {
         
         title = (TextView) findViewById(R.id.title);
         title.setText(pairx);
+        idpage = (TextView) findViewById(R.id.idpage);
         
         btnAgain = (Button) findViewById(R.id.btnAgain);
         btnAgain.setVisibility(View.GONE);
@@ -147,14 +149,12 @@ public class LearningActivity extends FragmentActivity {
             	
             	if( changeorient == 0 ) {
             		
-            		//if( whatspage == 0 ) {
             	FragmentLifecycle fragmentToHide = (FragmentLifecycle)adapterViewPager.getItem(currentPosition);
     			fragmentToHide.onPauseFragment();
-            		//}
-            		//if( whatspage == 2 ){ }else {
+ 
     			FragmentLifecycle fragmentToShow = (FragmentLifecycle)adapterViewPager.getItem(position);
     			fragmentToShow.onResumeFragment();
-            		//}
+
     			
     			currentPosition = position;           		
             	}
@@ -192,9 +192,7 @@ public class LearningActivity extends FragmentActivity {
         
         IntentFilter filter = new IntentFilter(ACTION_INTENT);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
-        
-        //may be better swipe to page 2
-        //if( whatspage == 2 ) { vpPager.setCurrentItem(2); }
+
         
         }
         else{
@@ -250,6 +248,7 @@ public class LearningActivity extends FragmentActivity {
     	  String xxxsps=xxxsp + "";
     	  Log.d("updateAgain " + value, "xxsp " + xxxsps);
     	  btnAgain.setVisibility(View.VISIBLE);
+    	  idpage.setText(xxxsps);
 
       }
       //end of broadcast
@@ -326,7 +325,7 @@ public class LearningActivity extends FragmentActivity {
             super(fragmentManager);
             
             this.fragments = new ArrayList<Fragment>();
-    		fragments.add(CandlesFragment.newInstance(0, pairx, importantless));
+    		fragments.add(CandlesFragment.newInstance(0, pairx, importantless, whatspage));
     		fragments.add(BuySellFragment.newInstance(2, pairx, importantless));
     		fragments.add(TradesFragment.newInstance(2, pairx, importantless));
     		fragments.add(ImportantFragment.newInstance(1, str4, numless, nazless, importantless));
@@ -479,6 +478,10 @@ public class LearningActivity extends FragmentActivity {
     	Intent i = new Intent(this, LearningActivity.class);
     	Bundle extras = new Bundle();
         extras.putString("pairx", pairx);
+        int whatspagex = Integer.parseInt(idpage.getText().toString());
+        extras.putInt("whatspage", whatspagex);
+        
+        
         i.putExtras(extras);                
         startActivity(i);
         finish();
@@ -510,33 +513,9 @@ public class LearningActivity extends FragmentActivity {
 	    }
 	    //end test if internet
 	    
-	    public void SellOk(View v) {
-	    	
-	    	Button btnSellok = (Button) v.findViewById(R.id.btnSellok);
-	    	btnSellok.setVisibility(View.GONE);
-	    	
-	    	Intent iu = new Intent(getApplicationContext(), MakeTradeActivity.class);
-            Bundle extrasu = new Bundle();
-            extrasu.putString("xtrade", "1");
-            iu.putExtras(extrasu);
-            startActivityForResult(iu, 100);
-	    	
-	    }
 	    
-	    public void BuyOk(View v) {
-	    	
-	    	Button btnBuyok = (Button) v.findViewById(R.id.btnBuyok);
-	    	btnBuyok.setVisibility(View.GONE);
-	    	
-	    	Intent iu = new Intent(getApplicationContext(), MakeTradeActivity.class);
-            Bundle extrasu = new Bundle();
-            extrasu.putString("xtrade", "2");
-            iu.putExtras(extrasu);
-            startActivityForResult(iu, 100);
-	    	
-	    }
 	    
-	    // Response 
+	    // Response from MakeTradeActivity.class DROPED
 	    @Override
 	    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	        super.onActivityResult(requestCode, resultCode, data);
@@ -558,8 +537,12 @@ public class LearningActivity extends FragmentActivity {
 	        }
 
 	 
-	    }
+	    }//end of onactivityresult
+	    
+	    void switchFragment(int target){
+	    	vpPager.setCurrentItem(target);
+	       }
 	    
 
 
-}
+}//end of activity
