@@ -1,0 +1,12 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+		<header android:fragment="com.eusecom.exforu.StockPreferenceFragment"
+						android:title="@string/prefrepuser"
+						android:summary="@string/prefrepuser">
+			<extra android:name="resource" android:value="preferences" />
+		</header>
+		<header android:fragment="com.eusecom.exforu.StockPreferenceFragment"
+						android:title="@string/prefother"
+						android:summary="@string/prefother">
+			<extra android:name="resource" android:value="preferences2" />
+		</header>
+</preference-headers>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layout_height="wrap_content"   
+    android:background="@drawable/list_selector"
+    android:orientation="horizontal">
+ 
+ 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/icon"
+        android:paddingLeft="16dp"
+        android:contentDescription="@string/desc_list_item_icon"        
+        android:src="@drawable/item_circle"/>
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingTop="4dp" 
+        android:textColor="@color/primary_text_default_material_light"
+        android:textAppearance="?android:attr/textAppearanceListItem"         
+        android:id="@+id/title" />
+    
+    <TextView android:id="@+id/counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/primary_text_default_material_light"
+        android:textAppearance="?android:attr/textAppearanceListItem"/>
+ 
+</LinearLayout>

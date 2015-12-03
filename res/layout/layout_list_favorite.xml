@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="120dp"
+    android:background="@drawable/border_listfavorite"
+    >
+     
+     <!-- icon -->
+     <ImageView
+         android:id="@+id/image"
+         android:layout_width="64dp"
+         android:layout_height="64dp"
+         android:layout_alignParentLeft="true"
+         android:layout_marginLeft="8dp"
+         android:layout_marginRight="8dp"
+         android:layout_marginTop="1dp"
+         android:layout_marginBottom="1dp"
+         android:contentDescription="@string/descimg"
+         android:src="@drawable/ic_launcher"
+     />
+     
+    <!-- title -->
+    <TextView
+         android:id="@+id/text"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@+id/image"
+         android:layout_alignBaseline="@+id/image"
+         android:textColor="@android:color/darker_gray"
+         android:layout_marginLeft="8dp"
+         android:layout_marginRight="8dp"
+         android:layout_marginTop="8dp"
+         android:textSize="22sp" />
+    
+    <TextView
+        android:id="@+id/asktxt"
+        android:text="@string/asktxt"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/image"
+        android:layout_below="@+id/image"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="18sp" />
+    
+    <TextView
+        android:id="@+id/askprice"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/asktxt"
+        android:layout_below="@+id/image"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="17sp" />
+    
+    <TextView
+        android:id="@+id/bidtxt"
+        android:text="@string/bidtxt"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/askprice"
+        android:layout_below="@+id/image"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="17sp" />
+    
+    <TextView
+        android:id="@+id/bidprice"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/bidtxt"
+        android:layout_below="@+id/image"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="17sp" />
+    
+    <TextView
+        android:id="@+id/changetxt"
+        android:text="@string/changetxt"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/bidprice"
+        android:layout_below="@+id/image"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="17sp" />
+    
+    <TextView
+        android:id="@+id/profit"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/changetxt"
+        android:layout_below="@+id/image"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="17sp" />
+ 
+</RelativeLayout>

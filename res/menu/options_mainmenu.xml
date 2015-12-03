@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+       
+    <item
+        android:id="@+id/preferences"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/preferences">
+    </item>
+    
+    <item
+        android:id="@+id/xfavorite"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_favorite"
+        android:title="@string/xfavorite">
+    </item>
+
+</menu>

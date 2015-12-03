@@ -1,0 +1,30 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/prefrep">
+	    
+
+		
+	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="@string/prefuser">
+	    
+
+		
+    	<EditTextPreference
+        android:key="userid"
+        android:defaultValue="0"
+        android:enabled="true"
+        android:summary="@string/userid_summary"
+        android:title="@string/userid_title" />
+    	
+    	<EditTextPreference
+        android:key="userpsw"
+        android:defaultValue=""
+        android:enabled="true"
+        android:summary="@string/userpsw_summary"
+        android:title="@string/userpsw_title" />
+    	
+    	
+		
+	</PreferenceCategory>
+</PreferenceScreen>
