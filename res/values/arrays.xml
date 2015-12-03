@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="account_names">
+        <item>XStore DEMO</item>
+        <item>XStore REAL</item>
+    </string-array>
+
+    <string-array name="account_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    
+    <string-array name="period_names">
+        <item>1 minute</item>
+        <item>5 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>4 hours</item>
+        <item>1 day</item>
+        <item>1 week</item>
+        <item>1 month</item>
+    </string-array>
+
+    <string-array name="period_values">
+        <item>M1</item>
+        <item>M5</item>
+        <item>M15</item>
+        <item>M30</item>
+        <item>H1</item>
+        <item>H4</item>
+        <item>D1</item>
+        <item>W1</item>
+        <item>MN1</item>
+    </string-array>
+    
+
+    
+</resources>

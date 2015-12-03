@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +92,9 @@ public class SetFavActivity extends ActionBarActivity {
     
     private SQLiteDatabase db2=null;
 	private Cursor constantsCursor2=null;
+	ImageButton addButton;
+	
+	RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +131,7 @@ public class SetFavActivity extends ActionBarActivity {
         Log.d("myfavList = ", myfavList.toString()); 
         
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
+        recyclerView = (RecyclerView) findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new FadeInAnimator());
         final SetFavAdapter adapter = new SetFavAdapter(this, new ArrayList<>(Arrays.asList(myfavpairs)));
@@ -167,7 +171,9 @@ public class SetFavActivity extends ActionBarActivity {
             		db2.delete("favpairs", "pair2=?", argsx);
 	
             	}
+            	recyclerView.scrollToPosition(0);
                 adapter.add(spinvalue, 0);
+                recyclerView.scrollToPosition(0);
                 myfavList.add(0, spinvalue);
                 Log.d("myfavList = ", myfavList.toString());
                 
@@ -202,7 +208,37 @@ public class SetFavActivity extends ActionBarActivity {
             }
         });
         
-        
+        addButton = (ImageButton) findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+            	Spinner spinner = (Spinner) findViewById(R.id.spinner);
+            	String spinvalue = spinner.getSelectedItem().toString();          	
+            	int indexwhere = myfavList.indexOf(spinvalue);
+            	
+            	if( indexwhere >= 0 ) { 
+            		adapter.remove(indexwhere);
+            		myfavList.remove(spinvalue);
+            		Log.d("myfavList = ", myfavList.toString());
+            		
+            		String[] argsx={spinvalue};
+            		db2.delete("favpairs", "pair2=?", argsx);
+	
+            	}
+            	recyclerView.scrollToPosition(0);
+                adapter.add(spinvalue, 0);
+                recyclerView.scrollToPosition(0);
+                myfavList.add(0, spinvalue);
+                Log.d("myfavList = ", myfavList.toString());
+                
+                ContentValues values=new ContentValues(2);                
+        		values.put("pair2", spinvalue);
+        		values.put("nick2", "xxx");
+        		db2.insert("favpairs", "pairs", values);
+
+            }
+        });
         
         
     }//oncreate

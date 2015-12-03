@@ -34,6 +34,8 @@
 		<activity android:name="com.eusecom.exforu.SetFavActivity" android:label="@string/xfavorite"> </activity>
 		<activity android:name="com.eusecom.exforu.FavoriteActivity" android:label="@string/app_name"> </activity>
 		<activity android:name="com.eusecom.exforu.StreamActivity" android:label="@string/app_name"> </activity>
+		<activity android:name="com.eusecom.exforu.LearningActivity" android:label="@string/app_name"> </activity>
+		<activity android:name="com.eusecom.exforu.TestNecoActivity" android:label="@string/app_name"> </activity>
     </application>
 
 </manifest>

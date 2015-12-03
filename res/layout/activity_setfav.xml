@@ -60,10 +60,32 @@
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
+    
+    
+    <RelativeLayout 
+    android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingBottom="@dimen/activity_vertical_margin"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:paddingTop="@dimen/activity_vertical_margin">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    
+    <ImageButton
+    android:id="@+id/addButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+
+    android:contentDescription="@string/image_button_plus"
+    android:src="@android:drawable/ic_input_add" />
+    
+    </RelativeLayout>
 
 </LinearLayout>

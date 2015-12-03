@@ -2,7 +2,7 @@
 <android.support.v7.widget.Toolbar
     	xmlns:android="http://schemas.android.com/apk/res/android"
     	xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/tool_bar"
+        android:id="@+id/tool_barlearning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -26,34 +26,24 @@
                 android:textSize="18sp"
         		android:textStyle="bold"
                 android:text="@string/app_name"/>
+            
+            <Button android:id="@+id/btnAgain"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:text="@string/again"
+        		android:textSize="15sp"
+        		android:layout_toLeftOf="@+id/spinner"
+    			android:onClick="buttonAgain"/>
 
             <Spinner
                 android:id="@+id/spinner"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:padding="1dp"
+                android:layout_alignParentRight="true"				
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/del"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:background="?attr/selectableItemBackground"
-                android:padding="10dp"
-                android:text="@string/del"/>
-
-            <TextView
-                android:id="@+id/add"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/del"
-                android:layout_centerInParent="true"
-                android:background="?attr/selectableItemBackground"
-                android:padding="10dp"
-                android:text="@string/add"/>
+            
 
         </RelativeLayout>
 

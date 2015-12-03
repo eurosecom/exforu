@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="60dp"
+    android:background="@drawable/border_listfavorite"
+    >
+
+    <TextView
+        android:id="@+id/itime"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/iorder"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/itime"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/isymbol"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/txtopenprice"
+        android:text="@string/opentxt"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/itime"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/iopenprice"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/txtopenprice"
+        android:layout_below="@+id/itime"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/txtvolume"
+        android:text="@string/voltxt"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iopenprice"
+        android:layout_below="@+id/itime"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/ivolume"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/txtvolume"
+        android:layout_below="@+id/itime"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+
+    <TextView
+        android:id="@+id/iprofit"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/itime"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+ 
+</RelativeLayout>

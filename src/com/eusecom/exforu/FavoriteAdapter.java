@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -47,6 +48,24 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         holder.askprice.setText(mAskPrice.get(position));
         holder.bidprice.setText(mBidPrice.get(position));
         holder.profit.setText(mProfit.get(position));
+        
+        holder.setClickListener(new FavoriteAdapter.ViewHolder.ClickListener() {
+            public void onClick(View v, int pos, boolean isLongClick) {
+                if (isLongClick) {
+         
+                    // View v at position pos is long-clicked.
+                	String poslx = pos + "";
+                	Toast.makeText(mContext, "longclick " + poslx, Toast.LENGTH_SHORT).show();
+                	
+                } else {
+                    // View v at position pos is clicked.
+                	String possx = pos + "";
+                	Toast.makeText(mContext, "shortclick " + possx, Toast.LENGTH_SHORT).show();
+                	//toggleSelection(pos);
+                }
+            }
+        });
+        
     }
 
     @Override
@@ -64,13 +83,14 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         notifyItemInserted(position);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public ImageView image;
         public TextView text;
         public TextView askprice;
         public TextView bidprice;
         public TextView profit;
+        private ClickListener clickListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -79,6 +99,51 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             askprice = (TextView) itemView.findViewById(R.id.askprice);
             bidprice = (TextView) itemView.findViewById(R.id.bidprice);
             profit = (TextView) itemView.findViewById(R.id.profit);
+            
+            // We set listeners to the whole item view, but we could also
+            // specify listeners for the title or the icon.
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+            
         }
+        
+        
+        /* Interface for handling clicks - both normal and long ones. */
+        public interface ClickListener {
+
+            /**
+             * Called when the view is clicked.
+             *
+             * @param v view that is clicked
+             * @param position of the clicked item
+             * @param isLongClick true if long click, false otherwise
+             */
+            public void onClick(View v, int position, boolean isLongClick);
+
+        }
+
+        /* Setter for listener. */
+        public void setClickListener(ClickListener clickListener) {
+            this.clickListener = clickListener;
+        }
+
+        @SuppressWarnings("deprecation")
+    	@Override
+        public void onClick(View v) {
+
+            // If not long clicked, pass last variable as false.
+            clickListener.onClick(v, getPosition(), false);
+        }
+
+        @SuppressWarnings("deprecation")
+    	@Override
+        public boolean onLongClick(View v) {
+
+            // If long clicked, passed last variable as true.
+            clickListener.onClick(v, getPosition(), true);
+            return true;
+        }
+
+  
     }
 }

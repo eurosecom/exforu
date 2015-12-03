@@ -114,6 +114,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
     private static String[] myprofits = null;
     
     private List<String> myfavList = new ArrayList<String>();
+    private LinkedList<String> myfavLinkedList = new LinkedList<String>();
     
     private SQLiteDatabase db2=null;
 	private Cursor constantsCursor2=null;
@@ -123,6 +124,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
     
     String userpsws;
 	long useridl;
+	String accountx;
 	
 	GetFavoriteStreamAsyncTask GetFavoriteStreamAsyncTask;
 	int myProgress;
@@ -152,9 +154,17 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         
         btnAgain = (Button) findViewById(R.id.btnAgain);
         btnAgain.setVisibility(View.GONE);
+        
+        accountx=SettingsActivity.getAccountx(this);
+        
+        if( accountx.equals("0")) {
+        	useridl=Long.valueOf(SettingsActivity.getUserId(this));
+        	userpsws=SettingsActivity.getUserPsw(this);
+        }else{
+        	useridl=Long.valueOf(SettingsActivity.getUserIdr(this));
+        	userpsws=SettingsActivity.getUserPswr(this);
+        }
 
-        userpsws=SettingsActivity.getUserPsw(this);
-        useridl=Long.valueOf(SettingsActivity.getUserId(this));
         repeat=1000*Integer.parseInt(SettingsActivity.getStreamf(this));
         
         String repeats = getResources().getString(R.string.again) + " " + SettingsActivity.getStreamf(this) + " sec.";
@@ -179,6 +189,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         	myfavpairs[ic] = constantsCursor2.getString(constantsCursor2.getColumnIndex("pair2"));
         	myaskprices[ic] = ""; mybidprices[ic] = ""; myprofits[ic] = "";
         	myfavList.add(constantsCursor2.getString(constantsCursor2.getColumnIndex("pair2")));
+        	myfavLinkedList.add(constantsCursor2.getString(constantsCursor2.getColumnIndex("pair2")));
         	ic=ic+1;
         	constantsCursor2.moveToNext();
         }
@@ -191,11 +202,15 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         
         LinkedList<String> listget = new LinkedList<String>();
 		String symbolget = "EURUSD";
-		listget.add(symbolget);
+		//listget.add(symbolget);
+		//symbolget = "USDJPY";
+		//listget.add(symbolget);
+		listget=myfavLinkedList;
         
 		if (isOnline()) 
         {
-			GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, 20, userpsws, useridl, listget, symbolget, repeat);
+			GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, 20, accountx, userpsws, useridl
+					, listget, symbolget, repeat);
 	        GetFavoriteStreamAsyncTask.execute();
 	        myAskList = new ArrayList<>(Arrays.asList(myaskprices));
 	        myBidList = new ArrayList<>(Arrays.asList(mybidprices));
@@ -245,7 +260,8 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 		String symbolget = "EURUSD";
 		listget.add(symbolget);
 		
-    	GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, 20, userpsws, useridl, listget, symbolget, repeat);
+    	GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, 20, accountx, userpsws, useridl
+    			, listget, symbolget, repeat);
         GetFavoriteStreamAsyncTask.execute();
     }
     
@@ -257,18 +273,26 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 		     public void run() {
 
 		    	 System.out.println("I am at doChangeUI2.");
+		    	 DecimalFormat df;
 		    	 
-		    	 DecimalFormat df = new DecimalFormat("0.00000");             	
+		    	 if( ask < 10 ){
+	    			 df = new DecimalFormat("0.00000");
+	    	 
+	    		 }else{
+	    			 df = new DecimalFormat("0.000"); 
+	    		 }
+	 
              	 String asks = df.format(ask);
              	 asks = asks.replace(',','.');
              	          	
             	 String bids = df.format(bid);
             	 bids = bids.replace(',','.');
+            	 
+            	 int indexmyfavlist = myfavList.indexOf(symbol);
 		    	 
-		    	 myaskprices[0] = asks;
-		    	 mybidprices[0] = bids;
-		    	 Log.d("myaskprices[0] = ", myaskprices[0].toString());
-		    	 Log.d("myaskprices[1] = ", myaskprices[1].toString());
+		    	 myaskprices[indexmyfavlist] = asks;
+		    	 mybidprices[indexmyfavlist] = bids;
+
 		    	 myAskList = new ArrayList<>(Arrays.asList(myaskprices));
 		    	 myBidList = new ArrayList<>(Arrays.asList(mybidprices));
 		    	 adapter = new FavoriteAdapter(getBaseContext(), new ArrayList<>(Arrays.asList(myfavpairs))

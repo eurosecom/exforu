@@ -13,23 +13,36 @@
     <string name="profittxt">Profit:</string>
     <string name="changetxt">Change:</string>
     <string name="balancetxt">Balance:</string>
+    <string name="pricetxt">Price:</string>
     <string name="textok">OK</string>
 	<string name="textyes">Yes</string>
 	<string name="textno">No</string>
+	<string name="opentxt">Open:</string>
+    <string name="closetxt">Close:</string>
+    <string name="hightxt">High:</string>
+    <string name="lowtxt">Low:</string>
+    <string name="timetxt">Time:</string>
+    <string name="voltxt">Vol:</string>
     
     <string name="settings">Settings</string>
     <string name="prefrepuser">Preferences of broker and user</string>
 	<string name="prefrep">Preferences of broker</string>
 	<string name="prefuser">Preferences of user</string>
 	<string name="prefother">Other Preferences</string>
-	<string name="userid_title">User ID</string>
-	<string name="userid_summary">User ID for login to XStore Pro.</string>
-	<string name="userpsw_title">User password</string>
-	<string name="userpsw_summary">User password for login to XStore Pro.</string>
+	<string name="userid_title">User ID XStore DEMO</string>
+	<string name="userid_summary">User ID for login to XStore Pro DEMO.</string>
+	<string name="userpsw_title">User password XStore DEMO</string>
+	<string name="userpsw_summary">User password for login to XStore Pro DEMO.</string>
+	<string name="useridr_title">User ID XStore REAL</string>
+	<string name="useridr_summary">User ID for login to XStore Pro REAL.</string>
+	<string name="userpswr_title">User password XStore REAL</string>
+	<string name="userpswr_summary">User password for login to XStore Pro REAL.</string>
 	<string name="rpt_title">Repeating time of Favorite TXT Pairs</string>
 	<string name="rpt_summary">Time in sec for repeating communication of Favorite TXT Pairs.</string>
 	<string name="streamf_title">Streaming Time of Favorite pairs</string>
 	<string name="streamf_summary">Streaming Time in sec for getting of Favorite Pairs.</string>
+	<string name="account_title">Account for Login.</string>
+	<string name="period_title">Default period</string>
 
     
 	<!-- Nav Drawer -->
@@ -43,8 +56,10 @@
         <item >All TXT Pairs</item>
         <item >Favorite TXT Pairs</item>
         <item >Stream EURUSD TXT</item>
+        <item >Stream EURUSD Tab</item>
         <item >Set favorite</item>
         <item >Settings</item>
+        <item >Test</item>
     </string-array>
      
     <string name="app_name1">Slider Menu 1</string>
@@ -60,6 +75,8 @@
         <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>
+        <item>@drawable/item_circle</item>
+        <item>@drawable/item_circle</item>
     </array>
     
     <string name="vystup">My output</string>
@@ -67,5 +84,58 @@
     
     <string name="potrebujeteinternet">You must have an internet connection to use this function. Pleas connect and try again.</string>
 	<string name="niejeinternet">Unable to connect</string>
+	<string name="image_button_plus">+</string>
+	
+	<!-- Slider Tab text -->
+    <string-array name="slider_tab_text">
+        <item >Candles</item>
+        <item >Buy/Sell</item>
+        <item >Trades</item>
+        <item >Other</item>
+    </string-array>
+    
+    <string name="gridchart">GridChart</string>
+    <string name="linechart">LineChart</string>
+    <string name="sliplinechart">SlipLineChart</string>
+    <string name="slipareachart">SlipAreaChart</string>
+    <string name="slipbandchart">SlipBandChart</string>
+    <string name="stickchart">StickChart</string>
+    <string name="slipstickchart">SlipStickChart</string>
+    <string name="coloredslipstickchart">ColoredSlipStickChart</string>
+    <string name="mastickchart">MAStickChart</string>
+    <string name="maslipstickchart">MASlipStickChart</string>
+    <string name="minusstickchart">MinusStickChart</string>
+    <string name="slipminusstickchart">SlipMinusStickChart</string>
+    <string name="candlestickchart">CandleStickChart</string>
+    <string name="slipcandlestickchart">SlipCandleStickChart</string>
+    <string name="macandlestickchart">MACandleStickChart</string>
+    <string name="maslipcandlestickchart">MASlipCandleStickChart</string>
+    <string name="bollmaslipcandlestickchart">BOLLMASlipCandleStickChart</string>
+    <string name="macdchart">MACDChart</string>
+    <string name="piechart">PieChart</string>
+    <string name="piechart_title1">title1</string>
+    <string name="piechart_title2">title2</string>
+    <string name="piechart_title3">title3</string>
+    <string name="piechart_title4">title4</string>
+    <string name="piechart_title5">title5</string>
+    <string name="rosechart">RoseChart</string>
+    <string name="rosechart_title1">title1</string>
+    <string name="rosechart_title2">title2</string>
+    <string name="rosechart_title3">title3</string>
+    <string name="rosechart_title4">title4</string>
+    <string name="rosechart_title5">title5</string>
+    <string name="rosechart_title6">title6</string>
+    <string name="spiderwebchart">SpiderWebChart</string>
+    <string name="spiderwebchart_title1">title1</string>
+    <string name="spiderwebchart_title2">title2</string>
+    <string name="spiderwebchart_title3">title3</string>
+    <string name="spiderwebchart_title4">title4</string>
+    <string name="spiderwebchart_title5">title5</string>
+    <string name="radarchart">RadarChart</string>
+    <string name="radarchart_title1">title1</string>
+    <string name="radarchart_title2">title2</string>
+    <string name="radarchart_title3">title3</string>
+    <string name="radarchart_title4">title4</string>
+    <string name="radarchart_title5">title5</string>
 
 </resources>

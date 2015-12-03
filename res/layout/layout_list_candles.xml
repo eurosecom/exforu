@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="20dp"
+    android:background="@drawable/border_listfavorite"
+    >
+     
+    <view class="com.eusecom.exforu.MyView"
+          android:layout_width="fill_parent"
+          android:layout_height="20dp"
+          android:layout_alignParentLeft="true"
+          android:id="@+id/viewx"/>
+    
+    <TextView
+        android:id="@+id/time"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/viewx"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/openprice"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/time"
+        android:layout_below="@+id/viewx"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />   
+    
+    <TextView
+        android:id="@+id/closeprice"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/openprice"
+        android:layout_below="@+id/viewx"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/highprice"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/closeprice"
+        android:layout_below="@+id/viewx"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+
+    
+    <TextView
+        android:id="@+id/lowprice"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/highprice"
+        android:layout_below="@+id/viewx"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+ 
+</RelativeLayout>

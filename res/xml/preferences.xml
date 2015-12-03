@@ -2,7 +2,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="@string/prefrep">
 	    
-
+		<ListPreference 
+		    android:title="@string/account_title" 
+		    android:defaultValue="0" 
+		    android:entries="@array/account_names" 
+		    android:entryValues="@array/account_values" 
+		    android:key="accountx"/>
 		
 	</PreferenceCategory>
 	
@@ -23,6 +28,20 @@
         android:enabled="true"
         android:summary="@string/userpsw_summary"
         android:title="@string/userpsw_title" />
+    	
+    	<EditTextPreference
+        android:key="useridr"
+        android:defaultValue="0"
+        android:enabled="true"
+        android:summary="@string/useridr_summary"
+        android:title="@string/useridr_title" />
+    
+    	<EditTextPreference
+        android:key="userpswr"
+        android:defaultValue=""
+        android:enabled="true"
+        android:summary="@string/userpswr_summary"
+        android:title="@string/userpswr_title" />
     	
     	
 		

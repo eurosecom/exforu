@@ -1,7 +1,10 @@
 package com.eusecom.exforu;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.TextView;
 
 import pro.xstore.api.sync.Credentials;
@@ -10,20 +13,26 @@ import pro.xstore.api.sync.SyncAPIConnector;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
+import java.util.List;
+
 import pro.xstore.api.message.command.APICommandFactory;
 import pro.xstore.api.message.error.APICommandConstructionException;
 import pro.xstore.api.message.error.APICommunicationException;
 import pro.xstore.api.message.error.APIReplyParseException;
 import pro.xstore.api.message.records.SBalanceRecord;
+import pro.xstore.api.message.records.SCandleRecord;
 import pro.xstore.api.message.records.SProfitRecord;
 import pro.xstore.api.message.records.STickRecord;
 import pro.xstore.api.message.records.STradeRecord;
+import pro.xstore.api.message.records.TradeRecord;
 import pro.xstore.api.message.response.APIErrorResponse;
 import pro.xstore.api.message.response.LoginResponse;
+import pro.xstore.api.message.response.TradesResponse;
 import pro.xstore.api.streaming.StreamingListener;
 import pro.xstore.api.sync.ServerData.ServerEnum;
 
-public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
+@SuppressLint("SimpleDateFormat")
+public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	String vystuptxt;
 	String vystuptxt2;
@@ -38,13 +47,18 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 	String symbolget;
 	int repeati;
 	String errors="";
+
 	
  interface DoSomething {
   //void doInBackground(int progress);
-  void doChangeUI();
-  void doChangeUI2(String string, long timestamp, double ask, double bid);
+  void doChangeUI(List<String> myopenList, List<String> mycloseList, List<String> mychighList
+		  , List<String> mylowList, List<String> mytimeList);
+  void doChangeUI2(List<String> myopenList, List<String> mycloseList, List<String> mychighList
+		  , List<String> mylowList, List<String> mytimeList);
   void doChangeUI3(double balance, double equity);
+  void doChangeUI4(double bidp, double askp, double sprd, long timeax);
   void doChangeUIerr(String string);
+  void doChangeUIpost(String string);
  }
 
  DoSomething myDoSomethingCallBack;
@@ -52,7 +66,11 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  
  SyncAPIConnector connector;
  
- GetFavoriteStreamAsyncTask(DoSomething callback, int max, String account, String userpsw, long userid, LinkedList<String> list
+ private SQLiteDatabase db6=null;
+ private Activity mActivity;
+ 
+ GetTradesStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
+		 , LinkedList<String> list
 		 , String symbol, int repeat){
   myDoSomethingCallBack = callback;
   myMax = max;
@@ -62,6 +80,7 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
   listget=list;
   symbolget=symbol;
   repeati=repeat;
+  mActivity = activity;
  }
 
  @Override
@@ -69,16 +88,16 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	vystuptxt=""; vystuptxt2="";
 	
-	Log.d("AsyncTask", "AsyncTask is running");
+	//Log.d("AsyncTask", "AsyncTask is running");
 	
 	 try {
         
         // Create new connector
 		 if( accountx.equals("0")) {
-			 System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
 			 connector = new SyncAPIConnector(ServerEnum.DEMO);
 		 }else{
-			 System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
+			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.REAL);");
 			 connector = new SyncAPIConnector(ServerEnum.REAL); 
 		 }
         
@@ -95,7 +114,7 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
         );
         
         
-        System.out.println(loginResponse);
+        System.out.println("AsyncTrades " + loginResponse);
         
         
 		if (loginResponse != null && loginResponse.getStatus())
@@ -125,46 +144,80 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				
 				@Override
 				public void receiveTickRecord(STickRecord tickRecord) {
-					vystupx=vystupx+1;
-					String vystupxs=vystupx + "";
-					System.out.print("My " + vystupxs + ". Stream tick record: " + tickRecord);
-					String aDataRow= "-> " + tickRecord;
-					vystuptxt += aDataRow + "\n" + "\n";
 
-					long timestamp=tickRecord.getTimestamp();
-					String symbol=tickRecord.getSymbol();
-					double ask=tickRecord.getAsk();
-					double bid=tickRecord.getBid();
-					
-					String aDataRow2= vystupxs + ". -> " + tickRecord.getSymbol() + " Ask = " + tickRecord.getAsk();
-					vystuptxt2 += aDataRow2 + "\n" + "\n";
-					
-					    	 //myDoSomethingCallBack.doChangeUI2(vystuptxt);
-					    	 myDoSomethingCallBack.doChangeUI2(symbol, timestamp, ask, bid);
-	
+					//System.out.println("Stream tick record: " + tickRecord);
+					double bidp=tickRecord.getBid();
+					double askp=tickRecord.getAsk();
+					double sprd=tickRecord.getSpreadTable();
+					long timeax=tickRecord.getTimestamp();
+					myDoSomethingCallBack.doChangeUI4(bidp, askp, sprd, timeax);
 				}
+				
+				@Override
+				public void receiveCandleRecord(SCandleRecord candleRecord) {
+					System.out.println("Stream Candle record: " + candleRecord);
+				}
+				
+				
 			};
-			
+        
+                      
+            String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
+            TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
+            //System.out.println("tradesresponse " + tradesresponse.toString());
+            db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
+            db6.delete("trades", "_ID > 0", null);
+            
+            for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
+
+            	
+            	System.out.println(" opentime =" + tradesx.getOpen_time() + " order =" + tradesx.getOrder() 
+            			 + " openprice =" + tradesx.getOpen_price() + " volume =" + tradesx.getVolume());
+
+            	opent=tradesx.getOpen_price() + ""; 
+            	volumet=tradesx.getVolume() + ""; 
+            	ordert=tradesx.getOrder() + ""; 
+            	symbolt=tradesx.getSymbol() + ""; 
+            	timet=tradesx.getOpen_time() + "";
+            	cmdt=tradesx.getCmd() + "";
+            	
+                ContentValues cv6=new ContentValues();
+        		
+        		cv6.put("itime", timet);
+        		cv6.put("iopen", opent);
+        		cv6.put("ivolume", volumet);
+        		cv6.put("iorder", ordert);
+        		cv6.put("isymbol", symbolt);
+        		cv6.put("idruh", cmdt);
+        		
+
+        		db6.insert("trades", "time", cv6);
+ 
+               }            
+               db6.close();
+            
 			connector.connectStream(sl);
-			System.out.println("Stream connected.");
+			System.out.println("AsyncTrades " + "Stream connected.");
 			
 			//get stream of price one symbol
-			//connector.subscribePrice(symbolget);
+			connector.subscribePrice(symbolget);			
 			//get stream of price more symbols
-			connector.subscribePrices(listget);
+			//connector.subscribePrices(listget);
 			connector.subscribeBalance();
-			connector.subscribeProfits();
+			//connector.subscribeProfits();
+			//connector.subscribeCandle(symbolget);
 
 			//Thread.sleep(60000);
 			Thread.sleep(repeati);
 
 			connector.unsubscribePrice(symbolget);
 			connector.unsubscribeBalance();
-			connector.unsubscribeProfits();
+			//connector.unsubscribeProfits();
+			//connector.unsubscribeCandle(symbolget);
 		
 			
 			connector.disconnectStream();
-			System.out.println("Stream disconnected.");
+			System.out.println("AsyncTrades " + "Stream disconnected.");
 			
 		}
 
@@ -209,7 +262,7 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  @Override
  protected void onPostExecute(Void result) {
   super.onPostExecute(result);
-  myDoSomethingCallBack.doChangeUI();
+  myDoSomethingCallBack.doChangeUIpost("1");
  }
  
  protected void exit(){

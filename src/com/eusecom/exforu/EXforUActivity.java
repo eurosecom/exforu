@@ -120,11 +120,14 @@ public class EXforUActivity extends ActionBarActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         // Communities, Will add a counter here
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+        // Communities, Will add a counter here
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
         // Pages
         String favxs=favx + "";
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1), true, favxs));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1), true, favxs));
         // What's hot, We  will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
          
  
         // Recycle the typed array
@@ -308,12 +311,22 @@ public class EXforUActivity extends ActionBarActivity {
                         startActivity(i);
                 	}
 	            break;
+	            
 	        case 4:
+	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
+	        	Intent i = new Intent(this, LearningActivity.class);
+	        	Bundle extras = new Bundle();
+                extras.putString("pairx", "EURUSD");
+                i.putExtras(extras);                
+                startActivity(i);
+	        	
+	            break;
+	        case 5:
 	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
 	        	startActivity(new Intent(this, SetFavActivity.class));
 	        	
 	            break;
-	        case 5:
+	        case 6:
 	            //fragment = new HomeFragment();
 	        	//Toast.makeText(EXforUActivity.this, "5", Toast.LENGTH_SHORT).show();
 	        	
@@ -324,6 +337,12 @@ public class EXforUActivity extends ActionBarActivity {
 					startActivity(new Intent(this, EditPreferencesNew.class));
 				}
 
+	            break;
+	            
+	        case 7:
+	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
+	        	startActivity(new Intent(this, TestNecoActivity.class));
+	        	
 	            break;
 	 
 	        default:
@@ -353,7 +372,7 @@ public class EXforUActivity extends ActionBarActivity {
 	    public void onResume(){
 	        super.onResume();
 	        
-	        if( positionx == 4 ) { setDrawer(); }
+	        if( positionx == 5 ) { setDrawer(); }
 
 	    }
 	    //onresume
@@ -388,11 +407,13 @@ public class EXforUActivity extends ActionBarActivity {
 	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 	        // Communities, Will add a counter here
 	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+	        // Communities, Will add a counter here
+	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
 	        // Pages
 	        String favxs=favx + "";
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1), true, favxs));
+	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1), true, favxs));
 	        // What's hot, We  will add a counter here
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
 	        
 	        // Recycle the typed array
 	        navMenuIcons.recycle();
