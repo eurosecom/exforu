@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -130,13 +131,13 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
     
     //broadcastreceiver for send value from activity to fragment ui
   	String KeyWord;
-  	public static final String ACTION_INTENT = "com.eusecom.exforu.action.UI_UPDATE_PERIOD";
+  	public static final String ACTION_INTENT = "com.eusecom.exforu.action.UI_UPDATE_PERIOD_TRADES";
       protected BroadcastReceiver receiver = new BroadcastReceiver() {
 
 
           @Override
           public void onReceive(Context context, Intent intent) {
-        	  Log.d("change ui", "I am at onReceive.");
+        	  Log.d("change ui", "I am at onReceive TradesFragment.");
               if(ACTION_INTENT.equals(intent.getAction())) {
             	  
             	  	Bundle extras = intent.getExtras();
@@ -232,6 +233,8 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 
         if (isVisibleToUser) {
 
+        	doChangeUI();
+        	
         	try{
             // launch your AsyncTask here, if the task has not been executed yet
             if(GetTradesStreamAsyncTask.getStatus().equals(AsyncTask.Status.PENDING)) {
@@ -255,6 +258,25 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 		         updateViewact();
 		         
 		         actpricex=askp; actprices=askp; actpriceb=bidp;
+		         
+		         //insert actual price
+		         db5.delete("trades", "idruh = '2' ", null);
+		         ContentValues cv5=new ContentValues();		    		
+		    		cv5.put("itime", timeax);
+		    		cv5.put("iopen", askp);
+		    		cv5.put("ivolume", "0");
+		    		cv5.put("iorder", "0");
+		    		cv5.put("isymbol", pair);
+		    		cv5.put("idruh", "2");
+		    	 db5.insert("trades", "time", cv5);
+		    		
+		         
+		         myopenList=new ArrayList<String>(); myvolumeList=new ArrayList<String>(); 
+		    	 myorderList=new ArrayList<String>(); mysymbolList=new ArrayList<String>(); 
+		    	 mytimeList=new ArrayList<String>(); mydruhList=new ArrayList<String>();
+
+		    	 readSqlTrades();
+		         
 		         
 		         adapter = new TradesFragAdapter(getActivity(), mytimeList, myopenList
 		    	    		, myvolumeList, myorderList, mysymbolList, mydruhList, actpricex, actprices, actpriceb, periodxy);
@@ -311,8 +333,7 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
     }
 
     @Override
-    public void doChangeUI(final List<String> myopenListx, final List<String> myvolumeListx
-    		,final List<String> myorderListx, final List<String> mysymbolListx, final List<String> mytimeListx) {
+    public void doChangeUI() {
 
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
@@ -412,8 +433,50 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
     //update readSqlTrades
     public boolean readSqlTrades() {
 
-    	constantsCursor3=db5.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh "+
-				"FROM  trades WHERE _id > 0 ORDER BY itime DESC ",
+    	myopenList=new ArrayList<String>(); myvolumeList=new ArrayList<String>(); 
+	 	myorderList=new ArrayList<String>(); mysymbolList=new ArrayList<String>(); 
+	 	mytimeList=new ArrayList<String>(); mydruhList=new ArrayList<String>();
+	 	
+    	try {
+    		
+    	//sum TP and SL	
+    	String amount;
+    	db5.delete("trades", "idruh = '3' ", null);
+    	Cursor c = db5.rawQuery("select sum(ivolume) from trades where idruh = '0' GROUP BY idruh;", null);
+    	if(c.moveToFirst())
+    	    amount = c.getString(0);
+    	else
+    	    amount = "0";
+    	c.close();
+    	
+    	ContentValues cv51=new ContentValues();		    		
+   		cv51.put("itime", "0");
+   		cv51.put("iopen", "1.12");
+   		cv51.put("ivolume", amount);
+   		cv51.put("iorder", "0");
+   		cv51.put("isymbol", pair);
+   		cv51.put("idruh", "3");
+   		db5.insert("trades", "time", cv51);
+    	
+    	Cursor c2 = db5.rawQuery("select sum(ivolume) from trades where idruh = '1' GROUP BY idruh;", null);
+    	if(c2.moveToFirst())
+    	    amount = c2.getString(0);
+    	else
+    	    amount = "0";
+    	c2.close();
+    	
+        ContentValues cv52=new ContentValues();		    		
+   		cv52.put("itime", "0");
+   		cv52.put("iopen", "1.12");
+   		cv52.put("ivolume", amount);
+   		cv52.put("iorder", "0");
+   		cv52.put("isymbol", pair);
+   		cv52.put("idruh", "3");
+   		db5.insert("trades", "time", cv52);
+    	
+    	//read items	
+    	constantsCursor3=db5.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh " +
+				"FROM  trades WHERE _id >= 0 ORDER BY iopen DESC ",
 				null);
 		
         constantsCursor3.moveToFirst();
@@ -428,10 +491,15 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
 
         	constantsCursor3.moveToNext();
         }
-        
-        long unixTime = System.currentTimeMillis();
+
+        constantsCursor3.close();
+    	} catch (IllegalStateException ignored) {
+    	    // There's no way to avoid getting this if saveInstanceState has already been called.
+    	}
+    	
+    	long unixTime = System.currentTimeMillis();
         String unixtimes=unixTime + "";
-        if( myopenList.size() == 0 ) {
+        if( mydruhList.size() == 0 ) {
         	myopenList.add("1.0");
         	myvolumeList.add("0.0");
         	myorderList.add("0.0");
@@ -439,10 +507,6 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
         	mytimeList.add(unixtimes);
         	mydruhList.add("0");
         }
-        
-       
-        
-        constantsCursor3.close();
         
         return false;
     }
@@ -473,7 +537,17 @@ public class TradesFragment extends Fragment implements DoSomething, FragmentLif
    	@Override
    	public void onResumeFragment() {
    		Log.i("TradesFragment", "onResumeFragment()");
-   		Toast.makeText(getActivity(), "onResumeFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show(); 
+   		Toast.makeText(getActivity(), "onResumeFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show();
+   		
+   		db5=(new DatabaseTrades(getActivity())).getWritableDatabase();
+    	readSqlTrades();
+
+    	LinkedList<String> listget = new LinkedList<String>();
+		String symbolget = pair;
+		listget.add(symbolget);
+
+		GetTradesStreamAsyncTask = new GetTradesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);
+		GetTradesStreamAsyncTask.execute();
    	}
 
 }

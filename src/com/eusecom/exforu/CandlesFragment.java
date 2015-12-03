@@ -3,6 +3,7 @@ package com.eusecom.exforu;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,6 +101,9 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 	private List<String> myhighList = new ArrayList<String>();
 	private List<String> mylowList = new ArrayList<String>();
 	private List<String> mytimeList = new ArrayList<String>();
+	
+	private List<String> tropenList = new ArrayList<String>();
+	private List<String> trdruhList = new ArrayList<String>();
 
 	String oplos="";
 	String ophis="";
@@ -116,7 +120,13 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     long timea=0;
     
     TextView actprice;
-
+    TextView actbalance;
+	TextView actprofit;
+	
+	private SQLiteDatabase db8=null;
+	private Cursor constantsCursor8=null;
+	
+	
     // newInstance constructor for creating fragment with arguments
     public static CandlesFragment newInstance(int page, String pairx, String implessx) {
     	CandlesFragment fragmentCandles = new CandlesFragment();
@@ -130,13 +140,13 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     
     //broadcastreceiver for send value from activity to fragment ui
   	String KeyWord;
-  	public static final String ACTION_INTENT = "com.eusecom.exforu.action.UI_UPDATE_PERIOD";
+  	public static final String ACTION_INTENT = "com.eusecom.exforu.action.UI_UPDATE_PERIOD_CANDLES";
       protected BroadcastReceiver receiver = new BroadcastReceiver() {
 
 
           @Override
           public void onReceive(Context context, Intent intent) {
-        	  Log.d("change ui", "I am at onReceive.");
+        	  Log.d("change ui", "I am at onReceive CandlesFragment.");
               if(ACTION_INTENT.equals(intent.getAction())) {
             	  
             	  	Bundle extras = intent.getExtras();
@@ -180,6 +190,8 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         db4=(new DatabaseCandles(getActivity())).getWritableDatabase();
     	readSqlCandles();
     	
+    	db8=(new DatabaseTrades(getActivity())).getWritableDatabase();
+    	
     	//System.out.println("openlist: " + myopenList.toString());
 
         IntentFilter filter = new IntentFilter(ACTION_INTENT);
@@ -202,6 +214,8 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         View view = inflater.inflate(R.layout.fragment_candles, container, false);
 
         actprice = (TextView) view.findViewById(R.id.actprice);
+        actbalance = (TextView) view.findViewById(R.id.actbalance);
+        actprofit = (TextView) view.findViewById(R.id.actprofit);
 
         viewact = (MyViewAct) view.findViewById(R.id.viewact);
         
@@ -239,19 +253,6 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         
     }//oncreateview
     
-    
-    @Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		//LinkedList<String> listget = new LinkedList<String>();
-		//String symbolget = pair;
-		//listget.add(symbolget);
-
-		//GetCandlesStreamAsyncTask = new GetCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);
-        //GetCandlesStreamAsyncTask.execute();
-			
-	}//onactivitycreated
     
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -302,6 +303,15 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 		     @Override
 		     public void run() {
 
+		    	 String sbalances = balance + "";
+		    	 actbalance.setText(sbalances);
+		    	 
+		    	 double profitd = equity - balance;
+		    	 DecimalFormat df = new DecimalFormat("0.00");             	
+             	 String sprofits = df.format(profitd);
+             	 sprofits = sprofits.replace(',','.');
+
+		    	 actprofit.setText(sprofits);
 
 		    }
 		});
@@ -413,6 +423,8 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 		
 		constantsCursor3.close();
 		db4.close();
+		constantsCursor8.close();
+		db8.close();
 
 		if (isOnline()) 
         {
@@ -436,6 +448,47 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         return false;
     }
     //end test if internet
+    
+    //update viewact
+    @SuppressLint("SimpleDateFormat")
+	public boolean readtrades() {
+    	
+    	
+    	tropenList=new ArrayList<String>(); trdruhList=new ArrayList<String>();
+
+    	try {
+    		
+    		//read items except act price idruh=2
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh " +
+    				"FROM  trades WHERE idruh != '2' ORDER BY iopen DESC ",
+    				null);
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("iopen")));
+            	trdruhList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("idruh")));
+
+            	constantsCursor8.moveToNext();
+            }
+
+            
+
+    		} catch (IllegalStateException ignored) {
+    	    // There's no way to avoid getting this if saveInstanceState has already been called.
+    		}
+    	
+    		//constantsCursor8.close();
+    		//db8.close();
+    	
+    		if( trdruhList.size() == 0 ) {
+    			tropenList.add("1.0");
+    			trdruhList.add("0");
+    		}
+    	
+        return false;
+    }
+    //read trades
     
     //update viewact
     @SuppressLint("SimpleDateFormat")
@@ -466,8 +519,9 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         if(ophis.equals("")){ ophis="140000"; }
         //System.out.println("oplos " + oplos);
         
+        readtrades();
 
-        viewact.setCandle(1, openda, closeda, highda, lowda, vva, oplos, ophis);
+        viewact.setCandle(1, openda, closeda, highda, lowda, vva, oplos, ophis, tropenList, trdruhList);
         //System.out.println("openda " + openda);
         viewact.invalidate();
         
@@ -478,6 +532,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     //update readSqlCandles
     public boolean readSqlCandles() {
 
+    	try {
     	constantsCursor3=db4.rawQuery("SELECT _ID, time, open, close, high, low "+
 				"FROM  candles WHERE _id > 0 ORDER BY time DESC ",
 				null);
@@ -494,16 +549,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         	constantsCursor3.moveToNext();
         }
         
-        long unixTime = System.currentTimeMillis();
-        String unixtimes=unixTime + "";
-        if( myopenList.size() == 0 ) {
-        	myopenList.add("1.0");
-        	mycloseList.add("0.0");
-        	myhighList.add("0.0");
-        	mylowList.add("0.0");
-        	mytimeList.add(unixtimes);
-        }
-        
+
         constantsCursor3=db4.rawQuery("SELECT (open+low) AS oplo "+
  				"FROM  candles WHERE _id > 0 ORDER BY oplo ",
  				null);
@@ -523,6 +569,19 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         //System.out.println("ophis " + ophis);
         
         constantsCursor3.close();
+    	} catch (IllegalStateException ignored) {
+    	    // There's no way to avoid getting this if saveInstanceState has already been called.
+    	}
+    	
+    	long unixTime = System.currentTimeMillis();
+        String unixtimes=unixTime + "";
+        if( myopenList.size() == 0 ) {
+        	myopenList.add("1.0");
+        	mycloseList.add("0.0");
+        	myhighList.add("0.0");
+        	mylowList.add("0.0");
+        	mytimeList.add(unixtimes);
+        }
         
         return false;
     }
@@ -542,7 +601,10 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 		    	 Log.i("CandlesFragment", "onPauseFragment()");
 		    	 Toast.makeText(getActivity(), "onPauseFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
 		    	 constantsCursor3.close();
-		 		db4.close();
+		 		 db4.close();
+		 		 constantsCursor8.close();
+		 		 db8.close();
+		 		 
 
 		 		if (isOnline()) 
 		         {
@@ -555,7 +617,19 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 	@Override
 	public void onResumeFragment() {
 		Log.i("CandlesFragment", "onResumeFragment()");
-		Toast.makeText(getActivity(), "onResumeFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show(); 
+		Toast.makeText(getActivity(), "onResumeFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
+
+			db4=(new DatabaseCandles(getActivity())).getWritableDatabase();
+			readSqlCandles();
+			db8=(new DatabaseTrades(getActivity())).getWritableDatabase();
+    	
+			LinkedList<String> listget = new LinkedList<String>();
+			String symbolget = pair;
+			listget.add(symbolget);
+
+			GetCandlesStreamAsyncTask = new GetCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);	        
+            GetCandlesStreamAsyncTask.execute();
+
 	}
 	
     

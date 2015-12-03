@@ -32,7 +32,7 @@ import pro.xstore.api.streaming.StreamingListener;
 import pro.xstore.api.sync.ServerData.ServerEnum;
 
 @SuppressLint("SimpleDateFormat")
-public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
+public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	String vystuptxt;
 	String vystuptxt2;
@@ -51,7 +51,8 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 	
  interface DoSomething {
   //void doInBackground(int progress);
-  void doChangeUI();
+  void doChangeUI(List<String> myopenList, List<String> mycloseList, List<String> mychighList
+		  , List<String> mylowList, List<String> mytimeList);
   void doChangeUI2(List<String> myopenList, List<String> mycloseList, List<String> mychighList
 		  , List<String> mylowList, List<String> mytimeList);
   void doChangeUI3(double balance, double equity);
@@ -68,7 +69,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  private SQLiteDatabase db6=null;
  private Activity mActivity;
  
- GetTradesStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
+ GetBuySellStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
 		 , String symbol, int repeat){
   myDoSomethingCallBack = callback;
@@ -113,7 +114,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
         );
         
         
-        System.out.println("AsyncTrades " + loginResponse);
+        System.out.println("AsyncBuySell " + loginResponse);
         
         
 		if (loginResponse != null && loginResponse.getStatus())
@@ -125,10 +126,6 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				@Override
 				public void receiveTradeRecord(STradeRecord tradeRecord) {
 					//System.out.println("Stream trade record: " + tradeRecord);
-					
-					getTradesAgain();
-					myDoSomethingCallBack.doChangeUI();
-					
 				}
 
 				@Override
@@ -148,7 +145,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				@Override
 				public void receiveTickRecord(STickRecord tickRecord) {
 
-					System.out.println("Stream tick record: " + tickRecord);
+					//System.out.println("Stream tick record: " + tickRecord);
 					double bidp=tickRecord.getBid();
 					double askp=tickRecord.getAsk();
 					double sprd=tickRecord.getSpreadTable();
@@ -158,21 +155,52 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				
 				@Override
 				public void receiveCandleRecord(SCandleRecord candleRecord) {
-					//System.out.println("Stream Candle record: " + candleRecord);
+					System.out.println("Stream Candle record: " + candleRecord);
 				}
 				
 				
 			};
         
                       
-			getTradesAgain();
+            String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
+            TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
+            //System.out.println("tradesresponse " + tradesresponse.toString());
+            db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
+            db6.delete("trades", "_ID > 0", null);
+            
+            for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
+
+            	
+            	//System.out.println(" opentime =" + tradesx.getOpen_time() + " order =" + tradesx.getOrder() 
+            	//		 + " openprice =" + tradesx.getOpen_price() + " volume =" + tradesx.getVolume());
+
+            	opent=tradesx.getOpen_price() + ""; 
+            	volumet=tradesx.getVolume() + ""; 
+            	ordert=tradesx.getOrder() + ""; 
+            	symbolt=tradesx.getSymbol() + ""; 
+            	timet=tradesx.getOpen_time() + "";
+            	cmdt=tradesx.getCmd() + "";
+            	
+                ContentValues cv6=new ContentValues();
+        		
+        		cv6.put("itime", timet);
+        		cv6.put("iopen", opent);
+        		cv6.put("ivolume", volumet);
+        		cv6.put("iorder", ordert);
+        		cv6.put("isymbol", symbolt);
+        		cv6.put("idruh", cmdt);
+        		
+
+        		db6.insert("trades", "time", cv6);
+ 
+               }            
+               db6.close();
             
 			connector.connectStream(sl);
-			System.out.println("AsyncTrades " + "Stream connected.");
+			System.out.println("AsyncBuySell " + "Stream connected.");
 			
 			//get stream of price one symbol
-			connector.subscribePrice(symbolget);
-			connector.subscribeTrades();
+			connector.subscribePrice(symbolget);			
 			//get stream of price more symbols
 			//connector.subscribePrices(listget);
 			connector.subscribeBalance();
@@ -183,14 +211,13 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 			Thread.sleep(repeati);
 
 			connector.unsubscribePrice(symbolget);
-			connector.unsubscribeTrades();
 			connector.unsubscribeBalance();
 			//connector.unsubscribeProfits();
 			//connector.unsubscribeCandle(symbolget);
 		
 			
 			connector.disconnectStream();
-			System.out.println("AsyncTrades " + "Stream disconnected.");
+			System.out.println("AsyncBuySell " + "Stream disconnected.");
 			
 		}
 
@@ -235,10 +262,10 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  @Override
  protected void onPostExecute(Void result) {
   super.onPostExecute(result);
- 
+  myDoSomethingCallBack.doChangeUIpost("1");
  }
  
- 	protected void exit(){
+ protected void exit(){
 
 	 try {
 		Thread.sleep(10);
@@ -252,69 +279,6 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 	 	} catch (Exception ex) {
 			System.err.println(ex);
 		}
- 	}//exit
- 
- 
- 	protected void getTradesAgain(){
-
- 		try {
- 			
- 		System.out.println("getTradesAgain " + "to sqllite");
-
- 		String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
-        TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
-        //System.out.println("tradesresponse " + tradesresponse.toString());
-        db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
-        db6.delete("trades", "_ID > 0", null);
-        
-        for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
-
-        	
-        	//System.out.println(" opentime =" + tradesx.getOpen_time() + " order =" + tradesx.getOrder() 
-        	//		 + " openprice =" + tradesx.getOpen_price() + " volume =" + tradesx.getVolume());
-
-        	opent=tradesx.getOpen_price() + ""; 
-        	volumet=tradesx.getVolume() + ""; 
-        	ordert=tradesx.getOrder() + ""; 
-        	symbolt=tradesx.getSymbol() + ""; 
-        	timet=tradesx.getOpen_time() + "";
-        	cmdt=tradesx.getCmd() + "";
-        	
-            ContentValues cv6=new ContentValues();
-    		
-    		cv6.put("itime", timet);
-    		cv6.put("iopen", opent);
-    		cv6.put("ivolume", volumet);
-    		cv6.put("iorder", ordert);
-    		cv6.put("isymbol", symbolt);
-    		cv6.put("idruh", cmdt);
-    		
-
-    		db6.insert("trades", "time", cv6);
-
-           }            
-           db6.close();
-           
- 		}
-           // Catch errors
- 	     catch (APICommandConstructionException e) {
- 	    	 errors = errors + " API Command Construction Exception! \n";
- 	    	 myDoSomethingCallBack.doChangeUIerr(errors);
- 	         e.printStackTrace();
- 	     } catch (APICommunicationException e) {
- 	    	 errors = errors + " API Communication Exception! \n";
- 	    	 myDoSomethingCallBack.doChangeUIerr(errors);
- 	         e.printStackTrace();
- 	     } catch (APIReplyParseException e) {
- 	    	 errors = errors + " API Reply ParseException! \n";
- 	    	 myDoSomethingCallBack.doChangeUIerr(errors);
- 	         e.printStackTrace();
- 	     } catch (APIErrorResponse e) {
- 	    	 errors = errors + " API Error Response! \n";
- 	    	 myDoSomethingCallBack.doChangeUIerr(errors);
- 	         e.printStackTrace();
- 	     } 
-
- 	}//gettradesagain
+ }//exit
 
 }//asynctask

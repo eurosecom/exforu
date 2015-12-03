@@ -2,6 +2,8 @@ package com.eusecom.exforu;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,31 +95,68 @@ public class CandlesFragAdapter extends RecyclerView.Adapter<CandlesFragAdapter.
         
         holder.setClickListener(new CandlesFragAdapter.ViewHolder.ClickListener() {
             public void onClick(View v, int pos, boolean isLongClick) {
+            	
+            	//String possx = pos + "";
+            	long dv = Long.valueOf(mTime.get(pos));
+            	Date df = new java.util.Date(dv);
+            	String vvx = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(df);
+
+            	double opendx = Double.parseDouble(mopenPrice.get(pos))/100000;                	
+            	opendx = round(opendx,5);
+            	
+                double closedx = Double.parseDouble(mopenPrice.get(pos))/100000 + Double.parseDouble(mclosePrice.get(pos))/100000;
+                closedx = round(closedx,5);
+                double pips = (closedx - opendx)*10000;
+                pips = round(pips,0);
+                
+                String opends=opendx + ""; String closeds=closedx + "";
+                
+                double highdx = Double.parseDouble(mhighPrice.get(pos))/100000;
+                double lowdx = Double.parseDouble(mlowPrice.get(pos))/100000;
+                int plusx=1;
+                if( closedx < opendx )
+                {
+                plusx=0;
+                }
+                if(plusx == 1){
+                	highdx=closedx+highdx;
+                	lowdx=opendx+lowdx;
+                }else{
+                	highdx=opendx+highdx;
+                	lowdx=closedx+lowdx;
+                }
+                
+                highdx = round(highdx,5); lowdx = round(lowdx,5);
+                
+                String highds=highdx + ""; String lowds=lowdx + "";
+            	
                 if (isLongClick) {
          
                     // View v at position pos is long-clicked.
                 	//String poslx = pos + "";
-                	Toast.makeText(mContext, "longclick ", Toast.LENGTH_SHORT).show();
+                	
+                	String mesx=vvx + "\n" + "open = " + opends +" close = " + closeds + 
+                			"\n" + "high = " + highds +" low = " + lowds +
+                			"\n" + pips + " pips open/close";
+                	
+                	//Toast.makeText(mContext, "longclick ", Toast.LENGTH_SHORT).show();
+                	new AlertDialog.Builder(mContext)
+                    .setMessage(mesx)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) { 
+                          
+                        }
+                     })
+
+                     .show();
                 	
                 } else {
                     // View v at position pos is clicked.
-                	//String possx = pos + "";
-                	long dv = Long.valueOf(mTime.get(pos));
-                	Date df = new java.util.Date(dv);
-                	String vvx = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(df);
-
-                	double opendx = Double.parseDouble(mopenPrice.get(pos))/100000;                	
-                	opendx = round(opendx,5);
                 	
-                    double closedx = Double.parseDouble(mopenPrice.get(pos))/100000 + Double.parseDouble(mclosePrice.get(pos))/100000;
-                    closedx = round(closedx,5);
-                    double pips = (closedx - opendx)*10000;
-                    pips = round(pips,0);
-                    
-                    String opends=opendx + ""; String closeds=closedx + "";
                 	
-                	Toast.makeText(mContext, vvx + "\n" + "open = " + opends +
-                			" close = " + closeds + "\n" + pips + " pips", Toast.LENGTH_LONG).show();
+                	Toast.makeText(mContext, vvx + "\n" + "open = " + opends +" close = " + closeds + 
+                			"\n" + "high = " + highds +" low = " + lowds +
+                			"\n" + pips + " pips open/close", Toast.LENGTH_LONG).show();
                 	//toggleSelection(pos);
                 }
             }

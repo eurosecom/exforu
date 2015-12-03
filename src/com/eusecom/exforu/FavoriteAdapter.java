@@ -4,7 +4,11 @@ package com.eusecom.exforu;
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,7 @@ import java.util.List;
 /**
  * Created by Wasabeef on 2015/01/03.
  */
+@SuppressWarnings("deprecation")
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
     private Context mContext;
@@ -27,6 +32,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
     public FavoriteAdapter(Context context, List<String> dataSet, List<String> askPrice, 
     		List<String> bidPrice, List<String> Profit) {
+    	
         mContext = context;
         mDataSet = dataSet;
         mAskPrice = askPrice;
@@ -35,10 +41,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {   	
+        
         View v = LayoutInflater.from(mContext)
                 .inflate(R.layout.layout_list_favorite, parent, false);
         return new ViewHolder(v);
+        
     }
 
     @Override
@@ -55,18 +63,49 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
          
                     // View v at position pos is long-clicked.
                 	String poslx = pos + "";
-                	Toast.makeText(mContext, "longclick " + poslx, Toast.LENGTH_SHORT).show();
+                	String menax = mDataSet.get(pos);
+                	Toast.makeText(mContext, "longclick pos. " + poslx + " pair " + menax, Toast.LENGTH_SHORT).show();
                 	
                 } else {
                     // View v at position pos is clicked.
-                	String possx = pos + "";
-                	Toast.makeText(mContext, "shortclick " + possx, Toast.LENGTH_SHORT).show();
+                	//String possx = pos + "";
+                	String poslx = pos + "";
+                	String mena2 = mDataSet.get(pos);
+                	Toast.makeText(mContext, "shortclick pos. " + poslx + " pair " + mena2, Toast.LENGTH_SHORT).show();
                 	//toggleSelection(pos);
+                	
+                	Intent i = new Intent(mContext, LearningActivity.class);
+                	Bundle extras = new Bundle();
+                    extras.putString("pairx", mena2);
+                    extras.putInt("whatspage", 0);
+                    i.putExtras(extras);
+                    v.getContext().startActivity(i);
+                    //use localbroadcast or interface for finish activity and asynctask
+                    //mActivity.finish(); don't work if i send activity to adapter
+                    
+                    sendValueToFavAct("A", 1);
+
+                    
                 }
             }
         });
         
     }
+    
+    //sending values from fragment to activity
+  	protected void sendValueToFavAct(String value, int xxsp) {
+          // it has to be the same name as in the fragment
+          Intent intent = new Intent("com.eusecom.exforu.action.UI_FINISH_FAVACT");
+          Bundle dataBundle = new Bundle();
+          dataBundle.putInt("UI_XXSP", xxsp);
+          dataBundle.putString("UI_VALUE", value);
+          intent.putExtras(dataBundle);
+          
+          Log.d("FavoriteAdapter", "I am at sendValueToFavAct.");
+          LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+          
+        
+      }
 
     @Override
     public int getItemCount() {
@@ -127,7 +166,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             this.clickListener = clickListener;
         }
 
-        @SuppressWarnings("deprecation")
     	@Override
         public void onClick(View v) {
 
@@ -135,7 +173,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             clickListener.onClick(v, getPosition(), false);
         }
 
-        @SuppressWarnings("deprecation")
     	@Override
         public boolean onLongClick(View v) {
 

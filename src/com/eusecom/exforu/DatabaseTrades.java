@@ -32,11 +32,14 @@ public class DatabaseTrades extends SQLiteOpenHelper {
 	public static final String IDRUH="idruh";
 	public static final String DATM="datm";
 	public static final String DATZ="datz";
+	public static final String IMEMO="imemo";
+	public static final String ITP="itp";
+	public static final String ISL="isl";
 	
 	
 	public DatabaseTrades(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME3, null, 16);
+		super(context, DATABASE_NAME3, null, 18);
 	}
 	
 	@Override
@@ -44,7 +47,8 @@ public class DatabaseTrades extends SQLiteOpenHelper {
 		
 		db3.execSQL("CREATE TABLE trades (_id INTEGER PRIMARY KEY AUTOINCREMENT, itime TEXT, " +
 				"iopen TEXT, ivolume TEXT, iorder TEXT, isymbol TEXT, iperiod TEXT,  " +
-				"idruh TEXT, datm TIMESTAMP(14) DEFAULT CURRENT_TIMESTAMP, datz TIMESTAMP(14));");
+				"idruh TEXT, datm TIMESTAMP(14) DEFAULT CURRENT_TIMESTAMP, datz TIMESTAMP(14), "+ 
+				"imemo TEXT, itp TEXT, isl TEXT ) ");
 		
 		ContentValues cv3=new ContentValues();
 		
@@ -55,6 +59,9 @@ public class DatabaseTrades extends SQLiteOpenHelper {
 		cv3.put(ISYMBOL, "0");
 		cv3.put(IPERIOD, "30");
 		cv3.put(IDRUH, "1");
+		cv3.put(IMEMO, "memo");
+		cv3.put(ITP, "0");
+		cv3.put(ISL, "0");
 		db3.insert("trades", ITIME, cv3);
 		
 	

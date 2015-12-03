@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -56,6 +57,7 @@ public class LearningActivity extends FragmentActivity {
 	static String nazless;
 	static String importantless="";
 	static String pairx;
+	int whatspage;
     
     TextView title;
     Spinner spinner;
@@ -64,17 +66,24 @@ public class LearningActivity extends FragmentActivity {
     
     int currentPosition = 0;
 	int changeorient = 0;
+	private SQLiteDatabase db7=null;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.learninglay);
         
+        db7=(new DatabaseTemp(this)).getWritableDatabase();        
+        String UpdateSql7 = "UPDATE temppar SET favact='0' WHERE _id > 0 ";
+   	 	db7.execSQL(UpdateSql7);
+   	 	db7.close();
+        
         if (isOnline()) 
         {
         Intent i = getIntent();        
         Bundle extras = i.getExtras();       
         pairx = extras.getString("pairx");
+        whatspage = extras.getInt("whatspage");
         
         title = (TextView) findViewById(R.id.title);
         title.setText(pairx);
@@ -137,15 +146,20 @@ public class LearningActivity extends FragmentActivity {
                 			}
             	
             	if( changeorient == 0 ) {
+            		
+            		//if( whatspage == 0 ) {
             	FragmentLifecycle fragmentToHide = (FragmentLifecycle)adapterViewPager.getItem(currentPosition);
     			fragmentToHide.onPauseFragment();
-
+            		//}
+            		//if( whatspage == 2 ){ }else {
     			FragmentLifecycle fragmentToShow = (FragmentLifecycle)adapterViewPager.getItem(position);
     			fragmentToShow.onResumeFragment();
+            		//}
     			
-    			currentPosition = position;
+    			currentPosition = position;           		
             	}
     			changeorient=0;
+    			whatspage=0;
             	
             }
 
@@ -179,6 +193,9 @@ public class LearningActivity extends FragmentActivity {
         IntentFilter filter = new IntentFilter(ACTION_INTENT);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         
+        //may be better swipe to page 2
+        //if( whatspage == 2 ) { vpPager.setCurrentItem(2); }
+        
         }
         else{
         	 
@@ -197,6 +214,7 @@ public class LearningActivity extends FragmentActivity {
             
 
          }
+        
         
     }
     //end of oncreate
@@ -256,7 +274,8 @@ public class LearningActivity extends FragmentActivity {
                 System.out.println("strana " + strana);
 
                 	//problems with restarting GetLearningStreamAsyncTask.java
-                	sendValueToFragments(selectedItem, 1);
+                	//sendValueToFragments(selectedItem, 1);
+                	callAgain(0);
    
             }
 
@@ -270,10 +289,23 @@ public class LearningActivity extends FragmentActivity {
 	}
 	//onresume
 	
+		//call again learnactivity
+		protected void callAgain(int whatspagex) {
+	        
+	        Intent i = new Intent(this, LearningActivity.class);
+	    	Bundle extras = new Bundle();
+	        extras.putString("pairx", pairx);
+	        extras.putInt("whatspage", whatspagex);
+	        i.putExtras(extras);                
+	        startActivity(i);
+	        finish();
+	        
+	    }
+	
 	//sending values from activity to fragments
 	protected void sendValueToFragments(String value, int xxsp) {
         // it has to be the same name as in the fragment
-        Intent intent = new Intent("com.eusecom.exforu.action.UI_UPDATE_PERIOD");
+        Intent intent = new Intent("com.eusecom.exforu.action.SAVE_TRADE");
         Bundle dataBundle = new Bundle();
         dataBundle.putInt("UI_XXSP", xxsp);
         dataBundle.putString("UI_VALUE", value);
@@ -281,13 +313,6 @@ public class LearningActivity extends FragmentActivity {
         
         Log.d("change ui", "I am at sendValueToFragments.");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        
-        Intent i = new Intent(this, LearningActivity.class);
-    	Bundle extras = new Bundle();
-        extras.putString("pairx", "EURUSD");
-        i.putExtras(extras);                
-        startActivity(i);
-        finish();
         
     }
 
@@ -302,7 +327,7 @@ public class LearningActivity extends FragmentActivity {
             
             this.fragments = new ArrayList<Fragment>();
     		fragments.add(CandlesFragment.newInstance(0, pairx, importantless));
-    		fragments.add(ImportantFragment.newInstance(1, str4, numless, nazless, importantless));
+    		fragments.add(BuySellFragment.newInstance(2, pairx, importantless));
     		fragments.add(TradesFragment.newInstance(2, pairx, importantless));
     		fragments.add(ImportantFragment.newInstance(1, str4, numless, nazless, importantless));
         }
@@ -347,7 +372,7 @@ public class LearningActivity extends FragmentActivity {
       		     	return fragment0;
                case 1:
                	Log.i("instantiateItem 1", "instantiateItem");
-               	ImportantFragment fragment1 = (ImportantFragment) super.instantiateItem(container, position);
+               	BuySellFragment fragment1 = (BuySellFragment) super.instantiateItem(container, position);
       		     	fragments.set(1, fragment1);
       		     	return fragment1;
                case 2:
@@ -453,7 +478,7 @@ public class LearningActivity extends FragmentActivity {
     	btnAgain.setVisibility(View.GONE);
     	Intent i = new Intent(this, LearningActivity.class);
     	Bundle extras = new Bundle();
-        extras.putString("pairx", "EURUSD");
+        extras.putString("pairx", pairx);
         i.putExtras(extras);                
         startActivity(i);
         finish();
@@ -485,6 +510,55 @@ public class LearningActivity extends FragmentActivity {
 	    }
 	    //end test if internet
 	    
+	    public void SellOk(View v) {
+	    	
+	    	Button btnSellok = (Button) v.findViewById(R.id.btnSellok);
+	    	btnSellok.setVisibility(View.GONE);
+	    	
+	    	Intent iu = new Intent(getApplicationContext(), MakeTradeActivity.class);
+            Bundle extrasu = new Bundle();
+            extrasu.putString("xtrade", "1");
+            iu.putExtras(extrasu);
+            startActivityForResult(iu, 100);
+	    	
+	    }
+	    
+	    public void BuyOk(View v) {
+	    	
+	    	Button btnBuyok = (Button) v.findViewById(R.id.btnBuyok);
+	    	btnBuyok.setVisibility(View.GONE);
+	    	
+	    	Intent iu = new Intent(getApplicationContext(), MakeTradeActivity.class);
+            Bundle extrasu = new Bundle();
+            extrasu.putString("xtrade", "2");
+            iu.putExtras(extrasu);
+            startActivityForResult(iu, 100);
+	    	
+	    }
+	    
+	    // Response 
+	    @Override
+	    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	        super.onActivityResult(requestCode, resultCode, data);
+
+	        if (resultCode == 101) {
+	        	Toast.makeText(LearningActivity.this, "Trade Sell has made", Toast.LENGTH_LONG).show();
+	        	//may be will be better start learningactivity again and set page 2
+	        	//vpPager.setCurrentItem(2);
+	        	sendValueToFragments("1", 1);
+	        	callAgain(2);
+
+	        }
+	        if (resultCode == 102) {
+	        	Toast.makeText(LearningActivity.this, "Trade Buy has made", Toast.LENGTH_LONG).show();
+	        	//vpPager.setCurrentItem(2);
+	        	sendValueToFragments("2", 2);
+	        	callAgain(2);
+
+	        }
+
+	 
+	    }
 	    
 
 

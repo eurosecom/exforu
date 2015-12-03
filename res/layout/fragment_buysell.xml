@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    
+    <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    
+    <RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="30dp"
+    android:orientation="horizontal">
+    
+        <TextView
+        android:id="@+id/balancetxt"
+        android:text="@string/balancetxt"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+		android:layout_gravity="left"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="1dip"
+        android:gravity="left"
+        android:textSize="15sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+
+        <TextView
+        android:id="@+id/actbalance"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/balancetxt"
+		android:layout_gravity="left"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="1dip"
+        android:gravity="left"
+        android:textSize="15sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+        
+    	<TextView
+    	android:id="@+id/profittxt"
+    	android:text="@string/profittxt"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/actprofit"
+		android:layout_gravity="right"
+        android:paddingTop="6dip"
+        android:paddingLeft="1dip"
+        android:paddingRight="6dip"
+        android:gravity="right"
+        android:textSize="15sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+    	
+    	<TextView
+    	android:id="@+id/actprofit"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+		android:layout_gravity="right"
+        android:paddingTop="6dip"
+        android:paddingLeft="1dip"
+        android:paddingRight="6dip"
+        android:gravity="right"
+        android:textSize="15sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+        
+    </RelativeLayout>
+    
+    <LinearLayout
+    style="?android:attr/buttonBarStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+    	
+        	<LinearLayout
+    		android:background="@drawable/border_listtrades_redlight"
+    		android:layout_width="0dp"
+    		android:layout_height="100dp"
+    		android:layout_weight="1"
+    		android:orientation="vertical">
+    	
+        	<Button android:id="@+id/btnSell"
+        	android:layout_width="fill_parent"
+        	android:text="@string/btnsell"
+        	android:textSize="22sp"
+        	android:textColor="@drawable/black"        	
+    		android:layout_height="60dp"
+        	android:layout_marginTop="0dip"/>
+        	
+        	<TextView
+        	android:id="@+id/actprics"
+			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+			android:layout_gravity="left"
+        	android:paddingTop="1dip"
+        	android:paddingLeft="6dip"
+        	android:paddingRight="1dip"
+        	android:gravity="left"
+        	android:textSize="22sp"
+        	android:textColor="@drawable/black"
+        	android:textStyle="bold" />
+        	
+        	</LinearLayout>
+        	
+        	<LinearLayout
+    		android:layout_width="0dp"
+    		android:layout_height="100dp"
+    		android:layout_weight="1"
+    		android:background="@drawable/border_listtrades_bluelight"
+    		android:orientation="vertical">
+    	
+        	<Button android:id="@+id/btnBuy"
+        	android:layout_width="fill_parent"
+        	android:text="@string/btnbuy"
+        	android:textSize="22sp"
+        	android:textColor="@drawable/black"        	
+    		android:layout_height="60dp"
+        	android:layout_marginTop="0dip"/>
+        	
+        	<TextView
+        	android:id="@+id/actpricb"
+			android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+			android:layout_gravity="right"
+        	android:paddingTop="1dip"
+        	android:paddingLeft="6dip"
+        	android:paddingRight="1dip"
+        	android:gravity="right"
+        	android:textSize="22sp"
+        	android:textColor="@drawable/black"
+        	android:textStyle="bold" />
+        	
+        	</LinearLayout>
+
+    </LinearLayout>
+    
+    	
+        	<Button android:id="@+id/btnSellok"
+        	android:visibility="gone"
+        	android:onClick="SellOk"
+        	android:layout_width="fill_parent"
+        	android:text="@string/btnconfirmsell"
+        	android:textSize="22sp"
+        	android:textColor="@drawable/black"        	
+    		android:layout_height="60dp"
+        	android:layout_marginTop="0dip"/>
+
+        	<Button android:id="@+id/btnBuyok"
+        	android:visibility="gone"
+        	android:onClick="BuyOk"
+        	android:layout_width="fill_parent"
+        	android:text="@string/btnconfirmbuy"
+        	android:textSize="22sp"
+        	android:textColor="@drawable/black"        	
+    		android:layout_height="60dp"
+        	android:layout_marginTop="0dip"/>
+        	
+
+    
+    <RelativeLayout android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">    
+        
+ 
+        <TextView
+        android:id="@+id/volumetxt"
+        android:text="@string/volumetxt"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+		android:layout_gravity="left"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="1dip"
+        android:gravity="left"
+        android:textSize="22sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+
+    	<EditText
+    	android:id="@+id/inputMnoz"
+    	android:inputType="numberDecimal"
+    	android:singleLine="true"
+    	android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/volumetxt"
+		android:layout_gravity="right"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="6dip"
+        android:gravity="right"
+        android:textSize="22sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+    	
+    	
+    	<Button android:id="@+id/btnMinus"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="6dip"
+        android:paddingBottom="6dip"
+        android:textSize="22sp"
+        android:textColor="@drawable/black" 
+        android:layout_toRightOf="@+id/inputMnoz"
+        android:text="@string/minus"/>
+
+    	<Button android:id="@+id/btnPlus"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="1dip"
+        android:paddingBottom="6dip"
+        android:textSize="22sp"
+        android:textColor="@drawable/black" 
+        android:layout_toRightOf="@+id/btnMinus"
+        android:text="@string/plus"/>
+    	
+    
+     </RelativeLayout>
+     
+     <RelativeLayout android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">    
+        
+ 
+        <TextView
+        android:id="@+id/commenttxt"
+        android:text="@string/commenttxt"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+		android:layout_gravity="left"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="1dip"
+        android:gravity="left"
+        android:textSize="22sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+
+    	<EditText
+    	android:id="@+id/inputComment"
+    	android:inputType="text"
+    	android:singleLine="true"
+    	android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/commenttxt"
+		android:layout_gravity="right"
+        android:paddingTop="6dip"
+        android:paddingLeft="6dip"
+        android:paddingRight="6dip"
+        android:gravity="right"
+        android:textSize="22sp"
+        android:textColor="@drawable/black"
+        android:textStyle="bold" />
+    	
+
+     </RelativeLayout>
+    
+    
+    </LinearLayout>	
+</ScrollView>

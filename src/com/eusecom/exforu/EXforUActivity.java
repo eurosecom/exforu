@@ -55,6 +55,7 @@ public class EXforUActivity extends ActionBarActivity {
 	private Cursor constantsCursor2=null;
 	int favx=0;
 	int positionx=0;
+	private SQLiteDatabase db7=null;
 
 
 	@Override
@@ -65,6 +66,11 @@ public class EXforUActivity extends ActionBarActivity {
 
 		Toolbar mToolbar = (Toolbar) findViewById(R.id.tool_bar);
 		setSupportActionBar(mToolbar);
+		
+		db7=(new DatabaseTemp(this)).getWritableDatabase();        
+        String UpdateSql7 = "UPDATE temppar SET favact='0' WHERE _id > 0 ";
+   	 	db7.execSQL(UpdateSql7);
+   	 	db7.close();
 
 		
 		db2=(new DatabaseFavpairs(this)).getWritableDatabase();       
@@ -317,6 +323,7 @@ public class EXforUActivity extends ActionBarActivity {
 	        	Intent i = new Intent(this, LearningActivity.class);
 	        	Bundle extras = new Bundle();
                 extras.putString("pairx", "EURUSD");
+                extras.putInt("whatspage", 0);
                 i.putExtras(extras);                
                 startActivity(i);
 	        	

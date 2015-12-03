@@ -2,7 +2,8 @@ package com.eusecom.exforu;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
+import java.util.ArrayList;
+import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -26,6 +27,8 @@ public class MyViewAct extends View {
 	private String timex = "";
 	private double maxx = 1.15000;
 	private double minx = 1.09000;
+	private List<String> tropenList = new ArrayList<String>();
+	private List<String> trdruhList = new ArrayList<String>();
 
 	
 	
@@ -56,6 +59,47 @@ public class MyViewAct extends View {
         p.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         cv.drawText(timex, 5, 40, p);
         
+        //draw trades
+        int tropenx=0;
+        double tropend=0;
+        double tropend2=0;
+
+        for (int i=0;i < tropenList.size();i++)
+        {
+          //Log.i("Value of element "+i,tropenList.get(i));
+          
+        	int iidruh = Integer.parseInt(trdruhList.get(i));
+            
+            switch(iidruh) {
+            case 0:
+            	p.setColor(Color.BLUE);
+            	break;
+            case 1:
+            	p.setColor(Color.RED);
+            	break;
+            case 3:
+            	p.setColor(Color.LTGRAY);
+            	break;
+            case 4:
+            	p.setColor(Color.LTGRAY);
+            	break;
+    		}
+            	
+            	
+            	
+          p.setStrokeWidth(10);
+
+          tropend = Double.parseDouble(tropenList.get(i));
+          tropend2=((tropend-minx)/(maxx-minx))*cv.getWidth();
+          tropenx = (int) (tropend2);
+          cv.drawLine(tropenx, 0, tropenx, cv.getHeight(), p);
+          
+          //Log.i("tropenx "+i," " + tropenList.get(i) + " " + tropenx);
+          
+        }
+        
+
+        //draw act candle 
         if( whatp == 0 ){
         	//p.setColor(Color.GREEN);
             //p.setStrokeWidth(5);
@@ -139,7 +183,8 @@ public class MyViewAct extends View {
 		}
 	
 	public void setCandle(int whatpx, double openxy, double closexy, double highxy
-			, double lowxy, String timexy, String oplos, String ophis){
+			, double lowxy, String timexy, String oplos, String ophis
+			,List<String> tropenListx, List<String> trdruhListx){
 		   
 	   	this.whatp = whatpx;
 	   	this.openx = openxy;
@@ -149,6 +194,8 @@ public class MyViewAct extends View {
 	   	this.timex = timexy;
 	   	this.minx = (Double.parseDouble(oplos) - 400)/100000;
 	   	this.maxx = (Double.parseDouble(ophis) + 400)/100000;
+	   	this.tropenList = tropenListx;
+	   	this.trdruhList = trdruhListx;
 	   	
 	}
 	

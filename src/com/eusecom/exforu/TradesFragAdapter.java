@@ -6,6 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,8 @@ import java.util.List;
 
 /**
  * Created by Wasabeef on 2015/01/03.
+ * Used by EuroSecom
+ * iDruh 0=buy lightblue,1=sell redlight,2=actual price green
  */
 @SuppressLint("SimpleDateFormat")
 public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.ViewHolder> {
@@ -34,6 +39,7 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
 	private double actpricb;
     @SuppressWarnings("unused")
 	private String periodxy="D1";
+    
 
     public TradesFragAdapter(Context context, List<String> timex, List<String> iopenPrice, 
     		List<String> iVolume, List<String> iOrder, List<String> iSymbol
@@ -63,7 +69,13 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
 	@Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.iopenprice.setText(miopenPrice.get(position));
+        try{
         holder.ivolume.setText(miVolume.get(position));
+        }
+        catch (NullPointerException nullPointer)
+        {
+        	System.out.println("NPE " +  nullPointer);
+        }
         holder.iorder.setText(miOrder.get(position));
         holder.isymbol.setText(miSymbol.get(position));
         
@@ -78,15 +90,36 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         double volumed=Double.parseDouble(miVolume.get(position));
         double vopenpd=Double.parseDouble(miopenPrice.get(position));
         double pricedifd=0d;
+
+        int iidruh = Integer.parseInt(miDruh.get(position));
         
-        if( miDruh.get(position).equals("1")) {
-        	holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_redlight) );
-        	holder.iorder.setText(miOrder.get(position)+ " Sell");
-        	pricedifd=vopenpd-actprics;
-        }else{
+        switch(iidruh) {
+        case 0:
+        	
         	holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_bluelight) );
         	holder.iorder.setText(miOrder.get(position)+ " Buy");
         	pricedifd=actpricb-vopenpd;
+        	
+        break;
+        case 1:
+
+        	holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_redlight) );
+        	holder.iorder.setText(miOrder.get(position)+ " Sell");
+        	pricedifd=vopenpd-actprics;
+        	
+        break;
+        
+        case 2:
+        		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightgreen) );
+            	holder.iorder.setText(miOrder.get(position)+ " Actual Price");
+            	pricedifd=0;
+        break;
+        
+        case 3:
+    		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightbraun) );
+        	holder.iorder.setText(miOrder.get(position)+ " TP");
+        	pricedifd=0;
+        break;
 		}
         
         //System.out.println("actprice " + actprice);
@@ -95,6 +128,8 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         profitd2=round(profitd2,2);
         String profits=profitd2 + "";
         holder.iprofit.setText(profits);
+        
+        setAnimation(holder.relLayout, position);
 
         
         holder.setClickListener(new TradesFragAdapter.ViewHolder.ClickListener() {
@@ -114,6 +149,15 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         });
         
     }
+	
+	//@SuppressWarnings("unused")
+	private void setAnimation(View viewToAnimate, int position)
+	{
+
+	        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
+	        viewToAnimate.startAnimation(animation);
+
+	}
 
     @Override
     public int getItemCount() {
@@ -138,7 +182,9 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         public TextView iorder;
         public TextView itime;
         public TextView iprofit;
+        public RelativeLayout relLayout;
         //public MyView viewx;
+        
         private ClickListener clickListener;
 
         public ViewHolder(View itemView) {
@@ -150,8 +196,8 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
             ivolume = (TextView) itemView.findViewById(R.id.ivolume);
             isymbol = (TextView) itemView.findViewById(R.id.isymbol);
             iprofit = (TextView) itemView.findViewById(R.id.iprofit);
-
             
+            relLayout = (RelativeLayout) itemView.findViewById(R.id.relLayout);
             
             //viewx = (MyView) itemView.findViewById(R.id.viewx);
 

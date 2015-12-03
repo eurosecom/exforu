@@ -1,5 +1,8 @@
 package com.eusecom.exforu;
 
+import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
@@ -38,6 +41,10 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 	String symbolget;
 	int repeati;
 	String errors="";
+	String favact;
+	private SQLiteDatabase db7=null;
+	private Cursor constantsCursor7=null;
+	private Activity mActivity;
 	
  interface DoSomething {
   //void doInBackground(int progress);
@@ -52,7 +59,7 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  
  SyncAPIConnector connector;
  
- GetFavoriteStreamAsyncTask(DoSomething callback, int max, String account, String userpsw, long userid, LinkedList<String> list
+ GetFavoriteStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid, LinkedList<String> list
 		 , String symbol, int repeat){
   myDoSomethingCallBack = callback;
   myMax = max;
@@ -62,12 +69,22 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
   listget=list;
   symbolget=symbol;
   repeati=repeat;
+  mActivity = activity;
  }
 
  @Override
  protected Void doInBackground(Void... params) {
 
 	vystuptxt=""; vystuptxt2="";
+	
+	db7=(new DatabaseTemp(mActivity)).getWritableDatabase();
+    
+    constantsCursor7=db7.rawQuery("SELECT _ID, favact "+
+			"FROM temppar WHERE _id > 0 ORDER BY _id DESC ",
+			null);
+    constantsCursor7.moveToFirst();
+    favact = constantsCursor7.getString(constantsCursor7.getColumnIndex("favact"));
+    Log.d("Async favact 1 ", favact);
 	
 	Log.d("AsyncTask", "AsyncTask is running");
 	
@@ -106,28 +123,50 @@ public class GetFavoriteStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				
 				@Override
 				public void receiveTradeRecord(STradeRecord tradeRecord) {
-					System.out.println("Stream trade record: " + tradeRecord);
+					System.out.println("Favorite Stream trade record: " + tradeRecord);
 				}
 
 				@Override
 				public void receiveBalanceRecord(SBalanceRecord balanceRecord) {
-					System.out.println("Stream balance record: " + balanceRecord);
+					System.out.println("Favorite Stream balance record: " + balanceRecord);
 					
 					double balance=balanceRecord.getBalance();
 					double equity=balanceRecord.getEquity();
 					myDoSomethingCallBack.doChangeUI3(balance, equity);
+					
+					constantsCursor7=db7.rawQuery("SELECT _ID, favact "+
+							"FROM temppar WHERE _id > 0 ORDER BY _id DESC ",
+							null);
+				    constantsCursor7.moveToFirst();
+				    favact = constantsCursor7.getString(constantsCursor7.getColumnIndex("favact"));
+					favact = constantsCursor7.getString(constantsCursor7.getColumnIndex("favact"));
+				    Log.d("Async favact 2", favact);
+				    if( favact.equals("0")) {
+				    	try {
+							connector.unsubscribePrice(symbolget);
+							connector.unsubscribeBalance();
+							connector.unsubscribeProfits();
+						} catch (APICommunicationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+
+						connector.disconnectStream();
+						System.out.println("Stream disconnected.");
+				    }
 				}
 				
 				@Override
 				public void receiveProfitRecord(SProfitRecord profitRecord) {
-					System.out.println("Stream profit record: " + profitRecord);
+					System.out.println("Favorite Stream profit record: " + profitRecord);
 				}
 				
 				@Override
 				public void receiveTickRecord(STickRecord tickRecord) {
 					vystupx=vystupx+1;
 					String vystupxs=vystupx + "";
-					System.out.print("My " + vystupxs + ". Stream tick record: " + tickRecord);
+					System.out.print("My Favorite " + vystupxs + ". Stream tick record: " + tickRecord);
 					String aDataRow= "-> " + tickRecord;
 					vystuptxt += aDataRow + "\n" + "\n";
 

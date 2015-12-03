@@ -1,8 +1,11 @@
 package com.eusecom.exforu;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
@@ -10,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -119,6 +123,8 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
     private SQLiteDatabase db2=null;
 	private Cursor constantsCursor2=null;
 	
+	private SQLiteDatabase db7=null;
+	
 	String vystuptxt;
     private ProgressDialog pDialog2;
     
@@ -142,6 +148,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 	
 	int repeat=60000;
 	String repeats="60";
+	String favact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,13 +177,18 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         String repeats = getResources().getString(R.string.again) + " " + SettingsActivity.getStreamf(this) + " sec.";
         btnAgain.setText(repeats);
         
-        db2=(new DatabaseFavpairs(this)).getWritableDatabase();
+        db7=(new DatabaseTemp(this)).getWritableDatabase();        
+        String UpdateSql7 = "UPDATE temppar SET favact='1' WHERE _id > 0 ";
+   	 	db7.execSQL(UpdateSql7);
+
         
+        
+        db2=(new DatabaseFavpairs(this)).getWritableDatabase();
+
         constantsCursor2=db2.rawQuery("SELECT _ID, pair2, pswd2, name2 "+
 				"FROM  favpairs WHERE _id > 0 ORDER BY _id DESC ",
 				null);
-		
-
+        
         constantsCursor2.moveToFirst();
         
         final int sizec = constantsCursor2.getCount();
@@ -209,7 +221,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
         
 		if (isOnline()) 
         {
-			GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, 20, accountx, userpsws, useridl
+			GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, this, 20, accountx, userpsws, useridl
 					, listget, symbolget, repeat);
 	        GetFavoriteStreamAsyncTask.execute();
 	        myAskList = new ArrayList<>(Arrays.asList(myaskprices));
@@ -218,7 +230,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 	        
 	        recyclerView = (RecyclerView) findViewById(R.id.list);
 	        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-	        recyclerView.setItemAnimator(new FadeInAnimator());
+	        recyclerView.setItemAnimator(new FadeInAnimator());	        
 	        adapter = new FavoriteAdapter(this, new ArrayList<>(Arrays.asList(myfavpairs)), myAskList, myBidList, myProfitList);
 	        recyclerView.setAdapter(adapter);
 	        recyclerView.setItemAnimator(new FadeInRightAnimator());
@@ -228,6 +240,9 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 
 	        StrictMode.ThreadPolicy tp = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	        StrictMode.setThreadPolicy(tp);
+	        
+	        IntentFilter filter = new IntentFilter(ACTION_INTENT);
+	        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         }
         else{
         	 
@@ -252,6 +267,47 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 
     }//oncreate
     
+
+    //broadcastreceiver for send value from fragment to activity
+  	String KeyWord;
+  	public static final String ACTION_INTENT = "com.eusecom.exforu.action.UI_FINISH_FAVACT";
+      protected BroadcastReceiver receiver = new BroadcastReceiver() {
+
+
+          @Override
+          public void onReceive(Context context, Intent intent) {
+        	  Log.d("FavoriteActivity", "I am at onReceive.");
+              if(ACTION_INTENT.equals(intent.getAction())) {
+            	  
+            	  	Bundle extras = intent.getExtras();
+
+            	  	String value = extras.getString("UI_VALUE");
+            	  	int xxsp = extras.getInt("UI_XXSP");
+
+            	  	finishFavoriteActivity(value, xxsp);
+              }
+          }
+      };
+
+      private void finishFavoriteActivity(String value, int xxxsp) {
+          // you probably want this:
+    	  String xxxsps=xxxsp + "";
+    	  Log.d("finishFavoriteActivity " + value, "xxsp " + xxxsps);
+    	  constantsCursor2.close();
+  			db2.close();
+  			
+
+  			if (isOnline()) 
+  			{
+  				GetFavoriteStreamAsyncTask.exit();
+  				GetFavoriteStreamAsyncTask.cancel(true);
+  			}
+    	  finish();
+
+
+      }
+      //end of broadcast
+    
     public void buttonAgain(View v) {
     	
     	btnAgain.setVisibility(View.GONE);
@@ -260,7 +316,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 		String symbolget = "EURUSD";
 		listget.add(symbolget);
 		
-    	GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, 20, accountx, userpsws, useridl
+    	GetFavoriteStreamAsyncTask = new GetFavoriteStreamAsyncTask(this, this, 20, accountx, userpsws, useridl
     			, listget, symbolget, repeat);
         GetFavoriteStreamAsyncTask.execute();
     }
@@ -369,7 +425,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 
         	vystuptxt="";
         	
-        	Log.d("AsyncTask", "AsyncTask is running");
+        	Log.d("FavoriteActivity AsyncTask", "AsyncTask is running");
         	
         	 try {
                  
@@ -391,7 +447,7 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
                  if(loginResponse.getStatus() == true) {
                      
                      // Print the message on console
-                     System.out.println("User logged in");
+                     System.out.println("FavActivity User logged in");
                      
                      // Create and execute all symbols command (which gets list of all symbols available for the user)
                      AllSymbolsResponse availableSymbols = APICommandFactory.executeAllSymbolsCommand(connector);
@@ -465,6 +521,10 @@ public class FavoriteActivity extends ActionBarActivity implements DoSomething{
 		
 		constantsCursor2.close();
 		db2.close();
+		
+		String UpdateSql7 = "UPDATE temppar SET favact='0' WHERE _id > 0 ";
+	   	db7.execSQL(UpdateSql7);
+		db7.close();
 
 		if (isOnline()) 
         {

@@ -23,6 +23,10 @@
     <string name="lowtxt">Low:</string>
     <string name="timetxt">Time:</string>
     <string name="voltxt">Vol:</string>
+    <string name="volumetxt">Volume:</string>
+    <string name="commenttxt">Comment:</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
     
     <string name="settings">Settings</string>
     <string name="prefrepuser">Preferences of broker and user</string>
@@ -93,6 +97,11 @@
         <item >Trades</item>
         <item >Other</item>
     </string-array>
+    
+    <string name="btnbuy">Buy</string>
+    <string name="btnsell">Sell</string>
+    <string name="btnconfirmsell">Confirm Sell</string>
+    <string name="btnconfirmbuy">Confirm Buy</string>
     
     <string name="gridchart">GridChart</string>
     <string name="linechart">LineChart</string>

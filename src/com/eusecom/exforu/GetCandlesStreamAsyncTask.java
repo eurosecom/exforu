@@ -132,12 +132,12 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				
 				@Override
 				public void receiveTradeRecord(STradeRecord tradeRecord) {
-					System.out.println("Stream trade record: " + tradeRecord);
+					System.out.println("Candles Stream trade record: " + tradeRecord);
 				}
 
 				@Override
 				public void receiveBalanceRecord(SBalanceRecord balanceRecord) {
-					System.out.println("Stream balance record: " + balanceRecord);
+					//System.out.println("Candle Stream balance record: " + balanceRecord);
 					
 					double balance=balanceRecord.getBalance();
 					double equity=balanceRecord.getEquity();
@@ -146,7 +146,7 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				
 				@Override
 				public void receiveProfitRecord(SProfitRecord profitRecord) {
-					System.out.println("Stream profit record: " + profitRecord);
+					System.out.println("Candles Stream profit record: " + profitRecord);
 				}
 				
 				@Override
@@ -162,7 +162,7 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				
 				@Override
 				public void receiveCandleRecord(SCandleRecord candleRecord) {
-					System.out.println("Stream Candle record: " + candleRecord);
+					System.out.println("Candles Stream Candle record: " + candleRecord);
 				}
 				
 				
