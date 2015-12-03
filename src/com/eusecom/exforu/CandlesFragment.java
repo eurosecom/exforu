@@ -287,7 +287,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
             		}
                     
                     String riadok = popis + " " + tropenList.get(i) + " vol. " + trvolumeList.get(i) + "\n";
-                    if( tropenList.get(i).equals("0")) { riadok = "No trades"; }
+                    if( tropenList.get(i).equals("0")) { riadok = "No more trades"; }
                     SpannableString redSpannable= new SpannableString(riadok);
                     redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, riadok.length(), 0);
                     builder.append(redSpannable);
@@ -739,7 +739,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
             
             //read TP sells
         	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, itp " +
-    				"FROM models WHERE idruh = 1 AND itp != '0.0' GROUP BY idruh, itp ",
+    				"FROM models WHERE idruh = 1 AND itp > 0 GROUP BY idruh, itp ",
     				null);
 
     		
@@ -755,7 +755,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
             
             //read SL buys
         	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, isl " +
-    				"FROM models WHERE idruh = 0 AND isl != '0.0' GROUP BY idruh, isl ",
+    				"FROM models WHERE idruh = 0 AND isl > 0 GROUP BY idruh, isl ",
     				null);
 
     		
@@ -771,7 +771,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
             
             //read SL sells
             constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, isl " +
-    				"FROM models WHERE idruh = 1 AND isl != '0.0' GROUP BY idruh, isl ",
+    				"FROM models WHERE idruh = 1 AND isl > 0 GROUP BY idruh, isl ",
     				null);
 
     		
