@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relLayout"
     android:layout_width="fill_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/border_listfavorite"
     >
 
@@ -60,7 +60,7 @@
         android:textColor="@android:color/black"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
         android:textSize="15sp" />
     
@@ -75,7 +75,7 @@
         android:textColor="@android:color/black"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
         android:textSize="19sp" />
     
@@ -91,7 +91,7 @@
         android:textColor="@android:color/black"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
         android:textSize="15sp" />
     
@@ -106,7 +106,7 @@
         android:textColor="@android:color/black"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
         android:textSize="15sp" />
     
@@ -122,8 +122,76 @@
         android:textColor="@android:color/black"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    
+    
+    <TextView
+        android:id="@+id/txtactprice"
+        android:text="@string/pricetxt"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"        
+        android:layout_below="@+id/txtopenprice"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/iactprice"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/txtactprice"
+        android:layout_below="@+id/txtopenprice"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
         android:textSize="15sp" />
  
+    <TextView
+        android:id="@+id/txtsltp"
+        android:text="@string/sltptxt"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iactprice"
+        android:layout_below="@+id/txtopenprice"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/isltp"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/txtsltp"
+        android:layout_below="@+id/txtopenprice"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="15sp" />
+    
+    
+    
+    
+    
 </RelativeLayout>

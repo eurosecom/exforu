@@ -14,5 +14,26 @@
         android:icon="@drawable/ic_action_favorite"
         android:title="@string/xfavorite">
     </item>
+    
+    <item
+        android:id="@+id/xdemo"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_favorite"
+        android:title="@string/demobig">
+    </item>
+    
+    <item
+        android:id="@+id/xreal"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_favorite"
+        android:title="@string/realbig">
+    </item>
+    
+    <item
+        android:id="@+id/xmodel"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_favorite"
+        android:title="@string/modelbig">
+    </item>
 
 </menu>

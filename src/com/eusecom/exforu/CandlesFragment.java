@@ -108,6 +108,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 	
 	private List<String> tropenList = new ArrayList<String>();
 	private List<String> trdruhList = new ArrayList<String>();
+	private List<String> trvolumeList = new ArrayList<String>();
 
 	String oplos="";
 	String ophis="";
@@ -126,10 +127,14 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     TextView actprice;
     TextView actbalance;
 	TextView actprofit;
+	double actpricex=1.09;
+	double actprices=1.092;
+	double actpriceb=1.088;
 	
 	private SQLiteDatabase db8=null;
 	private Cursor constantsCursor8=null;
 	private SQLiteDatabase db7=null;
+	String profitmodel="0";
 	
 	
     // newInstance constructor for creating fragment with arguments
@@ -281,7 +286,8 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
                     	break;
             		}
                     
-                    String riadok = popis + " " + tropenList.get(i) + "\n";
+                    String riadok = popis + " " + tropenList.get(i) + " vol. " + trvolumeList.get(i) + "\n";
+                    if( tropenList.get(i).equals("0")) { riadok = "No trades"; }
                     SpannableString redSpannable= new SpannableString(riadok);
                     redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, riadok.length(), 0);
                     builder.append(redSpannable);
@@ -384,13 +390,22 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 
 		         updateViewact();
 
+		    	 if( accountx.equals("2") ) {
+		    		 actprices=askp;
+		    		 actpriceb=bidp;
+		    		 actpricex=askp;
+		    		 
+		    		 readProfitModel();
+		    	 }
+
+
 		    }
 		});
     	
     	}
         catch (NullPointerException nullPointer)
         {
-        	System.out.println("NPE CandlesFragment.java" +  nullPointer);
+        	System.out.println("NPE CandlesFragment.java ui4 " +  nullPointer);
         }
      
     }
@@ -398,9 +413,12 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     @Override
     public void doChangeUI3(final double balance, final double equity) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
+
+		    	 if( accountx.equals("0") || accountx.equals("1") ) {
 
 		    	 String sbalances = balance + "";
 		    	 actbalance.setText(sbalances);
@@ -411,9 +429,22 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
              	 sprofits = sprofits.replace(',','.');
 
 		    	 actprofit.setText(sprofits);
+		    	 }
+		    	 
+	             	if( accountx.equals("2") ) {
+			    		 
+				    	 actprofit.setText(profitmodel);
+				    	 
+			    	 }
 
 		    }
 		});
+    	
+    	}
+        catch (NullPointerException nullPointer)
+        {
+        	System.out.println("NPE CandlesFragment.java ui3 " +  nullPointer);
+        }
      
     }
     
@@ -421,6 +452,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     public void doChangeUI2(final List<String> myopenListx, final List<String> mycloseListx
     		,final List<String> myhighListx, final List<String> mylowListx, final List<String> mytimeListx) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -431,6 +463,12 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 
 		    }
 		});
+    	
+    	}
+        catch (NullPointerException nullPointer)
+        {
+        	System.out.println("NPE CandlesFragment.java ui2 " +  nullPointer);
+        }
      
     }
 
@@ -438,6 +476,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     public void doChangeUI(final List<String> myopenListx, final List<String> mycloseListx
     		,final List<String> myhighListx, final List<String> mylowListx, final List<String> mytimeListx) {
 
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -478,25 +517,46 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 
 		    }
 		});
+    	
+    	}
+        catch (NullPointerException nullPointer)
+        {
+        	System.out.println("NPE CandlesFragment.java ui " +  nullPointer);
+        }
  
     }
     
     @Override
     public void doChangeUIerr(final String errs) {
 
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
 		    	 Toast.makeText(getActivity(), errs, Toast.LENGTH_LONG).show();
 		    }
 		});
+    	
+    	}
+        catch (NullPointerException nullPointer)
+        {
+        	System.out.println("NPE CandlesFragment.java uierr " +  nullPointer);
+        }
 
     }
     
     @Override
     public void doChangeUIpost(final String errs) {
 
+    	try{
+    		
     	sendValueToAct("A", 1);
+    	
+    	}
+    	catch (NullPointerException nullPointer)
+    	{
+    	System.out.println("NPE CandlesFragment.java uipost " +  nullPointer);
+    	}
 
     }
     
@@ -550,15 +610,105 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     @SuppressLint("SimpleDateFormat")
 	public boolean readtrades() {
     	
-    	db8=(new DatabaseTrades(getActivity())).getWritableDatabase();
     	
-    	tropenList=new ArrayList<String>(); trdruhList=new ArrayList<String>();
 
     	try {
     		
+    		if( accountx.equals("0") || accountx.equals("1") )
+            {
+    			
+    			db8=(new DatabaseTrades(getActivity())).getWritableDatabase();    	    	
+    	    	tropenList=new ArrayList<String>(); trdruhList=new ArrayList<String>(); trvolumeList=new ArrayList<String>();
+    	    	
     		//read items except act price idruh=2
         	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh " +
-    				"FROM  trades WHERE idruh != '2' AND iopen > 0 ORDER BY iopen DESC ",
+    				"FROM trades WHERE  ( idruh = 0 OR idruh = 1 ) AND iopen > 0 ORDER BY iopen DESC ",
+    				null);
+        	
+        	constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("iopen")));
+            	trdruhList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("idruh")));
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read TP buys
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, itp " +
+    				"FROM trades WHERE idruh = 0 AND itp != '0.0' GROUP BY idruh, itp ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("itp")));
+            	trdruhList.add("3");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read TP sells
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, itp " +
+    				"FROM trades WHERE idruh = 1 AND itp != '0.0' GROUP BY idruh, itp ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("itp")));
+            	trdruhList.add("4");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read SL buys
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, isl " +
+    				"FROM trades WHERE idruh = 0 AND isl != '0.0' GROUP BY idruh, isl ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("isl")));
+            	trdruhList.add("5");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read SL sells
+            constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, isl " +
+    				"FROM trades WHERE idruh = 1 AND isl != '0.0' GROUP BY idruh, isl ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("isl")));
+            	trdruhList.add("6");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+        	
+            } //end of if( accountx.equals("0") || accountx.equals("1") )
+    		
+    		if( accountx.equals("2") )
+            {
+    			db8=(new DatabaseModels(getActivity())).getWritableDatabase();    	    	
+    	    	tropenList=new ArrayList<String>(); trdruhList=new ArrayList<String>(); trvolumeList=new ArrayList<String>();
+    	    	
+    		//read buys and sells
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh " +
+    				"FROM models WHERE ( idruh = 0 OR idruh = 1 ) AND iopen > 0 ORDER BY iopen DESC ",
     				null);
     		
             constantsCursor8.moveToFirst();
@@ -566,11 +716,76 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
             	
             	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("iopen")));
             	trdruhList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("idruh")));
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read TP buys
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, itp " +
+    				"FROM models WHERE idruh = 0 AND itp != '0.0' GROUP BY idruh, itp ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("itp")));
+            	trdruhList.add("3");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read TP sells
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, itp " +
+    				"FROM models WHERE idruh = 1 AND itp != '0.0' GROUP BY idruh, itp ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("itp")));
+            	trdruhList.add("4");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read SL buys
+        	constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, isl " +
+    				"FROM models WHERE idruh = 0 AND isl != '0.0' GROUP BY idruh, isl ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("isl")));
+            	trdruhList.add("5");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
+
+            	constantsCursor8.moveToNext();
+            }
+            
+            //read SL sells
+            constantsCursor8=db8.rawQuery("SELECT _ID, itime, iopen, SUM(ivolume) as ivolume, iorder, isymbol, idruh, isl " +
+    				"FROM models WHERE idruh = 1 AND isl != '0.0' GROUP BY idruh, isl ",
+    				null);
+
+    		
+            constantsCursor8.moveToFirst();
+            while(!constantsCursor8.isAfterLast()) {
+            	
+            	tropenList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("isl")));
+            	trdruhList.add("6");
+            	trvolumeList.add(constantsCursor8.getString(constantsCursor8.getColumnIndex("ivolume")));
 
             	constantsCursor8.moveToNext();
             }
 
-            
+            }//end if( accountx.equals("2") )
 
     		} catch (IllegalStateException ignored) {
     	    // There's no way to avoid getting this if saveInstanceState has already been called.
@@ -581,10 +796,13 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     			trdruhList.add("0");
     		}
     		if( tropenList.size() == 0 ) {
-    			tropenList.add("1");
+    			tropenList.add("0");
     		}
-    		Log.d("tropenList", tropenList.toString());
-    		Log.d("trdruhList", trdruhList.toString());
+    		if( trvolumeList.size() == 0 ) {
+    			trvolumeList.add("0");
+    		}
+    		//Log.d("tropenList", tropenList.toString());
+    		//Log.d("trdruhList", trdruhList.toString());
     	
     		constantsCursor8.close();
     		db8.close();
@@ -623,6 +841,8 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         //System.out.println("oplos " + oplos);
         
         readtrades();
+        System.out.println("tropenList " + tropenList);
+        Log.d("trdruhList", trdruhList.toString());
 
         viewact.setCandle(1, openda, closeda, highda, lowda, vva, oplos, ophis, tropenList, trdruhList);
         //System.out.println("openda " + openda);
@@ -749,6 +969,57 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
             //whatspage=0;
 
 	}
+	//onResumeFragment()
+	
+	public boolean readProfitModel() {
+    	
+    	SQLiteDatabase db5=null;
+
+    	try{
+    	db5=(new DatabaseModels(getActivity())).getWritableDatabase();
+
+    	//read items	
+    	Cursor constantsCursor3=db5.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh, imemo, itp, isl " +
+				"FROM models WHERE _id >= 0 ORDER BY iopen DESC ",
+				null);
+		
+    	double profmod=0; double profmod2=0; double profmod3=0;
+        constantsCursor3.moveToFirst();
+        while(!constantsCursor3.isAfterLast()) {
+        	
+        	//here count Profit for Model profitmodel
+        	int idruhi = Integer.parseInt(constantsCursor3.getString(constantsCursor3.getColumnIndex("idruh")));
+        	double iopend = Double.parseDouble(constantsCursor3.getString(constantsCursor3.getColumnIndex("iopen")));
+        	double ivolumed = Double.parseDouble(constantsCursor3.getString(constantsCursor3.getColumnIndex("ivolume")));
+        	if( idruhi == 0 ){ 
+        		profmod=profmod + ( 100000* ivolumed * ( actpriceb - iopend) );
+        	}
+        	if( idruhi == 1 ){ 
+        		profmod=profmod + ( 100000* ivolumed * ( iopend - actprices) );
+        	}
+        	
+        	//String profmods=profmod + "";
+        	//Log.i("profmod ", profmods);
+
+        	constantsCursor3.moveToNext();
+        }
+
+        if( actpricex > 0 ) {
+        profmod2=profmod/actpricex;
+        }
+        profmod3=round(profmod2,2);
+        profitmodel=profmod3 + "";
+        constantsCursor3.close();
+    	} catch (IllegalStateException ignored) {
+    	    // There's no way to avoid getting this if saveInstanceState has already been called.
+    	}
+    	
+        
+        db5.close();
+        
+        return false;
+    }
+    //update readProfitModel
 	
     
 }

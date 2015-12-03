@@ -135,6 +135,9 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         	holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_bluelight) );
         	holder.iorder.setText(miOrder.get(position)+ " Buy");
         	pricedifd=actpricb-vopenpd;
+        	String actpricbs=actpricb + "";
+        	holder.iactprice.setText(actpricbs);
+        	holder.isltp.setText(miSl.get(position) + " / " + miTp.get(position));
         	
         break;
         case 1:
@@ -142,57 +145,85 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         	holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_redlight) );
         	holder.iorder.setText(miOrder.get(position)+ " Sell");
         	pricedifd=vopenpd-actprics;
+        	String actpricss=actprics + "";
+        	holder.iactprice.setText(actpricss);
+        	holder.isltp.setText(miSl.get(position) + " / " + miTp.get(position));
         	
         break;
         
         case 2:
-        		holder.iorder.setVisibility(View.GONE);
+        		//holder.iorder.setVisibility(View.GONE);
         		holder.iprofit.setVisibility(View.GONE);
         		holder.ivolume.setVisibility(View.GONE);
         		holder.txtvolume.setVisibility(View.INVISIBLE);
         		
+        		holder.txtactprice.setVisibility(View.GONE);
+            	holder.iactprice.setVisibility(View.GONE);
+            	holder.txtsltp.setVisibility(View.GONE);
+            	holder.isltp.setVisibility(View.GONE);
+        		
         		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightgreen) );
-            	holder.iorder.setText(miOrder.get(position)+ " Actual Price");
+            	holder.iorder.setText("Actual Price");
             	pricedifd=0;
         break;
         
         case 3:
-        	holder.iorder.setVisibility(View.GONE);
+        	//holder.iorder.setVisibility(View.GONE);
         	holder.iprofit.setVisibility(View.GONE);
         	holder.itime.setVisibility(View.INVISIBLE);
         	
+        	holder.txtactprice.setVisibility(View.GONE);
+        	holder.iactprice.setVisibility(View.GONE);
+        	holder.txtsltp.setVisibility(View.GONE);
+        	holder.isltp.setVisibility(View.GONE);
+        	
     		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_yellow) );
-        	holder.iorder.setText(miOrder.get(position)+ " TP Buy");
+        	holder.iorder.setText("TP Buy");
         	pricedifd=0;
         break;
         
         case 4:
-        	holder.iorder.setVisibility(View.GONE);
+        	//holder.iorder.setVisibility(View.GONE);
         	holder.iprofit.setVisibility(View.GONE);
         	holder.itime.setVisibility(View.INVISIBLE);
         	
+        	holder.txtactprice.setVisibility(View.GONE);
+        	holder.iactprice.setVisibility(View.GONE);
+        	holder.txtsltp.setVisibility(View.GONE);
+        	holder.isltp.setVisibility(View.GONE);
+        	
     		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_yellow) );
-        	holder.iorder.setText(miOrder.get(position)+ " TP Sell");
+        	holder.iorder.setText("TP Sell");
         	pricedifd=0;
         break;
         
         case 5:
-        	holder.iorder.setVisibility(View.GONE);
+        	//holder.iorder.setVisibility(View.GONE);
         	holder.iprofit.setVisibility(View.GONE);
         	holder.itime.setVisibility(View.INVISIBLE);
         	
+        	holder.txtactprice.setVisibility(View.GONE);
+        	holder.iactprice.setVisibility(View.GONE);
+        	holder.txtsltp.setVisibility(View.GONE);
+        	holder.isltp.setVisibility(View.GONE);
+        	
     		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightbrown) );
-        	holder.iorder.setText(miOrder.get(position)+ " SL Buy");
+        	holder.iorder.setText("SL Buy");
         	pricedifd=0;
         break;
         
         case 6:
-        	holder.iorder.setVisibility(View.GONE);
+        	//holder.iorder.setVisibility(View.GONE);
         	holder.iprofit.setVisibility(View.GONE);
         	holder.itime.setVisibility(View.INVISIBLE);
         	
+        	holder.txtactprice.setVisibility(View.GONE);
+        	holder.iactprice.setVisibility(View.GONE);
+        	holder.txtsltp.setVisibility(View.GONE);
+        	holder.isltp.setVisibility(View.GONE);
+        	
     		holder.itemView.setBackgroundDrawable( mContext.getResources().getDrawable(R.drawable.border_listtrades_lightbrown) );
-        	holder.iorder.setText(miOrder.get(position)+ " SL Sell");
+        	holder.iorder.setText("SL Sell");
         	pricedifd=0;
         break;
 		}
@@ -306,6 +337,12 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
         public TextView txtvolume;
         //public MyView viewx;
         
+        public TextView txtactprice;
+        public TextView iactprice;
+        public TextView txtsltp;
+        public TextView isltp;
+        
+        
         private ClickListener clickListener;
 
         public ViewHolder(View itemView) {
@@ -321,6 +358,12 @@ public class TradesFragAdapter extends RecyclerView.Adapter<TradesFragAdapter.Vi
             relLayout = (RelativeLayout) itemView.findViewById(R.id.relLayout);
             
             txtvolume = (TextView) itemView.findViewById(R.id.txtvolume);
+            
+            txtactprice = (TextView) itemView.findViewById(R.id.txtactprice);
+            iactprice = (TextView) itemView.findViewById(R.id.iactprice);
+            txtsltp = (TextView) itemView.findViewById(R.id.txtsltp);
+            isltp = (TextView) itemView.findViewById(R.id.isltp);
+            
             
             //viewx = (MyView) itemView.findViewById(R.id.viewx);
 

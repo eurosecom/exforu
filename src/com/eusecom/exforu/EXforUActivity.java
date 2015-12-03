@@ -5,12 +5,15 @@ package com.eusecom.exforu;
 import java.util.ArrayList;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -24,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.app.FragmentManager;
 
 import com.eusecom.exforu.adapter.NavDrawerListAdapter;
@@ -57,7 +61,8 @@ public class EXforUActivity extends ActionBarActivity {
 	int favx=0;
 	int positionx=0;
 	private SQLiteDatabase db7=null;
-	String myfavpair;
+	String myfavpair, accountx, accountname;
+	TextView title;
 
 
 	@Override
@@ -68,6 +73,19 @@ public class EXforUActivity extends ActionBarActivity {
 
 		Toolbar mToolbar = (Toolbar) findViewById(R.id.tool_bar);
 		setSupportActionBar(mToolbar);
+		
+		accountx=SettingsActivity.getAccountx(this);
+
+		accountname="DEMO";        
+        if( accountx.equals("2")) {
+        	accountname="MODEL";
+        }
+        if( accountx.equals("1")) {
+        	accountname="REAL";
+        }
+		
+		title = (TextView) findViewById(R.id.title);
+        title.setText(getResources().getString(R.string.app_name) + " " + accountname);
 		
 		db7=(new DatabaseTemp(this)).getWritableDatabase();        
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
@@ -123,22 +141,15 @@ public class EXforUActivity extends ActionBarActivity {
         navDrawerItems = new ArrayList<NavDrawerItem>();
  
         // adding nav drawer items to array
-        // Home
+        
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Find People
+        
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Photos
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Communities, Will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Communities, Will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-        // Pages
+ 
         String favxs=favx + "";
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1), true, favxs));
-        // What's hot, We  will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, favxs));
+        
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
          
  
         // Recycle the typed array
@@ -229,6 +240,48 @@ public class EXforUActivity extends ActionBarActivity {
 
 			return(true);
 			
+			
+		case R.id.xdemo:
+			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+         	Editor editor = prefs.edit();
+         	editor.putString("accountx", "0").apply();
+         	editor.commit();
+         	
+         	accountx="0";
+    		accountname="DEMO";
+    		title.setText(getResources().getString(R.string.app_name) + " " + accountname);
+
+			return(true);
+			
+			
+		case R.id.xreal:
+			
+			SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+         	Editor editor1 = prefs1.edit();
+         	editor1.putString("accountx", "0").apply();
+         	editor1.commit();
+         	
+         	accountx="1";
+    		accountname="REAL";
+    		title.setText(getResources().getString(R.string.app_name) + " " + accountname);
+
+			return(true);
+			
+			
+		case R.id.xmodel:
+			
+			SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+         	Editor editor2 = prefs2.edit();
+         	editor2.putString("accountx", "2").apply();
+         	editor2.commit();
+         	
+         	accountx="2";
+    		accountname="MODEL";
+    		title.setText(getResources().getString(R.string.app_name) + " " + accountname);
+
+			return(true);
+			
 		
 
 	
@@ -276,7 +329,7 @@ public class EXforUActivity extends ActionBarActivity {
 	            break;
 	            
 	        case 1:
-	        	//Toast.makeText(XforActivity.this, "1", Toast.LENGTH_SHORT).show();
+	        		/*
 	        		if (android.os.Build.VERSION.SDK_INT>=16) {
             		
                     Intent slideactivity = new Intent(EXforUActivity.this, XstoreConnectActivity.class);
@@ -289,10 +342,8 @@ public class EXforUActivity extends ActionBarActivity {
                         Intent i = new Intent(getApplicationContext(), XstoreConnectActivity.class);
                         startActivity(i);
                 	}
-	            break;
-	        case 2:
-	            //fragment = new HomeFragment();
-	        	//Toast.makeText(EXforUActivity.this, "2", Toast.LENGTH_SHORT).show();
+
+
 	        		if (android.os.Build.VERSION.SDK_INT>=16) {
             		
                     Intent slideactivity = new Intent(EXforUActivity.this, FavTxtActivity.class);
@@ -305,10 +356,8 @@ public class EXforUActivity extends ActionBarActivity {
                         Intent i = new Intent(getApplicationContext(), FavTxtActivity.class);
                         startActivity(i);
                 	}
-	            break;
-	        case 3:
-	            //fragment = new HomeFragment();
-	        	//Toast.makeText(EXforUActivity.this, "3", Toast.LENGTH_SHORT).show();
+
+
 	        		if (android.os.Build.VERSION.SDK_INT>=16) {
             		
                     Intent slideactivity = new Intent(EXforUActivity.this, StreamActivity.class);
@@ -321,10 +370,9 @@ public class EXforUActivity extends ActionBarActivity {
                         Intent i = new Intent(getApplicationContext(), StreamActivity.class);
                         startActivity(i);
                 	}
-	            break;
-	            
-	        case 4:
-	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
+                	*/
+                	
+
 	        	Intent i = new Intent(this, LearningActivity.class);
 	        	Bundle extras = new Bundle();
                 extras.putString("pairx", myfavpair);
@@ -333,12 +381,12 @@ public class EXforUActivity extends ActionBarActivity {
                 startActivity(i);
 	        	
 	            break;
-	        case 5:
+	        case 2:
 	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
 	        	startActivity(new Intent(this, SetFavActivity.class));
 	        	
 	            break;
-	        case 6:
+	        case 3:
 	            //fragment = new HomeFragment();
 	        	//Toast.makeText(EXforUActivity.this, "5", Toast.LENGTH_SHORT).show();
 	        	
@@ -351,11 +399,12 @@ public class EXforUActivity extends ActionBarActivity {
 
 	            break;
 	            
-	        case 7:
+
+	            /*
 	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
 	        	startActivity(new Intent(this, TestNecoActivity.class));
-	        	
-	            break;
+	        	*/
+
 	 
 	        default:
 	            break;

@@ -78,6 +78,8 @@ public class EditTradeActivity extends Activity {
     REQUEST_STATUS tradeok;
     long tradeokl=0;
     private SQLiteDatabase db7=null;
+    private SQLiteDatabase db62=null;
+    int modall;
 
  
     @Override
@@ -97,6 +99,7 @@ public class EditTradeActivity extends Activity {
         isl = extras.getString("isl");
         icomm = extras.getString("icomm");
         iorder = extras.getLong("iorder");
+        modall = extras.getInt("modall");
         
         String trx="Buy";
         if( xtrade.equals("6")) { trx="Sell"; }
@@ -104,6 +107,10 @@ public class EditTradeActivity extends Activity {
         title = (TextView) findViewById(R.id.title);
         title.setText(getResources().getString(R.string.edit) + " " + trx + " " + pair 
         		 + " " + getResources().getString(R.string.positiontxt)  + iorder );
+        if( modall == 1 ){
+        	title.setText(getResources().getString(R.string.edit) + " " + trx + " " + pair 
+           		 + " " + getResources().getString(R.string.positionalltxt) + " " + icomm  );	
+        }
         
         steplot =SettingsActivity.getSteplot(this);
         accountx=SettingsActivity.getAccountx(this);
@@ -186,7 +193,15 @@ public class EditTradeActivity extends Activity {
             	itp = inputTp.getText().toString();
             	
             	//Save trade
+            	if( accountx.equals("0")) {
+                	new SaveTrade().execute();
+                	}
+            	if( accountx.equals("1")) {
             	new SaveTrade().execute();
+            		}
+            	if( accountx.equals("2")) {
+                	new SaveTradeModel().execute();
+                	}
                 
             }
         });
@@ -202,7 +217,15 @@ public class EditTradeActivity extends Activity {
             	itp = inputTp.getText().toString();
             	
             	//Save trade
+            	if( accountx.equals("0")) {
+                	new SaveTrade().execute();
+                	}
+            	if( accountx.equals("1")) {
             	new SaveTrade().execute();
+            		}
+            	if( accountx.equals("2")) {
+                	new SaveTradeModel().execute();
+                	}
                 
             }
         });
@@ -295,12 +318,173 @@ public class EditTradeActivity extends Activity {
     }
     //koniec oncreate
     
+    
+    class SaveTradeModel extends AsyncTask<String, String, String> {
+    	
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(EditTradeActivity.this);
+            pDialog.setMessage(getString(R.string.progmodtrade));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+        }
+ 
+
+        protected String doInBackground(String... args) {
+        	try {
+                
+                // Create new connector
+       		 	if( accountx.equals("2")) {
+       			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
+       			 connector = new SyncAPIConnector(ServerEnum.DEMO);
+       		 	}
+
+                
+                // Create new credentials
+                // TODO: Insert your credentials
+        		@SuppressWarnings("deprecation")
+        		//Credentials credentials = new Credentials(381715L, "9a14e566", "", "YOUR APP NAME");
+        		Credentials credentials = new Credentials(useridl, userpsws, "", "YOUR APP NAME");
+                
+                // Create and execute new login command
+                LoginResponse loginResponse = APICommandFactory.executeLoginCommand(
+                        connector,         // APIConnector
+                        credentials        // Credentials
+                );
+                
+                
+                System.out.println("SaveTrade " + loginResponse);
+                
+                if (loginResponse != null && loginResponse.getStatus())
+        		{
+                	
+                	if (isl == null ) {isl="0";}
+                    if( isl.equals("")) {isl="0";}
+                    if (itp == null ) {itp="0";}
+                    if( itp.equals("")) {itp="0";}
+                    
+                    if( modall == 0 ){
+                    	db62=(new DatabaseModels(EditTradeActivity.this)).getWritableDatabase();
+                    	String UpdateSql62 = "UPDATE models SET itp='" + itp + "', isl='" + isl + "' " 
+                    		+ " WHERE iorder='" + iorder + "' ";
+                    	db62.execSQL(UpdateSql62);
+                    	}
+                    if( modall == 1 ){
+                        db62=(new DatabaseModels(EditTradeActivity.this)).getWritableDatabase();
+                        String UpdateSql62 = "UPDATE models SET itp='" + itp + "', isl='" + isl + "' " 
+                        		+ " WHERE imemo='" + icomm + "' ";
+                 	 	db62.execSQL(UpdateSql62);
+                        }
+
+
+                	getorder=iorder;
+
+                	if( getorder > 0 ){
+
+                    	tradeokl = 1;
+                    	
+                    	}
+                
+        		}
+
+        		// Catch errors
+             } catch (UnknownHostException e) {
+            	 errors = errors + " Unknown Host Exception! \n";
+            	 
+                 e.printStackTrace();
+             } catch (IOException e) {
+            	 errors = errors + " IO Exception! \n";
+            	
+                 e.printStackTrace();
+             } catch (APICommandConstructionException e) {
+            	 errors = errors + " API Command Construction Exception! \n";
+
+                 e.printStackTrace();
+             } catch (APICommunicationException e) {
+            	 errors = errors + " API Communication Exception! \n";
+
+                 e.printStackTrace();
+             } catch (APIReplyParseException e) {
+            	 errors = errors + " API Reply ParseException! \n";
+
+                 e.printStackTrace();
+             } catch (APIErrorResponse e) {
+            	 errors = errors + " API Error Response! \n";
+
+                 e.printStackTrace();
+             } 
+                
+ 
+           return null;
+        }
+ 
+
+        protected void onPostExecute(String file_url) {
+        	
+        	pDialog.dismiss();
+        	
+        	SQLiteDatabase db6=(new DatabaseTrades(EditTradeActivity.this)).getWritableDatabase();
+            db6.delete("trades", "_ID > 0", null);
+            db6.close();
+        	
+        	String titlex="";
+        	if( xtrade.equals("5")) { titlex=String.format(getResources().getString(R.string.trademodifyednum), iorder); }
+        	if( xtrade.equals("6")) { titlex=String.format(getResources().getString(R.string.trademodifyednum), iorder); }
+        	if( modall == 1 ) { titlex=getString(R.string.alltrademodifyed); }
+
+        	
+        	if( tradeokl == 3 || tradeokl == 1 ){
+        		
+        		new AlertDialog.Builder(EditTradeActivity.this)
+                .setMessage(titlex)
+                .setPositiveButton(getString(R.string.textok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) { 
+                      
+                    	Intent i = new Intent(EditTradeActivity.this, LearningActivity.class);
+        	        	Bundle extras = new Bundle();
+                        extras.putString("pairx", pair);
+                        extras.putInt("whatspage", 3);
+                        i.putExtras(extras);                
+                        startActivity(i);
+                    	finish();
+                    }
+                 })
+
+                 .show();
+        		
+        	}else{
+        		new AlertDialog.Builder(EditTradeActivity.this)
+        		.setMessage(getString(R.string.tradenotmodifyed))
+        		.setPositiveButton(getString(R.string.textok), new DialogInterface.OnClickListener() {
+        			public void onClick(DialogInterface dialog, int which) { 
+                  
+        				Intent i = new Intent(EditTradeActivity.this, LearningActivity.class);
+        	        	Bundle extras = new Bundle();
+                        extras.putString("pairx", pair);
+                        extras.putInt("whatspage", 3);
+                        i.putExtras(extras);                
+                        startActivity(i);
+                    	finish();
+        			}
+        		})
+
+        		.show();
+        	}
+
+
+        }
+ 
+    }
+    //koniec savetrademodel
+    
    
  
 
-    /**
-     * Background Async Task to Save Trade
-     * */
+
     class SaveTrade extends AsyncTask<String, String, String> {
     	
 
@@ -321,10 +505,6 @@ public class EditTradeActivity extends Activity {
                 
                 // Create new connector
         		if( accountx.equals("0")) {
-       			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
-       			 connector = new SyncAPIConnector(ServerEnum.DEMO);
-       		 	}
-       		 	if( accountx.equals("2")) {
        			 //System.out.println("connector = new SyncAPIConnector(ServerEnum.DEMO);");
        			 connector = new SyncAPIConnector(ServerEnum.DEMO);
        		 	}
@@ -444,10 +624,19 @@ public class EditTradeActivity extends Activity {
         	
         	pDialog.dismiss();
         	
+        	SQLiteDatabase db6=(new DatabaseTrades(EditTradeActivity.this)).getWritableDatabase();
+            db6.delete("trades", "_ID > 0", null);
+            db6.close();
+        	
+        	String titlex="";
+        	if( xtrade.equals("5")) { titlex=String.format(getResources().getString(R.string.trademodifyednum), iorder); }
+        	if( xtrade.equals("6")) { titlex=String.format(getResources().getString(R.string.trademodifyednum), iorder); }
+
+        	
         	if( tradeokl == 3 || tradeokl == 1 ){
         		
         		new AlertDialog.Builder(EditTradeActivity.this)
-                .setMessage(getString(R.string.trademodifyed))
+                .setMessage(titlex)
                 .setPositiveButton(getString(R.string.textok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) { 
                       

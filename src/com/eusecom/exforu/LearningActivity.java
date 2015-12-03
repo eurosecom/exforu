@@ -49,7 +49,7 @@ import android.widget.Toast;
 public class LearningActivity extends FragmentActivity {
 
 	private SmartFragmentStatePagerAdapter adapterViewPager;
-    String strana="0";
+    String strana="0", accountname, accountx;
     static String str1, str2, str3, str4;
     static Drawable drw1, drw2, drw3;
     static ViewPager vpPager;
@@ -86,8 +86,19 @@ public class LearningActivity extends FragmentActivity {
         pairx = extras.getString("pairx");
         whatspage = extras.getInt("whatspage");
         
+        accountx=SettingsActivity.getAccountx(this);
+        
+        accountname="DEMO";        
+        if( accountx.equals("2")) {
+        	accountname="MODEL";
+        }
+        if( accountx.equals("1")) {
+        	accountname="REAL";
+        }
+        
         title = (TextView) findViewById(R.id.title);
-        title.setText(pairx);
+        title.setText(getResources().getString(R.string.app_name) + " " + accountname);      
+        
         idpage = (TextView) findViewById(R.id.idpage);
         
         btnAgain = (Button) findViewById(R.id.btnAgain);
@@ -488,8 +499,6 @@ public class LearningActivity extends FragmentActivity {
 
 
     	}
-
-
 
 	    
 	    @Override

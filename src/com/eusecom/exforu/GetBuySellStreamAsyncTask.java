@@ -74,6 +74,7 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  String candl, buse, trade;
  private SQLiteDatabase db72=null;
  private Cursor constantsCursor72=null;
+ private SQLiteDatabase db61=null;
  
  GetBuySellStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
@@ -196,39 +197,7 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 			};
         
                       
-            String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
-            TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
-            //System.out.println("tradesresponse " + tradesresponse.toString());
-            db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
-            db6.delete("trades", "_ID > 0", null);
-            
-            for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
-
-            	
-            	//System.out.println(" opentime =" + tradesx.getOpen_time() + " order =" + tradesx.getOrder() 
-            	//		 + " openprice =" + tradesx.getOpen_price() + " volume =" + tradesx.getVolume());
-
-            	opent=tradesx.getOpen_price() + ""; 
-            	volumet=tradesx.getVolume() + ""; 
-            	ordert=tradesx.getOrder() + ""; 
-            	symbolt=tradesx.getSymbol() + ""; 
-            	timet=tradesx.getOpen_time() + "";
-            	cmdt=tradesx.getCmd() + "";
-            	
-                ContentValues cv6=new ContentValues();
-        		
-        		cv6.put("itime", timet);
-        		cv6.put("iopen", opent);
-        		cv6.put("ivolume", volumet);
-        		cv6.put("iorder", ordert);
-        		cv6.put("isymbol", symbolt);
-        		cv6.put("idruh", cmdt);
-        		
-
-        		db6.insert("trades", "time", cv6);
- 
-               }            
-               db6.close();
+			getTradesAgain();
             
 			connector.connectStream(sl);
 			System.out.println("AsyncBuySell " + "Stream connected.");
@@ -314,5 +283,132 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 			System.err.println(ex);
 		}
  }//exit
+ 
+ 
+ protected void getTradesAgain(){
+
+		System.out.println("getTradesAgain " + accountx);
+		String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
+		String ccoment=""; String tpx=""; String slx="";
+		db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
+     db6.delete("trades", "_ID > 0", null);
+     
+		if( accountx.equals("0") || accountx.equals("1") ) {
+			 		
+		try {
+			
+		
+     TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
+     //System.out.println("tradesresponse " + tradesresponse.toString());
+     System.out.println("getTradesAgain " + "demo");
+     
+     for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
+
+     	
+     	//System.out.println(" opentime =" + tradesx.getOpen_time() + " order =" + tradesx.getOrder() 
+     	//		 + " openprice =" + tradesx.getOpen_price() + " volume =" + tradesx.getVolume());
+
+     	opent=tradesx.getOpen_price() + ""; 
+     	volumet=tradesx.getVolume() + ""; 
+     	ordert=tradesx.getOrder() + ""; 
+     	symbolt=tradesx.getSymbol() + ""; 
+     	timet=tradesx.getOpen_time() + "";
+     	cmdt=tradesx.getCmd() + "";
+     	ccoment=tradesx.getCustomComment() + "";
+     	tpx=tradesx.getTp() + "";
+     	slx=tradesx.getSl() + "";
+     	
+         ContentValues cv6=new ContentValues();
+ 		
+ 		cv6.put("itime", timet);
+ 		cv6.put("iopen", opent);
+ 		cv6.put("ivolume", volumet);
+ 		cv6.put("iorder", ordert);
+ 		cv6.put("isymbol", symbolt);
+ 		cv6.put("idruh", cmdt);
+ 		cv6.put("imemo", ccoment);
+ 		cv6.put("itp", tpx);
+ 		cv6.put("isl", slx);
+ 		
+
+ 		db6.insert("trades", "time", cv6);
+
+        }            
+                   
+		}
+        // Catch errors
+	     catch (APICommandConstructionException e) {
+	    	 errors = errors + " API Command Construction Exception! \n";
+	    	 myDoSomethingCallBack.doChangeUIerr(errors);
+	         e.printStackTrace();
+	     } catch (APICommunicationException e) {
+	    	 errors = errors + " API Communication Exception! \n";
+	    	 myDoSomethingCallBack.doChangeUIerr(errors);
+	         e.printStackTrace();
+	     } catch (APIReplyParseException e) {
+	    	 errors = errors + " API Reply ParseException! \n";
+	    	 myDoSomethingCallBack.doChangeUIerr(errors);
+	         e.printStackTrace();
+	     } catch (APIErrorResponse e) {
+	    	 errors = errors + " API Error Response! \n";
+	    	 myDoSomethingCallBack.doChangeUIerr(errors);
+	         e.printStackTrace();
+	     } 
+		
+									}
+		if( accountx.equals("2") )  {
+			
+			System.out.println("getTradesAgain " + "model");
+			
+			try{
+		    		db61=(new DatabaseModels(mActivity)).getWritableDatabase();
+		    		Cursor c = db61.rawQuery("select iopen, ivolume, iorder, isymbol, itime, idruh, imemo, itp, isl from models where iorder >= 0 ORDER BY iorder ;", null);
+		    		if(c.moveToFirst()){    		
+		    			while(!c.isAfterLast()) 
+		    			{
+
+		    			opent=c.getString(0); 
+		    			volumet=c.getString(1); 
+		    			ordert=c.getString(2); 
+		    			symbolt=c.getString(3); 
+		    			timet=c.getString(4);
+		    			cmdt=c.getString(5);
+		    			ccoment=c.getString(6);
+		    			tpx=c.getString(7);
+		    			slx=c.getString(8);
+
+		    	    	ContentValues cv61=new ContentValues();
+		    	    	System.out.println("ordert " +  ordert);
+		    	    	
+		    	    	cv61.put("itime", timet);
+		    	    	cv61.put("iopen", opent);
+		    	    	cv61.put("ivolume", volumet);
+		    	    	cv61.put("iorder", ordert);
+		    	    	cv61.put("isymbol", symbolt);
+		    	    	cv61.put("idruh", cmdt);
+		    	    	cv61.put("imemo", ccoment);
+		    	    	cv61.put("itp", tpx);
+		    	    	cv61.put("isl", slx);
+
+		    	   		db6.insert("trades", "itime", cv61);
+
+		    	   		c.moveToNext();
+		    			}
+		    	}
+		    	c.close();
+		    	db61.close();
+		    	
+			 	}
+				catch (NullPointerException nullPointer)
+				{
+         	System.out.println("NPE GetTradesStreamAsyncTsk.java" +  nullPointer);
+				}
+			
+									}
+		
+		db6.close();
+			
+
+	}//gettradesagain
 
 }//asynctask

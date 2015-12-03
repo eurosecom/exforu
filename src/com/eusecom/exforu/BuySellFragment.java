@@ -8,8 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +71,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
     Button btnBuyok;
     
     String startlot, steplot;
+    String profitmodel="0";
     
     private SQLiteDatabase db7=null;
 
@@ -185,6 +189,12 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
             	if( accountx.equals("2")) {
                     actprics.setEnabled(true);
                     actprics.setFocusableInTouchMode(true);
+                    	if (isOnline()) 
+                    	{
+            			GetBuySellStreamAsyncTask.exit();
+            			GetBuySellStreamAsyncTask.cancel(true);
+                    	}
+                    	sendValueToAct("B", 2);
                     }
                 
             }
@@ -202,6 +212,12 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
             	if( accountx.equals("2")) {
                     actpricb.setEnabled(true);
                     actpricb.setFocusableInTouchMode(true);
+                    	if (isOnline()) 
+                    	{
+                    		GetBuySellStreamAsyncTask.exit();
+                    		GetBuySellStreamAsyncTask.cancel(true);
+                    	}
+                    	sendValueToAct("B", 2);
                     }
                 
             }
@@ -293,7 +309,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
     	    	String ivolume = inputMnoz.getText().toString();
     	    	String itp = inputTp.getText().toString();
     	    	String isl = inputSl.getText().toString();
-    	    	String actprict = actprics.getText().toString();
+    	    	String actprict = actprics.getText().toString().trim();
     	    	
     	    	Spinner ispinner=(Spinner) view.findViewById(R.id.ispinner);
     	    	String icomm = ispinner.getSelectedItem().toString();
@@ -308,9 +324,39 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
                 extrasu.putString("icomm", icomm);
                 extrasu.putLong("iorder", 0);
                 extrasu.putString("iprice", actprict);
+                extrasu.putInt("modall", 0);
                 iu.putExtras(extrasu);
-                startActivity(iu);
+                
+                double price = 0;
+                try {
+                	price = Double.parseDouble(actprict);
+                } catch (NumberFormatException e) {
+                    // EditText EtPotential does not contain a valid double
+                }
+                
+            if( price > 0 ){
+            	startActivity(iu);
                 getActivity().finish();
+                
+            }
+            else{
+            	 
+
+                new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.pricetxt))
+                .setMessage(getString(R.string.potrebujeteprice))
+                .setPositiveButton(getString(R.string.textok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) { 
+                      
+                    }
+                 })
+
+                 .show();
+                
+
+             }
+                
+                
                 
             }
         });
@@ -331,7 +377,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
     	    	String ivolume = inputMnoz.getText().toString();
     	    	String itp = inputTp.getText().toString();
     	    	String isl = inputSl.getText().toString();
-    	    	String actprict = actpricb.getText().toString();
+    	    	String actprict = actpricb.getText().toString().trim();
     	    	
     	    	Spinner ispinner=(Spinner) view.findViewById(R.id.ispinner);
     	    	String icomm = ispinner.getSelectedItem().toString();
@@ -346,9 +392,37 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
                 extrasu.putString("icomm", icomm);
                 extrasu.putLong("iorder", 0);
                 extrasu.putString("iprice", actprict);
+                extrasu.putInt("modall", 0);
                 iu.putExtras(extrasu);
-                startActivity(iu);
+                
+                double price = 0;
+                try {
+                	price = Double.parseDouble(actprict);
+                } catch (NumberFormatException e) {
+                    // EditText EtPotential does not contain a valid double
+                }
+                
+            if( price > 0 ){
+            	startActivity(iu);
                 getActivity().finish();
+                
+            }
+            else{
+            	 
+
+                new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.pricetxt))
+                .setMessage(getString(R.string.potrebujeteprice))
+                .setPositiveButton(getString(R.string.textok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) { 
+                      
+                    }
+                 })
+
+                 .show();
+                
+
+             }
     	    	
                 
             }
@@ -474,6 +548,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
     @Override
     public void doChangeUI4(final double bidp, final double askp, final double sprd, final long timeax) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -482,18 +557,34 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
 		    	 String bidps=bidp + "";
 		    	 actpricb.setText(askps);
 		    	 actprics.setText(bidps);
+		    	 
+		    	 if( accountx.equals("2") ) {
+		    		 actprices=askp;
+		    		 actpriceb=bidp;
+		    		 actpricex=askp;
+		    		 
+		    		 readProfitModel();
+		    	 }
 
 		    }
 		});
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE BuyellFragment.java ui4 " +  nullPointer);
+		}
      
     }
     
     @Override
     public void doChangeUI3(final double balance, final double equity) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
+
+		    	 if( accountx.equals("0") || accountx.equals("1") ) {
 
 		    	 String sbalances = balance + "";
 		    	 actbalance.setText(sbalances);
@@ -504,9 +595,21 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
              	 sprofits = sprofits.replace(',','.');
              	 
              	 actprofit.setText(sprofits);
+		    	 }
+		    	 
+             	if( accountx.equals("2") ) {
+		    		 
+			    	 actprofit.setText(profitmodel);
+			    	 
+		    	 }
 
 		    }
 		});
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE BuyellFragment.java ui3 " +  nullPointer);
+		}
      
     }
     
@@ -514,6 +617,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
     public void doChangeUI2(final List<String> myopenListx, final List<String> myvolumeListx
     		,final List<String> myorderListx, final List<String> mysymbolListx, final List<String> mytimeListx) {
     	//Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -522,6 +626,11 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
 
 		    }
 		});
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE BuyellFragment.java ui2 " +  nullPointer);
+		}
      
     }
 
@@ -529,6 +638,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
     public void doChangeUI(final List<String> myopenListx, final List<String> myvolumeListx
     		,final List<String> myorderListx, final List<String> mysymbolListx, final List<String> mytimeListx) {
 
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -537,12 +647,18 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
 
 		    }
 		});
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE BuyellFragment.java ui " +  nullPointer);
+		}
  
     }
     
     @Override
     public void doChangeUIerr(final String errs) {
 
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -550,12 +666,18 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
 
 		    }
 		});
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE BuyellFragment.java uierr " +  nullPointer);
+		}
 
     }
     
     @Override
     public void doChangeUIpost(final String errs) {
 
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -563,6 +685,11 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
 		    	 sendValueToAct("B", 2);
 		    }
 		});
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE BuyellFragment.java uipost " +  nullPointer);
+		}
 
     }
     
@@ -654,6 +781,57 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
 		GetBuySellStreamAsyncTask = new GetBuySellStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);
 		GetBuySellStreamAsyncTask.execute();
    	}
+   	
+
+    public boolean readProfitModel() {
+    	
+    	SQLiteDatabase db5=null;
+
+    	try{
+    	db5=(new DatabaseModels(getActivity())).getWritableDatabase();
+
+    	//read items	
+    	Cursor constantsCursor3=db5.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh, imemo, itp, isl " +
+				"FROM models WHERE _id >= 0 ORDER BY iopen DESC ",
+				null);
+		
+    	double profmod=0; double profmod2=0; double profmod3=0;
+        constantsCursor3.moveToFirst();
+        while(!constantsCursor3.isAfterLast()) {
+        	
+        	//here count Profit for Model profitmodel
+        	int idruhi = Integer.parseInt(constantsCursor3.getString(constantsCursor3.getColumnIndex("idruh")));
+        	double iopend = Double.parseDouble(constantsCursor3.getString(constantsCursor3.getColumnIndex("iopen")));
+        	double ivolumed = Double.parseDouble(constantsCursor3.getString(constantsCursor3.getColumnIndex("ivolume")));
+        	if( idruhi == 0 ){ 
+        		profmod=profmod + ( 100000* ivolumed * ( actpriceb - iopend) );
+        	}
+        	if( idruhi == 1 ){ 
+        		profmod=profmod + ( 100000* ivolumed * ( iopend - actprices) );
+        	}
+        	
+        	String profmods=profmod + "";
+        	Log.i("profmod ", profmods);
+
+        	constantsCursor3.moveToNext();
+        }
+
+        if( actpricex > 0 ) {
+        profmod2=profmod/actpricex;
+        }
+        profmod3=round(profmod2,2);
+        profitmodel=profmod3 + "";
+        constantsCursor3.close();
+    	} catch (IllegalStateException ignored) {
+    	    // There's no way to avoid getting this if saveInstanceState has already been called.
+    	}
+    	
+        
+        db5.close();
+        
+        return false;
+    }
+    //update readProfitModel
    	
 
 }//end of fragment

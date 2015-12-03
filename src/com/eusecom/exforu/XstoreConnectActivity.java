@@ -1,3 +1,6 @@
+/* I do not use this script now.
+*/
+
 package com.eusecom.exforu;
 
 import android.app.Activity;

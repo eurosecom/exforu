@@ -133,6 +133,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 	String senditem, senddruh, sendvolume, sendprice, sendcomm;
 	Long sendorder;
 	String sendtp="0", sendsl="0";
+	String profitmodel="0";
 
     // newInstance constructor for creating fragment with arguments
     public static TradesFragment newInstance(int page, String pairx, String implessx) {
@@ -271,6 +272,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
     public void doChangeItem(final String itemx, final String idruhx, final String iorderx
     		, final String ivolumex, final String ipricex, final String icommx, final String itpx, final String islx) {
 
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -289,12 +291,20 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 
 		    }
 		});
+    	
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE TradesFragment.java uiitem" +  nullPointer);
+		}
      
     }
     
     @Override
     public void doChangeUI4(final double bidp, final double askp, final double sprd, final long timeax) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -323,7 +333,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 		         }
                  catch (NullPointerException nullPointer)
                  {
-                 	System.out.println("NPE TradesFragment.java" +  nullPointer);
+                 	System.out.println("NPE TradesFragment.java " +  nullPointer);
                  }
 		    		
 		         
@@ -345,17 +355,26 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 
 		    }
 		});
+    	
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE TradesFragment.java ui4 " +  nullPointer);
+		}
      
     }
     
     @Override
     public void doChangeUI3(final double balance, final double equity) {
      //Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
 
-		    	 
+		    	 if( accountx.equals("0") || accountx.equals("1") ) {
+		    		 
 		    	 String sbalances = balance + "";
 		    	 actbalance.setText(sbalances);
 		    	 
@@ -366,9 +385,23 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 
 
 		    	 actprofit.setText(sprofits);
+		    	 
+		    	 }
+		    	 
+		    	 if( accountx.equals("2") ) {
+		    		 
+			    	 actprofit.setText(profitmodel);
+			    	 
+		    	 }
 
 		    }
 		});
+    	
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE TradesFragment.java ui3 " +  nullPointer);
+		}
      
     }
     
@@ -376,6 +409,8 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
     public void doChangeUI2(final List<String> myopenListx, final List<String> myvolumeListx
     		,final List<String> myorderListx, final List<String> mysymbolListx, final List<String> mytimeListx) {
     	//Toast.makeText(StreamActivity.this, "Finish", Toast.LENGTH_LONG).show();
+    	
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -386,12 +421,19 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 
 		    }
 		});
+    	
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE TradesFragment.java ui2 " +  nullPointer);
+		}
      
     }
 
     @Override
     public void doChangeUI() {
 
+    	try{
     	getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
@@ -413,33 +455,52 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 
 		    }
 		});
+    	
+    	}
+		catch (NullPointerException nullPointer)
+		{
+		System.out.println("NPE TradesFragment.java ui " +  nullPointer);
+		}
  
     }
     
     @Override
     public void doChangeUIerr(final String errs) {
 
-    	getActivity().runOnUiThread(new Runnable() {
+    	try{
+    		getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
 		    	 Toast.makeText(getActivity(), errs, Toast.LENGTH_LONG).show();
 
 		    }
-		});
+    		});
+    	
+    	}
+    	catch (NullPointerException nullPointer)
+    	{
+		System.out.println("NPE TradesFragment.java uierr " +  nullPointer);
+    	}
 
     }
     
     @Override
     public void doChangeUIpost(final String errs) {
 
-    	getActivity().runOnUiThread(new Runnable() {
+    	try{
+    		getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
 
 		    	 sendValueToAct("C", 3);
 		    	 
-		    }
-		});
+		     }
+    		});
+    	}
+		catch (NullPointerException nullPointer)
+		{
+			System.out.println("NPE TradesFragment.java uipost " +  nullPointer);
+		}
 
     }
 
@@ -663,8 +724,23 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 				"FROM  trades WHERE _id >= 0 ORDER BY iopen DESC ",
 				null);
 		
+    	double profmod=0; double profmod2=0; double profmod3=0;
         constantsCursor3.moveToFirst();
         while(!constantsCursor3.isAfterLast()) {
+        	
+        	//here count Profit for Model profitmodel
+        	int idruhi = Integer.parseInt(constantsCursor3.getString(constantsCursor3.getColumnIndex("idruh")));
+        	double iopend = Double.parseDouble(constantsCursor3.getString(constantsCursor3.getColumnIndex("iopen")));
+        	double ivolumed = Double.parseDouble(constantsCursor3.getString(constantsCursor3.getColumnIndex("ivolume")));
+        	if( idruhi == 0 ){ 
+        		profmod=profmod + ( 100000* ivolumed * ( actpriceb - iopend) );
+        	}
+        	if( idruhi == 1 ){ 
+        		profmod=profmod + ( 100000* ivolumed * ( iopend - actprices) );
+        	}
+        	
+        	//String profmods=profmod + "";
+        	//Log.i("profmod ", profmods);
         	
         	myopenList.add(constantsCursor3.getString(constantsCursor3.getColumnIndex("iopen")));
         	myvolumeList.add(constantsCursor3.getString(constantsCursor3.getColumnIndex("ivolume")));
@@ -685,6 +761,11 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
         	constantsCursor3.moveToNext();
         }
 
+        if( actpricex > 0 ) {
+        profmod2=profmod/actpricex;
+        }
+        profmod3=round(profmod2,2);
+        profitmodel=profmod3 + "";
         constantsCursor3.close();
     	} catch (IllegalStateException ignored) {
     	    // There's no way to avoid getting this if saveInstanceState has already been called.
@@ -698,7 +779,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
         	myorderList.add("0.0");
         	mysymbolList.add("0.0");
         	mytimeList.add(unixtimes);
-        	mydruhList.add("0");
+        	mydruhList.add("2");
         	mycomentList.add("x");
         	mytpList.add("0");
         	myslList.add("0");
@@ -793,6 +874,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
             extrase.putString("isl", sendsl);
             extrase.putString("icomm", sendcomm);
             extrase.putLong("iorder", sendorder);
+            extrase.putInt("modall", 0);
             ie.putExtras(extrase);
             startActivity(ie);
             getActivity().finish();
@@ -805,7 +887,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
         	Toast.makeText(getActivity(), "delete click " + senditem, Toast.LENGTH_SHORT).show();
         	
         	new AlertDialog.Builder(getActivity())
-			.setTitle(getString(R.string.closetrade) + " " + sendorder)
+        	.setTitle(getString(R.string.closetrade) + " " + sendorder)
 			.setMessage(getString(R.string.wantclose))
 			.setPositiveButton(R.string.textyes,
 													new DialogInterface.OnClickListener() {
@@ -826,6 +908,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 		            extrasu.putString("iprice", "0");
 		            //it's position 
 		            extrasu.putLong("iorder", sendorder);
+		            extrasu.putInt("modall", 0);
 		            iu.putExtras(extrasu);
 		            startActivity(iu);
 		            getActivity().finish();
@@ -844,9 +927,76 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
 				}
 			})
 			.show();
+
+            break;
             
+        case R.id.modifyall:
+
+    		Toast.makeText(getActivity(), "edit click " + senditem, Toast.LENGTH_SHORT).show();
+
+    		Intent iea = new Intent(getActivity(), EditTradeActivity.class);
+            Bundle extrasea = new Bundle();
+            //can to change itp, isl
+            if(senddruh.equals("0")) { extrasea.putString("xtrade", "5"); }
+            if(senddruh.equals("1")) { extrasea.putString("xtrade", "6"); }
+            extrasea.putString("pairx", pair);
+            extrasea.putString("ivolume", sendvolume);
+            extrasea.putString("iprice", sendprice);
+            extrasea.putString("itp", sendtp);
+            extrasea.putString("isl", sendsl);
+            extrasea.putString("icomm", sendcomm);
+            extrasea.putLong("iorder", sendorder);
+            extrasea.putInt("modall", 1);
+            iea.putExtras(extrasea);
+            startActivity(iea);
+            getActivity().finish();
+            
+            break;
+            
+            
+        case R.id.closeall:
         	
-            
+        	Toast.makeText(getActivity(), "delete click " + senditem, Toast.LENGTH_SHORT).show();
+        	
+        	new AlertDialog.Builder(getActivity())
+        	.setTitle(getString(R.string.closetrades) + " sys " + sendcomm)
+			.setMessage(getString(R.string.wantcloses))			
+			.setPositiveButton(R.string.textyes,
+													new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+															int whichButton) {
+					
+					
+					Intent iu = new Intent(getActivity(), MakeTradeActivity.class);
+		            Bundle extrasu = new Bundle();
+		            //have to set ivolume, iorder is position, icomm may be empty
+		            if(senddruh.equals("0")) { extrasu.putString("xtrade", "3"); }
+		            if(senddruh.equals("1")) { extrasu.putString("xtrade", "4"); }
+		            extrasu.putString("pairx", pair);
+		            extrasu.putString("ivolume", sendvolume);
+		            extrasu.putString("itp", "0");
+		            extrasu.putString("isl", "0");
+		            extrasu.putString("icomm", sendcomm);
+		            extrasu.putString("iprice", "0");
+		            //it's position 
+		            extrasu.putLong("iorder", sendorder);
+		            extrasu.putInt("modall", 1);
+		            iu.putExtras(extrasu);
+		            startActivity(iu);
+		            getActivity().finish();
+
+				}
+			})
+			.setNegativeButton(R.string.textno,
+													new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+															int whichButton) {
+					// ignore, just dismiss
+					
+				}
+			})
+			.show();
+
             break;
 
         }

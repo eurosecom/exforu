@@ -294,7 +294,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  
  	protected void getTradesAgain(){
 
- 		System.out.println("getTradesAgain " + "to sqllite");
+ 		System.out.println("getTradesAgain " + accountx);
  		String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
  		String ccoment=""; String tpx=""; String slx="";
  		db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
@@ -306,7 +306,8 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  			
  		
         TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
-        System.out.println("tradesresponse " + tradesresponse.toString());        
+        //System.out.println("tradesresponse " + tradesresponse.toString());
+        System.out.println("getTradesAgain " + "demo");
         
         for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
 
@@ -364,14 +365,15 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  									}
  		if( accountx.equals("2") )  {
  			
+ 			System.out.println("getTradesAgain " + "model");
+ 			
  			try{
  		    		db61=(new DatabaseModels(mActivity)).getWritableDatabase();
  		    		Cursor c = db61.rawQuery("select iopen, ivolume, iorder, isymbol, itime, idruh, imemo, itp, isl from models where iorder >= 0 ORDER BY iorder ;", null);
  		    		if(c.moveToFirst()){    		
  		    			while(!c.isAfterLast()) 
  		    			{
- 		    			ordert = c.getString(0);
- 		    			
+
  		    			opent=c.getString(0); 
  		    			volumet=c.getString(1); 
  		    			ordert=c.getString(2); 
