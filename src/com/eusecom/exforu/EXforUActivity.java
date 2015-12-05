@@ -144,7 +144,8 @@ public class EXforUActivity extends ActionBarActivity {
         
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+        String nav1 = String.format(navMenuTitles[1], myfavpair);
+        navDrawerItems.add(new NavDrawerItem(nav1, navMenuIcons.getResourceId(1, -1)));
  
         String favxs=favx + "";
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, favxs));
