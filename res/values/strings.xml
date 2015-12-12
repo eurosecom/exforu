@@ -4,6 +4,7 @@
     <string name="preferences">Settings</string>
     <string name="xfavorite">Set favorite</string>
     <string name="myfavorite">My favorite pairs</string>
+    <string name="candleshistory">Candles history</string>
     <string name="add">Add</string>
     <string name="del">Del</string>
     <string name="again">Again</string>
@@ -81,6 +82,7 @@
         <item >Stream EURUSD TXT</item>
         -->
         <item >Trade %s</item>
+        <item >Candles history</item>
         <item >Set favorite</item>
         <item >Settings</item>
         <!-- <item >Test</item> -->
@@ -93,6 +95,7 @@
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
+        <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>

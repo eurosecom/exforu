@@ -27,6 +27,7 @@ public class TestNecoActivity extends FragmentActivity {
 	int currentPosition = 0;
 	int changeorient = 0;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
