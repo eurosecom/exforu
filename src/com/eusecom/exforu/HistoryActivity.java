@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -89,6 +88,7 @@ public class HistoryActivity extends ActionBarActivity implements DoSomething{
     private static String[] myaskprices = null;
     private static String[] mybidprices = null;
     private static String[] myprofits = null;
+    private static String[] myidevents = null;
     
     private List<String> myfavList = new ArrayList<String>();
     private LinkedList<String> myfavLinkedList = new LinkedList<String>();
@@ -129,13 +129,14 @@ public class HistoryActivity extends ActionBarActivity implements DoSomething{
         constantsCursor21.moveToFirst();
         
         final int sizec = constantsCursor21.getCount();
-        myfavpairs = new String[sizec];
+        myfavpairs = new String[sizec]; myidevents = new String[sizec];
         myaskprices = new String[sizec]; mybidprices = new String[sizec]; myprofits = new String[sizec];
         
         int ic=0;
         while(!constantsCursor21.isAfterLast()) {
         	
         	myfavpairs[ic] = constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2"));
+        	myidevents[ic] = constantsCursor21.getString(constantsCursor21.getColumnIndex("_id"));
         	myaskprices[ic] = ""; mybidprices[ic] = ""; myprofits[ic] = "";
         	myfavList.add(constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2")));
         	myfavLinkedList.add(constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2")));
@@ -144,7 +145,8 @@ public class HistoryActivity extends ActionBarActivity implements DoSomething{
         }
         constantsCursor21.close();
         
-        Log.d("myfavList = ", myfavList.toString());
+        //Log.d("myfavList = ", myfavList.toString());
+        //Log.d("myidevents = ", myidevents[1]);
 
 		if (isOnline()) 
         {
@@ -156,7 +158,9 @@ public class HistoryActivity extends ActionBarActivity implements DoSomething{
 	        recyclerView = (RecyclerView) findViewById(R.id.list);
 	        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 	        recyclerView.setItemAnimator(new FadeInAnimator());	        
-	        adapter = new HistoryAdapter(this, new ArrayList<>(Arrays.asList(myfavpairs)), myAskList, myBidList, myProfitList);
+	        adapter = new HistoryAdapter(this, new ArrayList<>(Arrays.asList(myfavpairs)),
+	        		new ArrayList<>(Arrays.asList(myidevents)), 
+	        		myAskList, myBidList, myProfitList);
 	        recyclerView.setAdapter(adapter);
 	        recyclerView.setItemAnimator(new FadeInRightAnimator());
 	        recyclerView.getItemAnimator().setAddDuration(300);

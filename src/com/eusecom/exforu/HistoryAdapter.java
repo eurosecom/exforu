@@ -24,13 +24,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private Context mContext;
     private List<String> mDataSet;
+    private List<String> mIdevent;
 
 
-    public HistoryAdapter(Context context, List<String> dataSet, List<String> askPrice, 
+    public HistoryAdapter(Context context, List<String> dataSet, List<String> idevent, List<String> askPrice, 
     		List<String> bidPrice, List<String> Profit) {
     	
         mContext = context;
         mDataSet = dataSet;
+        mIdevent = idevent;
 
     }
 
@@ -62,13 +64,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     // View v at position pos is clicked.
                 	//String possx = pos + "";
                 	String poslx = pos + "";
-                	String mena2 = mDataSet.get(pos);
-                	Toast.makeText(mContext, "shortclick pos. " + poslx + " pair " + mena2, Toast.LENGTH_SHORT).show();
+                	String event2 = mDataSet.get(pos); 
+                	String id2 = mIdevent.get(pos);
+                	Toast.makeText(mContext, "shortclick pos. " + poslx + " pair " + event2, Toast.LENGTH_SHORT).show();
                 	//toggleSelection(pos);
                 	
-                	Intent i = new Intent(mContext, LearningActivity.class);
+                	Intent i = new Intent(mContext, HistoryCandlesActivity.class);
                 	Bundle extras = new Bundle();
-                    extras.putString("pairx", mena2);
+                    extras.putString("eventx", event2);
+                    extras.putString("idx", id2);
                     extras.putInt("whatspage", 0);
                     i.putExtras(extras);
                     v.getContext().startActivity(i);

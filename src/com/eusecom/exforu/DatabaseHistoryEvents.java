@@ -36,7 +36,7 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 	
 	public DatabaseHistoryEvents(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME2, null, 2);
+		super(context, DATABASE_NAME2, null, 3);
 	}
 	
 	@Override
@@ -49,28 +49,28 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 		ContentValues cv21=new ContentValues();
 		
 		cv21.put(PAIR2, "USD Interest rate change 12.02.2006");
-		cv21.put(NICK2, "nnn1");
-		cv21.put(MAIL2, "mmm1");
-		cv21.put(UZID2, "uzid xxx");
-		cv21.put(NAME2, "name xxx");
+		cv21.put(NICK2, "EURUSD");
+		cv21.put(MAIL2, "2006-02-12");
+		cv21.put(UZID2, "14:30");
+		cv21.put(NAME2, "120");
 		cv21.put(PSWD2, "memo 1");
 		cv21.put(DRUH2, "druh xxx");
 		db21.insert("historyevents", PAIR2, cv21);
 		
 		cv21.put(PAIR2, "USD Interest rate change 16.12.2015");
-		cv21.put(NICK2, "nnn2");
-		cv21.put(MAIL2, "mmm2");
-		cv21.put(UZID2, "uzid xxx2");
-		cv21.put(NAME2, "name xxx2");
+		cv21.put(NICK2, "EURUSD");
+		cv21.put(MAIL2, "2015-12-16");
+		cv21.put(UZID2, "14:30");
+		cv21.put(NAME2, "120");
 		cv21.put(PSWD2, "memo 2");
 		cv21.put(DRUH2, "druh xxx2");
 		db21.insert("historyevents", PAIR2, cv21);
 		
 		cv21.put(PAIR2, "US Non Farm Payroll 21.11.2015");
-		cv21.put(NICK2, "nnn3");
-		cv21.put(MAIL2, "mmm3");
-		cv21.put(UZID2, "uzid xxx3");
-		cv21.put(NAME2, "name xxx3");
+		cv21.put(NICK2, "EURUSD");
+		cv21.put(MAIL2, "2015-11-21");
+		cv21.put(UZID2, "20:00");
+		cv21.put(NAME2, "120");
 		cv21.put(PSWD2, "memo 3");
 		cv21.put(DRUH2, "druh xxx3");
 		db21.insert("historyevents", PAIR2, cv21);
