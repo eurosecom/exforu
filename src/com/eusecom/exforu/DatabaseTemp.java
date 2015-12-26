@@ -22,23 +22,24 @@ import android.database.sqlite.SQLiteDatabase;
 
 
 public class DatabaseTemp extends SQLiteOpenHelper {
-	private static final String DATABASE_NAME7="db7";
+	private static final String DATABASE_NAME7="db22";
 	public static final String FAVACT="favact";
 	public static final String CANDL="candl";
 	public static final String BUSE="buse";
 	public static final String TRADE="trade";
+	public static final String HIST="hist";
 	
 	
 	public DatabaseTemp(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME7, null, 1);
+		super(context, DATABASE_NAME7, null, 22);
 	}
 	
 	@Override
-	public void onCreate(SQLiteDatabase db7) {
+	public void onCreate(SQLiteDatabase db22) {
 		
-		db7.execSQL("CREATE TABLE temppar (_id INTEGER PRIMARY KEY AUTOINCREMENT, favact TEXT, " +
-				"candl TEXT, buse TEXT, trade TEXT);");
+		db22.execSQL("CREATE TABLE temppar (_id INTEGER PRIMARY KEY AUTOINCREMENT, favact TEXT, " +
+				"candl TEXT, buse TEXT, trade TEXT, hist TEXT);");
 		
 		ContentValues cv7=new ContentValues();
 		
@@ -46,16 +47,17 @@ public class DatabaseTemp extends SQLiteOpenHelper {
 		cv7.put(CANDL, "0");
 		cv7.put(BUSE, "0");
 		cv7.put(TRADE, "0");
+		cv7.put(HIST, "0");
 
-		db7.insert("temppar", FAVACT, cv7);
+		db22.insert("temppar", FAVACT, cv7);
 		
 	
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db3, int oldVersion, int newVersion) {
+	public void onUpgrade(SQLiteDatabase db7, int oldVersion, int newVersion) {
 		android.util.Log.w("temppar", "Upgrading database, which will destroy all old data");
-		db3.execSQL("DROP TABLE IF EXISTS candles");
-		onCreate(db3);
+		db7.execSQL("DROP TABLE IF EXISTS temppar");
+		onCreate(db7);
 	}
 }

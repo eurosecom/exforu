@@ -36,7 +36,7 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 	
 	public DatabaseHistoryEvents(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME2, null, 3);
+		super(context, DATABASE_NAME2, null, 4);
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 		cv21.put(MAIL2, "2006-02-12");
 		cv21.put(UZID2, "14:30");
 		cv21.put(NAME2, "120");
-		cv21.put(PSWD2, "memo 1");
+		cv21.put(PSWD2, "M5");
 		cv21.put(DRUH2, "druh xxx");
 		db21.insert("historyevents", PAIR2, cv21);
 		
@@ -62,7 +62,7 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 		cv21.put(MAIL2, "2015-12-16");
 		cv21.put(UZID2, "14:30");
 		cv21.put(NAME2, "120");
-		cv21.put(PSWD2, "memo 2");
+		cv21.put(PSWD2, "M5");
 		cv21.put(DRUH2, "druh xxx2");
 		db21.insert("historyevents", PAIR2, cv21);
 		
@@ -71,7 +71,7 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 		cv21.put(MAIL2, "2015-11-21");
 		cv21.put(UZID2, "20:00");
 		cv21.put(NAME2, "120");
-		cv21.put(PSWD2, "memo 3");
+		cv21.put(PSWD2, "M5");
 		cv21.put(DRUH2, "druh xxx3");
 		db21.insert("historyevents", PAIR2, cv21);
 		

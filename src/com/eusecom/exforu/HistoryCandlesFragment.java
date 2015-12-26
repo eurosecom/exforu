@@ -48,8 +48,7 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 
 	@SuppressWarnings("unused")
 	private int page;
-	@SuppressWarnings("unused")
-	private String impless;
+	private String idx;
 	private String pair;
 	
 	String userpsws;
@@ -137,12 +136,12 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 	
 	
     // newInstance constructor for creating fragment with arguments
-    public static HistoryCandlesFragment newInstance(int page, String pairx, String implessx, int whatspagex) {
+    public static HistoryCandlesFragment newInstance(int page, String pairx, String idxx, int whatspagex) {
     	HistoryCandlesFragment fragmentCandles = new HistoryCandlesFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
         args.putString("pairx", pairx);
-        args.putString("importantless", implessx);
+        args.putString("idx", idxx);
         args.putInt("whatspagex", whatspagex);
         fragmentCandles.setArguments(args);
         return fragmentCandles;
@@ -184,7 +183,7 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("page", 0);
         pair = getArguments().getString("pairx");
-        impless = getArguments().getString("importantless");
+        idx = getArguments().getString("idx");
         whatspage = getArguments().getInt("whatspagex", 0);
         System.out.println("whatspage: " + whatspage);
         
@@ -216,7 +215,7 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 		String symbolget = pair;
 		listget.add(symbolget);
 
-		GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);
+		GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat, idx);
         
     }
     //oncreate
@@ -875,7 +874,8 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 			String symbolget = pair;
 			listget.add(symbolget);
 
-			GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat);	        
+			GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20
+					, accountx, userpsws, useridl, listget, symbolget, repeat, idx);	        
             GetHistoryCandlesStreamAsyncTask.execute();
             
             //if( whatspage == 2 ) { ((LearningActivity)getActivity()).switchFragment(1); }

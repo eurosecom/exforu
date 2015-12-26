@@ -80,7 +80,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
         setContentView(R.layout.learninglay);
         
         db7=(new DatabaseTemp(this)).getWritableDatabase();        
-        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='1', buse='0', trade='0' WHERE _id > 0 ";
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0', hist='1' WHERE _id > 0 ";
    	 	db7.execSQL(UpdateSql7);
    	 	db7.close();
    	 	
@@ -363,7 +363,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
             super(fragmentManager);
             
             this.fragments = new ArrayList<Fragment>();
-    		fragments.add(HistoryCandlesFragment.newInstance(0, pairx, importantless, whatspage));
+    		fragments.add(HistoryCandlesFragment.newInstance(0, pairx, idx, whatspage));
     		fragments.add(ImportantFragment.newInstance(1, str4, numless, nazless, importantless));
     		fragments.add(ImportantFragment.newInstance(1, str4, numless, nazless, importantless));
     		fragments.add(ImportantFragment.newInstance(1, str4, numless, nazless, importantless));
@@ -513,11 +513,12 @@ public class HistoryCandlesActivity extends FragmentActivity {
     	public void buttonAgain(View v) {
     	
     	btnAgain.setVisibility(View.GONE);
-    	Intent i = new Intent(this, LearningActivity.class);
+    	Intent i = new Intent(this, HistoryCandlesActivity.class);
     	Bundle extras = new Bundle();
-        extras.putString("pairx", pairx);
-        int whatspagex = Integer.parseInt(idpage.getText().toString());
-        extras.putInt("whatspage", whatspagex);
+        extras.putString("pairx", pairx);        
+        extras.putString("eventx", eventx);
+        extras.putString("idx", idx);
+        extras.putInt("whatspage", 0);
         
         
         i.putExtras(extras);                

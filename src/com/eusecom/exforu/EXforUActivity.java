@@ -88,7 +88,7 @@ public class EXforUActivity extends ActionBarActivity {
         title.setText(getResources().getString(R.string.app_name) + " " + accountname);
 		
 		db7=(new DatabaseTemp(this)).getWritableDatabase();        
-        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0', hist='0' WHERE _id > 0 ";
    	 	db7.execSQL(UpdateSql7);
    	 	db7.close();
 

@@ -75,7 +75,7 @@ public class LearningActivity extends FragmentActivity {
         setContentView(R.layout.learninglay);
         
         db7=(new DatabaseTemp(this)).getWritableDatabase();        
-        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='1', buse='0', trade='0' WHERE _id > 0 ";
+        String UpdateSql7 = "UPDATE temppar SET favact='0', candl='1', buse='0', trade='0', hist='0' WHERE _id > 0 ";
    	 	db7.execSQL(UpdateSql7);
    	 	db7.close();
    	 	

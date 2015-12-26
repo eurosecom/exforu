@@ -47,6 +47,7 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
 	
 	LinkedList<String> listget = new LinkedList<String>();
 	String symbolget;
+	String idx;
 	int repeati;
 	String errors="";
 
@@ -81,7 +82,7 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
  
  GetHistoryCandlesStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
-		 , String symbol, int repeat){
+		 , String symbol, int repeat, String idxx){
   myDoSomethingCallBack = callback;
   myMax = max;
   accountx=account;
@@ -91,6 +92,7 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
   symbolget=symbol;
   repeati=repeat;
   mActivity = activity;
+  idx = idxx;
  }
 
  @Override
