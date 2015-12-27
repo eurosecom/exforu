@@ -73,11 +73,12 @@ public class HistoryCandlesActivity extends FragmentActivity {
 	private SQLiteDatabase db7=null;
 	private SQLiteDatabase db21=null;
 	private Cursor constantsCursor21=null;
+	String headx;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.learninglay);
+        setContentView(R.layout.candleshistory);
         
         db7=(new DatabaseTemp(this)).getWritableDatabase();        
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0', hist='1' WHERE _id > 0 ";
@@ -93,7 +94,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
         whatspage = extras.getInt("whatspage");
         
         //find pairx at DatabaseHistoryevents by idx
-        pairx = "";
+        headx = "";
         db21=(new DatabaseHistoryEvents(this)).getWritableDatabase();
 
         constantsCursor21=db21.rawQuery("SELECT _ID, pair2, pswd2, name2, nick2 "+
@@ -105,7 +106,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
         int ic=0;
         while(!constantsCursor21.isAfterLast()) {
         	
-        	pairx = constantsCursor21.getString(constantsCursor21.getColumnIndex("nick2"));
+        	headx = constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2"));
         	ic=ic+1;
         	constantsCursor21.moveToNext();
         }
@@ -124,7 +125,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
         }
         
         title = (TextView) findViewById(R.id.title);
-        title.setText(getResources().getString(R.string.app_name) + " " + accountname);      
+        title.setText(headx);      
         
         idpage = (TextView) findViewById(R.id.idpage);
         
@@ -224,6 +225,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
                  spinnerAdapter.add("MN1");
 
         spinner.setAdapter(spinnerAdapter);
+        spinner.setVisibility(View.GONE);
         
         String periodxy =SettingsActivity.getPeriodx(this);
         spinner.setSelection(spinnerAdapter.getPosition(periodxy),true);
@@ -285,7 +287,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
           // you probably want this:
     	  String xxxsps=xxxsp + "";
     	  Log.d("updateAgain " + value, "xxsp " + xxxsps);
-    	  btnAgain.setVisibility(View.VISIBLE);
+    	  //btnAgain.setVisibility(View.VISIBLE);
     	  idpage.setText(xxxsps);
 
       }

@@ -134,6 +134,9 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 	private SQLiteDatabase db7=null;
 	String profitmodel="0";
 	
+	private SQLiteDatabase db21=null;
+	private Cursor constantsCursor21=null;
+	String pairx;
 	
     // newInstance constructor for creating fragment with arguments
     public static HistoryCandlesFragment newInstance(int page, String pairx, String idxx, int whatspagex) {
@@ -203,10 +206,29 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
         	userpsws=SettingsActivity.getUserPswr(getActivity());
         }
 
+        pairx = "";
+        db21=(new DatabaseHistoryEvents(getActivity())).getWritableDatabase();
+
+        constantsCursor21=db21.rawQuery("SELECT _ID, pair2, pswd2, name2, nick2 "+
+    			"FROM  historyevents WHERE _id = " + idx + " ORDER BY _id DESC ",
+    			null);
+        
+        constantsCursor21.moveToFirst();
+
+        int ic=0;
+        while(!constantsCursor21.isAfterLast()) {
+        	
+        	pairx = constantsCursor21.getString(constantsCursor21.getColumnIndex("nick2"));
+        	ic=ic+1;
+        	constantsCursor21.moveToNext();
+        }
+        constantsCursor21.close();
+        db21.close();
+        
+        System.out.println("pairx at cndfr: " + pairx);
+        
         db4=(new DatabaseCandles(getActivity())).getWritableDatabase();
     	readSqlCandles();
-
-    	//System.out.println("openlist: " + myopenList.toString());
 
         IntentFilter filter = new IntentFilter(ACTION_INTENT);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
@@ -215,7 +237,8 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 		String symbolget = pair;
 		listget.add(symbolget);
 
-		GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws, useridl, listget, symbolget, repeat, idx);
+		GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws
+				, useridl, listget, pairx, repeat, idx);
         
     }
     //oncreate
@@ -875,7 +898,7 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 			listget.add(symbolget);
 
 			GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20
-					, accountx, userpsws, useridl, listget, symbolget, repeat, idx);	        
+					, accountx, userpsws, useridl, listget, pairx, repeat, idx);	        
             GetHistoryCandlesStreamAsyncTask.execute();
             
             //if( whatspage == 2 ) { ((LearningActivity)getActivity()).switchFragment(1); }

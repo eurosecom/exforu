@@ -77,9 +77,8 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
  private SQLiteDatabase db3=null;
  private Activity mActivity;
  
- 	String candl, buse, trade;
-
- 
+ 	String candl, buse, trade, pairx;
+ 	
  GetHistoryCandlesStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
 		 , String symbol, int repeat, String idxx){
@@ -100,7 +99,6 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
 
 	    
 	vystuptxt=""; vystuptxt2="";
-	
 	//Log.d("AsyncTask", "AsyncTask is running");
 	
 	 try {
