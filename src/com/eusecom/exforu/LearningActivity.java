@@ -34,7 +34,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -241,7 +240,7 @@ public class LearningActivity extends FragmentActivity {
 
           @Override
           public void onReceive(Context context, Intent intent) {
-        	  Log.d("change again", "I am at onReceive.");
+        	  //Log.d("change again", "I am at onReceive.");
               if(ACTION_INTENT.equals(intent.getAction())) {
             	  
             	  	Bundle extras = intent.getExtras();
@@ -257,7 +256,7 @@ public class LearningActivity extends FragmentActivity {
       private void updateAgain(String value, int xxxsp) {
           // you probably want this:
     	  String xxxsps=xxxsp + "";
-    	  Log.d("updateAgain " + value, "xxsp " + xxxsps);
+    	  //Log.d("updateAgain " + value, "xxsp " + xxxsps);
     	  btnAgain.setVisibility(View.VISIBLE);
     	  idpage.setText(xxxsps);
 
@@ -321,7 +320,7 @@ public class LearningActivity extends FragmentActivity {
         dataBundle.putString("UI_VALUE", value);
         intent.putExtras(dataBundle);
         
-        Log.d("change ui", "I am at sendValueToFragments.");
+        //Log.d("change ui", "I am at sendValueToFragments.");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         
     }
@@ -376,22 +375,22 @@ public class LearningActivity extends FragmentActivity {
 
    			switch (position) {               
                case 0:
-               	Log.i("instantiateItem 0", "instantiateItem");
+               	//Log.i("instantiateItem 0", "instantiateItem");
                	CandlesFragment fragment0 = (CandlesFragment) super.instantiateItem(container, position);
       		     	fragments.set(0, fragment0);
       		     	return fragment0;
                case 1:
-               	Log.i("instantiateItem 1", "instantiateItem");
+               	//Log.i("instantiateItem 1", "instantiateItem");
                	BuySellFragment fragment1 = (BuySellFragment) super.instantiateItem(container, position);
       		     	fragments.set(1, fragment1);
       		     	return fragment1;
                case 2:
-               	Log.i("instantiateItem 2", "instantiateItem");
+               	//Log.i("instantiateItem 2", "instantiateItem");
                	TradesFragment fragment2 = (TradesFragment) super.instantiateItem(container, position);
       		     	fragments.set(2, fragment2);
       		     	return fragment2;  	
                case 3:
-                  	Log.i("instantiateItem 3", "instantiateItem");
+                  	//Log.i("instantiateItem 3", "instantiateItem");
                   	ImportantFragment fragment3 = (ImportantFragment) super.instantiateItem(container, position);
          		     	fragments.set(3, fragment3);
          		     	return fragment3;

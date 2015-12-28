@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.TextView;
 
 import pro.xstore.api.sync.Credentials;
@@ -163,7 +162,7 @@ public class GetCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				    candl = constantsCursor71.getString(constantsCursor71.getColumnIndex("candl"));
 				    constantsCursor71.close();
 				    db71.close();
-				    Log.d("Async candl 2", candl);
+				    //Log.d("Async candl 2", candl);
 				    if( candl.equals("0")) {
 				    	try {
 				    		connector.unsubscribePrice(symbolget);

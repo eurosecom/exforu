@@ -6,17 +6,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.TextView;
-
 import pro.xstore.api.sync.Credentials;
 import pro.xstore.api.sync.SyncAPIConnector;
-
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
-
 import pro.xstore.api.message.command.APICommandFactory;
 import pro.xstore.api.message.error.APICommandConstructionException;
 import pro.xstore.api.message.error.APICommunicationException;
@@ -159,7 +155,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 				    trade = constantsCursor72.getString(constantsCursor72.getColumnIndex("trade"));
 				    constantsCursor72.close();
 				    db72.close();
-				    Log.d("Async trade 2", trade);
+				    //Log.d("Async trade 2", trade);
 				    if( trade.equals("0")) {
 				    	try {
 				    		connector.unsubscribePrice(symbolget);

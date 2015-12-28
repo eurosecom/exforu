@@ -157,7 +157,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 
           @Override
           public void onReceive(Context context, Intent intent) {
-        	  Log.d("change ui", "I am at onReceive CandlesFragment.");
+        	  //Log.d("change ui", "I am at onReceive CandlesFragment.");
               if(ACTION_INTENT.equals(intent.getAction())) {
             	  
             	  	Bundle extras = intent.getExtras();
@@ -187,7 +187,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         pair = getArguments().getString("pairx");
         impless = getArguments().getString("importantless");
         whatspage = getArguments().getInt("whatspagex", 0);
-        System.out.println("whatspage: " + whatspage);
+        //System.out.println("whatspage: " + whatspage);
         
         accountx=SettingsActivity.getAccountx(getActivity());
         periodxy =SettingsActivity.getPeriodx(getActivity());
@@ -431,11 +431,12 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 		    	 actprofit.setText(sprofits);
 		    	 }
 		    	 
-	             	if( accountx.equals("2") ) {
+	             if( accountx.equals("2") ) {
 			    		 
+	            	 	 //System.out.println("profitmodel = " +  profitmodel);
 				    	 actprofit.setText(profitmodel);
 				    	 
-			    	 }
+			     }
 
 		    }
 		});
@@ -569,7 +570,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
           dataBundle.putString("UI_VALUE", value);
           intent.putExtras(dataBundle);
           
-          Log.d("change again", "I am at sendValueToAct.");
+          //Log.d("change again", "I am at sendValueToAct.");
           LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
           
         
@@ -841,8 +842,8 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
         //System.out.println("oplos " + oplos);
         
         readtrades();
-        System.out.println("tropenList " + tropenList);
-        Log.d("trdruhList", trdruhList.toString());
+        //System.out.println("tropenList " + tropenList);
+        //Log.d("trdruhList", trdruhList.toString());
 
         viewact.setCandle(1, openda, closeda, highda, lowda, vva, oplos, ophis, tropenList, trdruhList);
         //System.out.println("openda " + openda);
