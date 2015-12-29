@@ -78,10 +78,12 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
  private Activity mActivity;
  
  	String candl, buse, trade, pairx;
+ 	String datex, timex, scopex, perix; 
  	
  GetHistoryCandlesStreamAsyncTask(Activity activity, DoSomething callback, int max, String account, String userpsw, long userid
 		 , LinkedList<String> list
-		 , String symbol, int repeat, String idxx){
+		 , String symbol, int repeat, String idxx,
+		 String datexx, String timexx, String scopexx, String perixx  ){
   myDoSomethingCallBack = callback;
   myMax = max;
   accountx=account;
@@ -92,6 +94,10 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
   repeati=repeat;
   mActivity = activity;
   idx = idxx;
+  datex=datexx;
+  timex=timexx;
+  scopex=scopexx;
+  perix=perixx;
  }
 
  @Override

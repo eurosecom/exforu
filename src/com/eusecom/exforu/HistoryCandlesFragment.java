@@ -242,7 +242,7 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 		listget.add(symbolget);
 
 		GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20, accountx, userpsws
-				, useridl, listget, pairx, repeat, idx);
+				, useridl, listget, pairx, repeat, idx, datex, timex, scopex, perix );
         
     }
     //oncreate
@@ -902,7 +902,8 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 			listget.add(symbolget);
 
 			GetHistoryCandlesStreamAsyncTask = new GetHistoryCandlesStreamAsyncTask(getActivity(), this, 20
-					, accountx, userpsws, useridl, listget, pairx, repeat, idx);	        
+					, accountx, userpsws, useridl, listget, pairx, repeat, idx,
+					datex, timex, scopex, perix );	        
             GetHistoryCandlesStreamAsyncTask.execute();
             
             //if( whatspage == 2 ) { ((LearningActivity)getActivity()).switchFragment(1); }
