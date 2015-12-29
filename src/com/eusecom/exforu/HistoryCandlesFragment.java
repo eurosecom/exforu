@@ -136,7 +136,7 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 	
 	private SQLiteDatabase db21=null;
 	private Cursor constantsCursor21=null;
-	String pairx;
+	String pairx, datex, timex, scopex, perix;
 	
     // newInstance constructor for creating fragment with arguments
     public static HistoryCandlesFragment newInstance(int page, String pairx, String idxx, int whatspagex) {
@@ -206,10 +206,10 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
         	userpsws=SettingsActivity.getUserPswr(getActivity());
         }
 
-        pairx = "";
+        pairx = ""; datex = ""; timex = ""; scopex = ""; perix = ""; 
         db21=(new DatabaseHistoryEvents(getActivity())).getWritableDatabase();
 
-        constantsCursor21=db21.rawQuery("SELECT _ID, pair2, pswd2, name2, nick2 "+
+        constantsCursor21=db21.rawQuery("SELECT _ID, pairx, datex, timex, scopex, perix "+
     			"FROM  historyevents WHERE _id = " + idx + " ORDER BY _id DESC ",
     			null);
         
@@ -218,7 +218,11 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
         int ic=0;
         while(!constantsCursor21.isAfterLast()) {
         	
-        	pairx = constantsCursor21.getString(constantsCursor21.getColumnIndex("nick2"));
+        	pairx = constantsCursor21.getString(constantsCursor21.getColumnIndex("pairx"));
+        	datex = constantsCursor21.getString(constantsCursor21.getColumnIndex("datex"));
+        	timex = constantsCursor21.getString(constantsCursor21.getColumnIndex("timex"));
+        	scopex = constantsCursor21.getString(constantsCursor21.getColumnIndex("scopex"));
+        	perix = constantsCursor21.getString(constantsCursor21.getColumnIndex("perix"));
         	ic=ic+1;
         	constantsCursor21.moveToNext();
         }

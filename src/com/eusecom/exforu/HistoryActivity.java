@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
 import com.eusecom.exforu.animators.BaseItemAnimator;
 import com.eusecom.exforu.animators.FadeInAnimator;
 import com.eusecom.exforu.animators.FadeInDownAnimator;
@@ -122,7 +121,7 @@ public class HistoryActivity extends ActionBarActivity implements DoSomething{
 
         db21=(new DatabaseHistoryEvents(this)).getWritableDatabase();
 
-        constantsCursor21=db21.rawQuery("SELECT _ID, pair2, pswd2, name2 "+
+        constantsCursor21=db21.rawQuery("SELECT _ID, namex "+
 				"FROM  historyevents WHERE _id > 0 ORDER BY _id DESC ",
 				null);
         
@@ -135,13 +134,15 @@ public class HistoryActivity extends ActionBarActivity implements DoSomething{
         int ic=0;
         while(!constantsCursor21.isAfterLast()) {
         	
-        	myfavpairs[ic] = constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2"));
+        	myfavpairs[ic] = constantsCursor21.getString(constantsCursor21.getColumnIndex("namex"));
         	myidevents[ic] = constantsCursor21.getString(constantsCursor21.getColumnIndex("_id"));
         	myaskprices[ic] = ""; mybidprices[ic] = ""; myprofits[ic] = "";
-        	myfavList.add(constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2")));
-        	myfavLinkedList.add(constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2")));
+        	myfavList.add(constantsCursor21.getString(constantsCursor21.getColumnIndex("namex")));
+        	myfavLinkedList.add(constantsCursor21.getString(constantsCursor21.getColumnIndex("namex")));
         	ic=ic+1;
+        	//Log.d("namex = ", constantsCursor21.getString(constantsCursor21.getColumnIndex("namex")));
         	constantsCursor21.moveToNext();
+        	
         }
         constantsCursor21.close();
         

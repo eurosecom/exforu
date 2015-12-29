@@ -23,57 +23,57 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME2="db21";
-	public static final String PAIR2="pair2";
-	public static final String NICK2="nick2";
-	public static final String MAIL2="mail2";
-	public static final String UZID2="uzid2";
-	public static final String NAME2="name2";
-	public static final String PSWD2="pswd2";
-	public static final String DRUH2="druh2";
-	public static final String DATM2="datm2";
-	public static final String DATZ2="datz2";
+	public static final String NAMEX="namex";
+	public static final String PAIRX="pairx";
+	public static final String DATEX="datex";
+	public static final String TIMEX="timex";
+	public static final String SCOPEX="scopex";
+	public static final String PERIX="perix";
+	public static final String DRUHX="druhx";
+	public static final String DATMX="datmx";
+	public static final String DATZX="datzx";
 	
 	
 	public DatabaseHistoryEvents(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME2, null, 4);
+		super(context, DATABASE_NAME2, null, 8);
 	}
 	
 	@Override
 	public void onCreate(SQLiteDatabase db21) {
 		
-		db21.execSQL("CREATE TABLE historyevents (_id INTEGER PRIMARY KEY AUTOINCREMENT, pair2 TEXT, " +
-				"nick2 TEXT, mail2 TEXT, uzid2 TEXT, name2 TEXT, pswd2 TEXT,  " +
-				"druh2 TEXT, datm2 TIMESTAMP(14) DEFAULT CURRENT_TIMESTAMP, datz2 TIMESTAMP(14));");
+		db21.execSQL("CREATE TABLE historyevents (_id INTEGER PRIMARY KEY AUTOINCREMENT, namex TEXT, " +
+				"pairx TEXT, datex TEXT, timex TEXT, scopex TEXT, perix TEXT,  " +
+				"druhx TEXT, datmx TIMESTAMP(14) DEFAULT CURRENT_TIMESTAMP, datzx TIMESTAMP(14));");
 		
 		ContentValues cv21=new ContentValues();
 		
-		cv21.put(PAIR2, "USD Interest rate change 12.02.2006");
-		cv21.put(NICK2, "EURUSD");
-		cv21.put(MAIL2, "2006-02-12");
-		cv21.put(UZID2, "14:30");
-		cv21.put(NAME2, "120");
-		cv21.put(PSWD2, "M5");
-		cv21.put(DRUH2, "druh xxx");
-		db21.insert("historyevents", PAIR2, cv21);
+		cv21.put(NAMEX, "USD Interest rate change 12.02.2006");
+		cv21.put(PAIRX, "EURUSD");
+		cv21.put(DATEX, "2006-02-12");
+		cv21.put(TIMEX, "14:30");
+		cv21.put(SCOPEX, "120");
+		cv21.put(PERIX, "M5");
+		cv21.put(DRUHX, "0");
+		db21.insert("historyevents", NAMEX, cv21);
 		
-		cv21.put(PAIR2, "USD Interest rate change 16.12.2015");
-		cv21.put(NICK2, "EURUSD");
-		cv21.put(MAIL2, "2015-12-16");
-		cv21.put(UZID2, "14:30");
-		cv21.put(NAME2, "120");
-		cv21.put(PSWD2, "M5");
-		cv21.put(DRUH2, "druh xxx2");
-		db21.insert("historyevents", PAIR2, cv21);
+		cv21.put(NAMEX, "USD Interest rate change 16.12.2015");
+		cv21.put(PAIRX, "EURUSD");
+		cv21.put(DATEX, "2015-12-16");
+		cv21.put(TIMEX, "14:30");
+		cv21.put(SCOPEX, "120");
+		cv21.put(PERIX, "M5");
+		cv21.put(DRUHX, "0");
+		db21.insert("historyevents", NAMEX, cv21);
 		
-		cv21.put(PAIR2, "US Non Farm Payroll 21.11.2015");
-		cv21.put(NICK2, "EURUSD");
-		cv21.put(MAIL2, "2015-11-21");
-		cv21.put(UZID2, "20:00");
-		cv21.put(NAME2, "120");
-		cv21.put(PSWD2, "M5");
-		cv21.put(DRUH2, "druh xxx3");
-		db21.insert("historyevents", PAIR2, cv21);
+		cv21.put(NAMEX, "US Non Farm Payroll 21.11.2015");
+		cv21.put(PAIRX, "EURUSD");
+		cv21.put(DATEX, "2015-11-21");
+		cv21.put(TIMEX, "20:00");
+		cv21.put(SCOPEX, "120");
+		cv21.put(PERIX, "M5");
+		cv21.put(DRUHX, "0");
+		db21.insert("historyevents", NAMEX, cv21);
 		
 
 		

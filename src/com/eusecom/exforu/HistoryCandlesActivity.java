@@ -97,7 +97,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
         headx = "";
         db21=(new DatabaseHistoryEvents(this)).getWritableDatabase();
 
-        constantsCursor21=db21.rawQuery("SELECT _ID, pair2, pswd2, name2, nick2 "+
+        constantsCursor21=db21.rawQuery("SELECT _ID, namex "+
 				"FROM  historyevents WHERE _id = " + idx + " ORDER BY _id DESC ",
 				null);
         
@@ -106,7 +106,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
         int ic=0;
         while(!constantsCursor21.isAfterLast()) {
         	
-        	headx = constantsCursor21.getString(constantsCursor21.getColumnIndex("pair2"));
+        	headx = constantsCursor21.getString(constantsCursor21.getColumnIndex("namex"));
         	ic=ic+1;
         	constantsCursor21.moveToNext();
         }
