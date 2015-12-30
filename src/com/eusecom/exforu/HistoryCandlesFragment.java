@@ -252,7 +252,7 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_candles, container, false);
+        View view = inflater.inflate(R.layout.fragment_historycandles, container, false);
 
         actprice = (TextView) view.findViewById(R.id.actprice);
         actbalance = (TextView) view.findViewById(R.id.actbalance);
@@ -341,7 +341,8 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 
     	recyclerView.setLayoutManager(mLayoutManager);
     	//recyclerView.setItemAnimator(new FadeInAnimator());
-    	adapter = new CandlesFragAdapter(getActivity(), mytimeList, myopenList, mycloseList, myhighList, mylowList, oplos, ophis, periodxy);
+    	adapter = new CandlesFragAdapter(getActivity(), mytimeList, myopenList, mycloseList, myhighList,
+    			mylowList, oplos, ophis, perix);
     	recyclerView.setAdapter(adapter);
     	recyclerView.setItemAnimator(new FadeInRightAnimator());
     	recyclerView.getItemAnimator().setAddDuration(300);
@@ -447,8 +448,8 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 		    	 	//mytimeList.remove(0); myopenList.remove(0); mycloseList.remove(0);
 		    	 	//myhighList.remove(0); mylowList.remove(0);
 		    	 
-		    	 	adapter = new CandlesFragAdapter(getActivity(), mytimeList, myopenList
-		    	    		, mycloseList, myhighList, mylowList, oplos, ophis, periodxy);
+		    	 	adapter = new CandlesFragAdapter(getActivity(), mytimeList, myopenList, mycloseList, 
+		    	 			myhighList, mylowList, oplos, ophis, perix);
 		    	    recyclerView.setAdapter(adapter);
 		    	    recyclerView.setItemAnimator(new FadeInRightAnimator());
 		    	    recyclerView.getItemAnimator().setAddDuration(300);
@@ -905,10 +906,6 @@ public class HistoryCandlesFragment extends Fragment implements DoSomething, Fra
 					, accountx, userpsws, useridl, listget, pairx, repeat, idx,
 					datex, timex, scopex, perix );	        
             GetHistoryCandlesStreamAsyncTask.execute();
-            
-            //if( whatspage == 2 ) { ((LearningActivity)getActivity()).switchFragment(1); }
-            //if( whatspage == 3 ) { ((LearningActivity)getActivity()).switchFragment(2); }
-            //whatspage=0;
 
 	}
 	//onResumeFragment()

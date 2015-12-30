@@ -58,11 +58,11 @@ public class HistoryCandlesActivity extends FragmentActivity {
 	static String nazless;
 	static String importantless="";
 	static String eventx;
-	static String pairx;
+	static String pairx, perix, datex;
 	static String idx;
 	static int whatspage;
     
-    TextView title, idpage;
+    TextView title, idpage, title2row;
     Spinner spinner;
     Button btnAgain;
     int repeat=60000;
@@ -97,7 +97,7 @@ public class HistoryCandlesActivity extends FragmentActivity {
         headx = "";
         db21=(new DatabaseHistoryEvents(this)).getWritableDatabase();
 
-        constantsCursor21=db21.rawQuery("SELECT _ID, namex "+
+        constantsCursor21=db21.rawQuery("SELECT _ID, namex, perix, datex, pairx "+
 				"FROM  historyevents WHERE _id = " + idx + " ORDER BY _id DESC ",
 				null);
         
@@ -107,6 +107,9 @@ public class HistoryCandlesActivity extends FragmentActivity {
         while(!constantsCursor21.isAfterLast()) {
         	
         	headx = constantsCursor21.getString(constantsCursor21.getColumnIndex("namex"));
+        	perix = constantsCursor21.getString(constantsCursor21.getColumnIndex("perix"));
+        	datex = constantsCursor21.getString(constantsCursor21.getColumnIndex("datex"));
+        	pairx = constantsCursor21.getString(constantsCursor21.getColumnIndex("pairx"));
         	ic=ic+1;
         	constantsCursor21.moveToNext();
         }
@@ -125,7 +128,9 @@ public class HistoryCandlesActivity extends FragmentActivity {
         }
         
         title = (TextView) findViewById(R.id.title);
-        title.setText(headx);      
+        title.setText(headx);
+        title2row = (TextView) findViewById(R.id.title2row);
+        title2row.setText(datex + " " + pairx + " " + perix);
         
         idpage = (TextView) findViewById(R.id.idpage);
         

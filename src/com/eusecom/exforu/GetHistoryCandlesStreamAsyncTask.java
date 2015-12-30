@@ -6,13 +6,16 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.widget.TextView;
-
 import pro.xstore.api.sync.Credentials;
 import pro.xstore.api.sync.SyncAPIConnector;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -179,10 +182,27 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
             db3=(new DatabaseCandles(mActivity)).getWritableDatabase();
             db3.delete("candles", "_ID > 0", null);
             
-            long unixTime = System.currentTimeMillis();
-            //System.out.println("1434723162180 unixTime=" + unixTime);
+            String str_date=datex + " " + timex;
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+            
+            Date date=null;
+			try {
+				date = (Date)formatter.parse(str_date);
+				//System.out.println("datex " + datex);
+				//System.out.println("timex " + timex);
+				//System.out.println("str_date " + str_date);
+	            System.out.println("date " + date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+            //System.out.println("Today is=" +date.getTime());
+            
+            //long unixTime = System.currentTimeMillis();
+            long unixTime = date.getTime();
+            //System.out.println("unixTime=" + unixTime);
             		
-            String periodxy =SettingsActivity.getPeriodx(mActivity);
+            String periodxy =perix;
             PERIOD_CODE PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; long unixTimeod = unixTime - 8640000000L;
             if( periodxy.equals("M1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M1; unixTimeod = unixTime - 6000000; }
             if( periodxy.equals("M5")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M5; unixTimeod = unixTime - 30000000; }
@@ -198,15 +218,10 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
             System.out.println("symbolget =" + symbolget + " PERIOD_CODEXy =" + PERIOD_CODEXy + " unixTimeod =" + unixTimeod);
 
             String opens=""; String closes=""; String highs=""; String lows=""; String times="";
-			ChartResponse chartresponse = APICommandFactory.executeChartLastCommand(connector, symbolget, PERIOD_CODEXy, unixTimeod);
+			//ChartResponse chartresponse = APICommandFactory.executeChartLastCommand(connector, symbolget, PERIOD_CODEXy, unixTimeod);
+			ChartResponse chartresponse = APICommandFactory.executeChartRangeCommand(connector, symbolget, PERIOD_CODEXy, unixTimeod, unixTime, 0L);
             for(RateInfoRecord chartx : chartresponse.getRateInfos()) {
 
-            	//long dv = Long.valueOf(chartx.getCtm());
-            	//Date df = new java.util.Date(dv);
-            	//String vv = new SimpleDateFormat("dd.MM.yyyy hh:mma").format(df);
-            	
-            	//System.out.println("-> date =" + vv + " open =" + chartx.getOpen() + " high =" + chartx.getHigh()
-            	//		 + " low =" + chartx.getLow() + " close =" + chartx.getClose());
             	opens=chartx.getOpen() + ""; closes=chartx.getClose() + ""; 
             	highs=chartx.getHigh() + ""; lows=chartx.getLow() + ""; times=chartx.getCtm() + "";
             	

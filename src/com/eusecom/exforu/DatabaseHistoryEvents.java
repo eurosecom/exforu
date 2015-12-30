@@ -36,7 +36,7 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 	
 	public DatabaseHistoryEvents(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME2, null, 8);
+		super(context, DATABASE_NAME2, null, 14);
 	}
 	
 	@Override
@@ -48,30 +48,30 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 		
 		ContentValues cv21=new ContentValues();
 		
-		cv21.put(NAMEX, "USD Interest rate change 12.02.2006");
+		cv21.put(NAMEX, "USD Interest rate change 12.02.2006 M5");
 		cv21.put(PAIRX, "EURUSD");
-		cv21.put(DATEX, "2006-02-12");
+		cv21.put(DATEX, "12-02-2006");
 		cv21.put(TIMEX, "14:30");
 		cv21.put(SCOPEX, "120");
 		cv21.put(PERIX, "M5");
 		cv21.put(DRUHX, "0");
 		db21.insert("historyevents", NAMEX, cv21);
 		
-		cv21.put(NAMEX, "USD Interest rate change 16.12.2015");
+		cv21.put(NAMEX, "USD Interest rate change 30.12.2015 M5");
 		cv21.put(PAIRX, "EURUSD");
-		cv21.put(DATEX, "2015-12-16");
-		cv21.put(TIMEX, "14:30");
+		cv21.put(DATEX, "30-12-2015");
+		cv21.put(TIMEX, "20:30");
 		cv21.put(SCOPEX, "120");
 		cv21.put(PERIX, "M5");
 		cv21.put(DRUHX, "0");
 		db21.insert("historyevents", NAMEX, cv21);
 		
-		cv21.put(NAMEX, "US Non Farm Payroll 21.11.2015");
+		cv21.put(NAMEX, "US Non Farm Payroll 21.11.2015 D1");
 		cv21.put(PAIRX, "EURUSD");
-		cv21.put(DATEX, "2015-11-21");
+		cv21.put(DATEX, "21-11-2015");
 		cv21.put(TIMEX, "20:00");
 		cv21.put(SCOPEX, "120");
-		cv21.put(PERIX, "M5");
+		cv21.put(PERIX, "D1");
 		cv21.put(DRUHX, "0");
 		db21.insert("historyevents", NAMEX, cv21);
 		
