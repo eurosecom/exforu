@@ -203,23 +203,33 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
             //System.out.println("unixTime=" + unixTime);
             		
             String periodxy =perix;
-            PERIOD_CODE PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; long unixTimeod = unixTime - 8640000000L;
-            if( periodxy.equals("M1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M1; unixTimeod = unixTime - 6000000; }
-            if( periodxy.equals("M5")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M5; unixTimeod = unixTime - 30000000; }
-            if( periodxy.equals("M15")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M15; unixTimeod = unixTime - 90000000; }
-            if( periodxy.equals("M30")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M30; unixTimeod = unixTime - 180000000; }
-            if( periodxy.equals("H1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_H1; unixTimeod = unixTime - 360000000; }
-            if( periodxy.equals("H4")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_H4; unixTimeod = unixTime - 1440000000; }
+            PERIOD_CODE PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; 
+            long unixTimeod = unixTime - 4320000000L; long unixTimedo = unixTime + 4320000000L;
+            if( periodxy.equals("M1")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M1; unixTimeod = unixTime - 3000000; unixTimedo = unixTime + 3000000; }
+            if( periodxy.equals("M5")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M5; unixTimeod = unixTime - 15000000; unixTimedo = unixTime + 15000000; }
+            if( periodxy.equals("M15")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M15; unixTimeod = unixTime - 45000000; unixTimedo = unixTime + 45000000; }
+            if( periodxy.equals("M30")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_M30; unixTimeod = unixTime - 90000000; unixTimedo = unixTime + 90000000; }
+            if( periodxy.equals("H1")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_H1; unixTimeod = unixTime - 180000000; unixTimedo = unixTime + 180000000; }
+            if( periodxy.equals("H4")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_H4; unixTimeod = unixTime - 720000000; unixTimedo = unixTime + 720000000; }
             //200 dni
-            if( periodxy.equals("D1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; unixTimeod = unixTime - 17280000000L; }
-            if( periodxy.equals("W1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_W1; unixTimeod = unixTime - 60480000000L; }
-            if( periodxy.equals("MN1")) { PERIOD_CODEXy=PERIOD_CODE.PERIOD_MN1; unixTimeod = unixTime - 241920000000L; }
+            if( periodxy.equals("D1")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; unixTimeod = unixTime - 8640000000L; unixTimedo = unixTime + 8640000000L; }
+            if( periodxy.equals("W1")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_W1; unixTimeod = unixTime - 30240000000L; unixTimedo = unixTime + 30240000000L; }
+            if( periodxy.equals("MN1")) 
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_MN1; unixTimeod = unixTime - 120960000000L; unixTimedo = unixTime + 120960000000L; }
             
-            System.out.println("symbolget =" + symbolget + " PERIOD_CODEXy =" + PERIOD_CODEXy + " unixTimeod =" + unixTimeod);
+            //System.out.println("symbolget =" + symbolget + " PERIOD_CODEXy =" + PERIOD_CODEXy + " unixTimeod =" + unixTimeod);
 
             String opens=""; String closes=""; String highs=""; String lows=""; String times="";
 			//ChartResponse chartresponse = APICommandFactory.executeChartLastCommand(connector, symbolget, PERIOD_CODEXy, unixTimeod);
-			ChartResponse chartresponse = APICommandFactory.executeChartRangeCommand(connector, symbolget, PERIOD_CODEXy, unixTimeod, unixTime, 0L);
+			ChartResponse chartresponse = APICommandFactory.executeChartRangeCommand(connector, symbolget, PERIOD_CODEXy, unixTimeod, unixTimedo, 0L);
             for(RateInfoRecord chartx : chartresponse.getRateInfos()) {
 
             	opens=chartx.getOpen() + ""; closes=chartx.getClose() + ""; 
