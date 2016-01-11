@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -548,9 +549,29 @@ public class EditTradeActivity extends Activity {
                 String customComment = icomm;
                 long expiration = 0;
                 
-                TradeTransInfoRecord ttOpenInfoRecord = null;
-                
-                
+                SQLiteDatabase db9=(new DatabaseTrades(EditTradeActivity.this)).getWritableDatabase();    	    	
+
+                Cursor constantsCursor9=null;
+    	    	if( modall == 0 ){
+                constantsCursor9=db9.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh, imemo, iopen " +
+    				"FROM trades WHERE iorder = '" + iorder + "' ORDER BY iorder ",
+    				null);
+    	    		}
+    	    	if( modall == 1 ){
+                    constantsCursor9=db9.rawQuery("SELECT _ID, itime, iopen, ivolume, iorder, isymbol, idruh, imemo, iopen " +
+        				"FROM trades WHERE imemo = '" + icomm + "' ORDER BY iorder ",
+        				null);
+        	    	}
+        	
+    	    	constantsCursor9.moveToFirst();
+    	    	while(!constantsCursor9.isAfterLast()) {
+            	
+    	    		//tropenList.add(constantsCursor8.getString(constantsCursor9.getColumnIndex("iopen")));
+    	    		order = Long.valueOf(constantsCursor9.getString(constantsCursor9.getColumnIndex("iorder")));
+    	    		volume = Double.parseDouble(constantsCursor9.getString(constantsCursor9.getColumnIndex("ivolume")));
+    	    		price = Double.parseDouble(constantsCursor9.getString(constantsCursor9.getColumnIndex("iopen")));
+    	    		TradeTransInfoRecord ttOpenInfoRecord = null;
+           
                 
                 //modify
                 if( xtrade.equals("5")) {
@@ -573,6 +594,10 @@ public class EditTradeActivity extends Activity {
                 getorder = tradeTransactionResponse.getOrder();
                 errcode = tradeTransactionResponse.getErrCode().toString();
                 if( errcode.equals("ERR_CODE")) { getorder=0; }
+                
+                constantsCursor9.moveToNext();
+    	    	}
+    	    	db9.close();
                
                 	if( getorder > 0 ){
                 	
@@ -631,6 +656,7 @@ public class EditTradeActivity extends Activity {
         	String titlex="";
         	if( xtrade.equals("5")) { titlex=String.format(getResources().getString(R.string.trademodifyednum), iorder); }
         	if( xtrade.equals("6")) { titlex=String.format(getResources().getString(R.string.trademodifyednum), iorder); }
+        	if( modall == 1 ) { titlex=getString(R.string.alltrademodifyed); }
 
         	
         	if( tradeokl == 3 || tradeokl == 1 ){
