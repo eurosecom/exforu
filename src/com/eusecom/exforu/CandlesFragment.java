@@ -287,11 +287,15 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
             		}
                     
                     String riadok = popis + " " + tropenList.get(i) + " vol. " + trvolumeList.get(i) + "\n";
-                    if( tropenList.get(i).equals("0")) { riadok = "No more trades"; }
+                    double opend = Double.parseDouble(tropenList.get(i));
+                    int sizeopen = tropenList.size();
+                    if( opend <= 0 ) { riadok = "No more trades"; }
                     SpannableString redSpannable= new SpannableString(riadok);
                     redSpannable.setSpan(new ForegroundColorSpan(Color.RED), 0, riadok.length(), 0);
                     builder.append(redSpannable);
+                    if( sizeopen == 1 || opend > 0 ){
                     mesx += redSpannable.toString();
+                    }
             		
                 }
 
