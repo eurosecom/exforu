@@ -104,9 +104,11 @@ public class MakeTradeActivity extends Activity {
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
    	 	db7.execSQL(UpdateSql7);
    	 	db7.close();
+   	 	
  
     }
     //koniec oncreate
+    
  
     class SaveTradeModel extends AsyncTask<String, String, String> {
     	
@@ -308,16 +310,16 @@ public class MakeTradeActivity extends Activity {
         	if( modall == 1 ) { titlex=getString(R.string.alltradeclosed); }
 
         	if( tradeokl == 3 || tradeokl == 1 ){
-
+        		
         	new AlertDialog.Builder(MakeTradeActivity.this)        	
         	.setMessage(titlex) 
             .setPositiveButton(getString(R.string.textok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) { 
-                  
+
                 	Intent i = new Intent(MakeTradeActivity.this, LearningActivity.class);
     	        	Bundle extras = new Bundle();
                     extras.putString("pairx", pair);
-                    extras.putInt("whatspage", 3);
+                    extras.putInt("whatspage", 1);
                     i.putExtras(extras);                
                     startActivity(i);
                 	finish();
@@ -330,12 +332,12 @@ public class MakeTradeActivity extends Activity {
         		new AlertDialog.Builder(MakeTradeActivity.this)
         		.setMessage(getString(R.string.tradenotmodifyed))
         		.setPositiveButton(getString(R.string.textok), new DialogInterface.OnClickListener() {
-        			public void onClick(DialogInterface dialog, int which) { 
-                  
+        			public void onClick(DialogInterface dialog, int which) {                   
+                   	 	
         				Intent i = new Intent(MakeTradeActivity.this, LearningActivity.class);
         	        	Bundle extras = new Bundle();
                         extras.putString("pairx", pair);
-                        extras.putInt("whatspage", 3);
+                        extras.putInt("whatspage", 1);
                         i.putExtras(extras);                
                         startActivity(i);
                     	finish();
@@ -511,7 +513,7 @@ public class MakeTradeActivity extends Activity {
                 	Intent i = new Intent(MakeTradeActivity.this, LearningActivity.class);
     	        	Bundle extras = new Bundle();
                     extras.putString("pairx", pair);
-                    extras.putInt("whatspage", 3);
+                    extras.putInt("whatspage", 1);
                     i.putExtras(extras);                
                     startActivity(i);
                 	finish();
@@ -529,7 +531,7 @@ public class MakeTradeActivity extends Activity {
         				Intent i = new Intent(MakeTradeActivity.this, LearningActivity.class);
         	        	Bundle extras = new Bundle();
                         extras.putString("pairx", pair);
-                        extras.putInt("whatspage", 3);
+                        extras.putInt("whatspage", 1);
                         i.putExtras(extras);                
                         startActivity(i);
                     	finish();
@@ -738,7 +740,7 @@ public class MakeTradeActivity extends Activity {
                 	Intent i = new Intent(MakeTradeActivity.this, LearningActivity.class);
     	        	Bundle extras = new Bundle();
                     extras.putString("pairx", pair);
-                    extras.putInt("whatspage", 3);
+                    extras.putInt("whatspage", 1);
                     i.putExtras(extras);                
                     startActivity(i);
                 	finish();
@@ -756,7 +758,7 @@ public class MakeTradeActivity extends Activity {
         				Intent i = new Intent(MakeTradeActivity.this, LearningActivity.class);
         	        	Bundle extras = new Bundle();
                         extras.putString("pairx", pair);
-                        extras.putInt("whatspage", 3);
+                        extras.putInt("whatspage", 1);
                         i.putExtras(extras);                
                         startActivity(i);
                     	finish();

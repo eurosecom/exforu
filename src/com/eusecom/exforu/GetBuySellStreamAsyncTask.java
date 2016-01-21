@@ -164,7 +164,7 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 						
 
 						connector.disconnectStream();
-						System.out.println("Stream disconnected.");
+						System.out.println("Stream BuySell disconnected.");
 				    }
 				}
 				
@@ -374,7 +374,7 @@ public class GetBuySellStreamAsyncTask extends AsyncTask<Void, Void, Void> {
 		    			slx=c.getString(8);
 
 		    	    	ContentValues cv61=new ContentValues();
-		    	    	System.out.println("ordert " +  ordert);
+		    	    	//System.out.println("ordert " +  ordert);
 		    	    	
 		    	    	cv61.put("itime", timet);
 		    	    	cv61.put("iopen", opent);

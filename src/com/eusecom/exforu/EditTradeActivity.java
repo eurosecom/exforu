@@ -448,7 +448,7 @@ public class EditTradeActivity extends Activity {
                     	Intent i = new Intent(EditTradeActivity.this, LearningActivity.class);
         	        	Bundle extras = new Bundle();
                         extras.putString("pairx", pair);
-                        extras.putInt("whatspage", 3);
+                        extras.putInt("whatspage", 1);
                         i.putExtras(extras);                
                         startActivity(i);
                     	finish();
@@ -466,7 +466,7 @@ public class EditTradeActivity extends Activity {
         				Intent i = new Intent(EditTradeActivity.this, LearningActivity.class);
         	        	Bundle extras = new Bundle();
                         extras.putString("pairx", pair);
-                        extras.putInt("whatspage", 3);
+                        extras.putInt("whatspage", 1);
                         i.putExtras(extras);                
                         startActivity(i);
                     	finish();
@@ -669,7 +669,7 @@ public class EditTradeActivity extends Activity {
                     	Intent i = new Intent(EditTradeActivity.this, LearningActivity.class);
         	        	Bundle extras = new Bundle();
                         extras.putString("pairx", pair);
-                        extras.putInt("whatspage", 3);
+                        extras.putInt("whatspage", 1);
                         i.putExtras(extras);                
                         startActivity(i);
                     	finish();
@@ -687,7 +687,7 @@ public class EditTradeActivity extends Activity {
         				Intent i = new Intent(EditTradeActivity.this, LearningActivity.class);
         	        	Bundle extras = new Bundle();
                         extras.putString("pairx", pair);
-                        extras.putInt("whatspage", 3);
+                        extras.putInt("whatspage", 1);
                         i.putExtras(extras);                
                         startActivity(i);
                     	finish();

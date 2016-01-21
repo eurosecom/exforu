@@ -810,8 +810,8 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
         		profmod=profmod + ( 100000* ivolumed * ( iopend - actprices) );
         	}
         	
-        	String profmods=profmod + "";
-        	Log.i("profmod ", profmods);
+        	//String profmods=profmod + "";
+        	//Log.i("profmod ", profmods);
 
         	constantsCursor3.moveToNext();
         }
