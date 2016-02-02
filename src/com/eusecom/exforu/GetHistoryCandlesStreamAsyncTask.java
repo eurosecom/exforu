@@ -219,7 +219,7 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
             { PERIOD_CODEXy=PERIOD_CODE.PERIOD_H4; unixTimeod = unixTime - 720000000; unixTimedo = unixTime + 720000000; }
             //200 dni
             if( periodxy.equals("D1")) 
-            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; unixTimeod = unixTime - 8640000000L; unixTimedo = unixTime + 8640000000L; }
+            { PERIOD_CODEXy=PERIOD_CODE.PERIOD_D1; unixTimeod = unixTime - 17280000000L; unixTimedo = unixTime + 17280000000L; }
             if( periodxy.equals("W1")) 
             { PERIOD_CODEXy=PERIOD_CODE.PERIOD_W1; unixTimeod = unixTime - 30240000000L; unixTimedo = unixTime + 30240000000L; }
             if( periodxy.equals("MN1")) 
