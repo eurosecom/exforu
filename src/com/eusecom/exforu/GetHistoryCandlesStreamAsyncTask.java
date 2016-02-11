@@ -225,7 +225,7 @@ public class GetHistoryCandlesStreamAsyncTask extends AsyncTask<Void, Void, Void
             if( periodxy.equals("MN1")) 
             { PERIOD_CODEXy=PERIOD_CODE.PERIOD_MN1; unixTimeod = unixTime - 120960000000L; unixTimedo = unixTime + 120960000000L; }
             
-            //System.out.println("symbolget =" + symbolget + " PERIOD_CODEXy =" + PERIOD_CODEXy + " unixTimeod =" + unixTimeod);
+            System.out.println("symbolget =" + symbolget + " PERIOD_CODEXy =" + PERIOD_CODEXy + " unixTimeod =" + unixTimeod + " unixTimedo =" + unixTimedo);
 
             String opens=""; String closes=""; String highs=""; String lows=""; String times="";
 			//ChartResponse chartresponse = APICommandFactory.executeChartLastCommand(connector, symbolget, PERIOD_CODEXy, unixTimeod);

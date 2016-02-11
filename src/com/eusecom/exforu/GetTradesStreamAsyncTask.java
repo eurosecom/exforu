@@ -290,7 +290,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  
  	protected void getTradesAgain(){
 
- 		System.out.println("getTradesAgain " + accountx);
+ 		//System.out.println("getTradesAgain " + accountx);
  		String opent=""; String volumet=""; String ordert=""; String symbolt=""; String timet=""; String cmdt="";
  		String ccoment=""; String tpx=""; String slx="";
  		db6=(new DatabaseTrades(mActivity)).getWritableDatabase();
@@ -303,7 +303,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  		
         TradesResponse tradesresponse = APICommandFactory.executeTradesCommand(connector, true);
         //System.out.println("tradesresponse " + tradesresponse.toString());
-        System.out.println("getTradesAgain " + "demo");
+        //System.out.println("getTradesAgain " + "demo");
         
         for(TradeRecord tradesx : tradesresponse.getTradeRecords()) {
 
@@ -381,7 +381,7 @@ public class GetTradesStreamAsyncTask extends AsyncTask<Void, Void, Void> {
  		    			slx=c.getString(8);
 
  		    	    	ContentValues cv61=new ContentValues();
- 		    	    	System.out.println("ordert " +  ordert);
+ 		    	    	//System.out.println("ordert " +  ordert);
  		    	    	
  		    	    	cv61.put("itime", timet);
  		    	    	cv61.put("iopen", opent);

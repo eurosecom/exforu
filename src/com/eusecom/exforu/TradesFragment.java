@@ -242,6 +242,27 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
     	recyclerView.getItemAnimator().setAddDuration(300);
     	recyclerView.getItemAnimator().setRemoveDuration(300);
     	registerForContextMenu(recyclerView);
+    	
+
+    	recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() 
+    	{
+    			@Override
+    			public void onScrolled(RecyclerView recyclerView, int dx, int dy) 
+    			{
+    				if( dy > 0 ) { 
+    					System.out.println("dx " +  dx + " dy " +  dy);
+    					if (isOnline()) 
+    		            {
+    		    			GetTradesStreamAsyncTask.exit();
+    		    			GetTradesStreamAsyncTask.cancel(true);
+    		            }
+    		    	 sendValueToAct("C", 3);
+    				}
+    			}
+    	});
+    	
+    	
+    	
 
         return view;
         

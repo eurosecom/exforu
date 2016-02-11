@@ -587,6 +587,7 @@ public class EditTradeActivity extends Activity {
                 			price, sl, tp, symbol, volume, order, customComment, expiration);
                 }
                 
+                System.out.println("ttOpenInfoRecord " + ttOpenInfoRecord);
 
                 TradeTransactionResponse tradeTransactionResponse = APICommandFactory.executeTradeTransactionCommand(connector, ttOpenInfoRecord);
 

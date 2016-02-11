@@ -36,7 +36,7 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 	
 	public DatabaseHistoryEvents(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME2, null, 23);
+		super(context, DATABASE_NAME2, null, 28);
 	}
 	
 	@Override
@@ -48,26 +48,8 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 		
 		ContentValues cv21=new ContentValues();
 		
-		//i've got data from 3.8.2010
-		cv21.put(NAMEX, "USD Interest rate change 01.01.2011 D1");
-		cv21.put(PAIRX, "EURUSD");
-		cv21.put(DATEX, "01-01-2011");
-		cv21.put(TIMEX, "14:30");
-		cv21.put(SCOPEX, "120");
-		cv21.put(PERIX, "D1");
-		cv21.put(DRUHX, "0");
-		db21.insert("historyevents", NAMEX, cv21);
-		
-		cv21.put(NAMEX, "USD Interest rate change 30.12.2015 M5");
-		cv21.put(PAIRX, "EURUSD");
-		cv21.put(DATEX, "30-12-2015");
-		cv21.put(TIMEX, "20:30");
-		cv21.put(SCOPEX, "120");
-		cv21.put(PERIX, "M5");
-		cv21.put(DRUHX, "0");
-		db21.insert("historyevents", NAMEX, cv21);
-		
-		cv21.put(NAMEX, "US Non Farm Payroll 01.08.2015 D1");
+
+		cv21.put(NAMEX, "Daily Candles 2015 D1");
 		cv21.put(PAIRX, "EURUSD");
 		cv21.put(DATEX, "01-08-2015");
 		cv21.put(TIMEX, "20:00");
@@ -76,16 +58,42 @@ public class DatabaseHistoryEvents extends SQLiteOpenHelper {
 		cv21.put(DRUHX, "0");
 		db21.insert("historyevents", NAMEX, cv21);
 		
-		cv21.put(NAMEX, "Today 05.01.2016 M5");
+		cv21.put(NAMEX, "M5 Candles 02.02.2016");
 		cv21.put(PAIRX, "EURUSD");
-		cv21.put(DATEX, "05-01-2016");
-		cv21.put(TIMEX, "19:00");
+		cv21.put(DATEX, "02-02-2016");
+		cv21.put(TIMEX, "12:00");
+		cv21.put(SCOPEX, "120");
+		cv21.put(PERIX, "M5");
+		cv21.put(DRUHX, "0");
+		db21.insert("historyevents", NAMEX, cv21);
+		
+		cv21.put(NAMEX, "H1 Candles 04.02.2015");
+		cv21.put(PAIRX, "EURUSD");
+		cv21.put(DATEX, "04-02-2015");
+		cv21.put(TIMEX, "12:00");
+		cv21.put(SCOPEX, "120");
+		cv21.put(PERIX, "H1");
+		cv21.put(DRUHX, "0");
+		db21.insert("historyevents", NAMEX, cv21);
+		
+		cv21.put(NAMEX, "M5 Candles 05.02.2015");
+		cv21.put(PAIRX, "EURUSD");
+		cv21.put(DATEX, "05-02-2015");
+		cv21.put(TIMEX, "12:00");
 		cv21.put(SCOPEX, "120");
 		cv21.put(PERIX, "M5");
 		cv21.put(DRUHX, "0");
 		db21.insert("historyevents", NAMEX, cv21);
 		
 
+		cv21.put(NAMEX, "M5 Candles 06.02.2015");
+		cv21.put(PAIRX, "EURUSD");
+		cv21.put(DATEX, "06-02-2015");
+		cv21.put(TIMEX, "12:00");
+		cv21.put(SCOPEX, "120");
+		cv21.put(PERIX, "M5");
+		cv21.put(DRUHX, "0");
+		db21.insert("historyevents", NAMEX, cv21);
 		
 	}
 
