@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 public class SettingsActivity extends android.preference.PreferenceActivity {
 	
 
-	
+	public static final String EMAILX = "emailx";
 	public static final String USER_ID = "userid";
 	public static final String USER_PSW = "userpsw";
 	public static final String USER_IDR = "useridr";
@@ -40,6 +40,9 @@ public class SettingsActivity extends android.preference.PreferenceActivity {
 		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(ACCOUNTX, "0");
 	}
 
+	public static String getEmail(Context ctx){
+		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(EMAILX, "");
+	}
 	
 	public static String getUserId(Context ctx){
 		return PreferenceManager.getDefaultSharedPreferences(ctx).getString(USER_ID, "0");

@@ -40,6 +40,8 @@
 	<string name="prefrep">Preferences of broker</string>
 	<string name="prefuser">Preferences of user</string>
 	<string name="prefother">Other Preferences</string>
+	<string name="emailx_title">User email</string>
+	<string name="emailx_summary">Email for creating account.</string>
 	<string name="userid_title">User ID XStore DEMO</string>
 	<string name="userid_summary">User ID for login to XStore Pro DEMO.</string>
 	<string name="userpsw_title">User password XStore DEMO</string>

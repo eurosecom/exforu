@@ -96,7 +96,7 @@ public class LearningActivity extends FragmentActivity {
         }
         
         title = (TextView) findViewById(R.id.title);
-        title.setText(getResources().getString(R.string.app_name) + " " + accountname);      
+        title.setText(pairx + " " + accountname);      
         
         idpage = (TextView) findViewById(R.id.idpage);
         

@@ -8,6 +8,13 @@
 		    android:entries="@array/account_names" 
 		    android:entryValues="@array/account_values" 
 		    android:key="accountx"/>
+    
+    <EditTextPreference
+        android:key="emailx"
+        android:defaultValue=""
+        android:enabled="true"
+        android:summary="@string/emailx_summary"
+        android:title="@string/emailx_title" />
         
     <EditTextPreference
         android:key="userid"

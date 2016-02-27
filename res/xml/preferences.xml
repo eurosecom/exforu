@@ -14,6 +14,12 @@
 	<PreferenceCategory android:title="@string/prefuser">
 	    
 
+	    <EditTextPreference
+        android:key="emailx"
+        android:defaultValue=""
+        android:enabled="true"
+        android:summary="@string/emailx_summary"
+        android:title="@string/emailx_title" />
 		
     	<EditTextPreference
         android:key="userid"
