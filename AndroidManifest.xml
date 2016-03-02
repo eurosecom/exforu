@@ -40,6 +40,7 @@
 		<activity android:name="com.eusecom.exforu.EditTradeActivity" android:label="@string/app_name"> </activity>
 		<activity android:name="com.eusecom.exforu.HistoryActivity" android:label="@string/candleshistory"> </activity>
 		<activity android:name="com.eusecom.exforu.HistoryCandlesActivity" android:label="@string/app_name"> </activity>
+		<activity android:name="com.eusecom.exforu.CreateDemoActivity" android:label="@string/create_demo"> </activity>
     </application>
 
 </manifest>

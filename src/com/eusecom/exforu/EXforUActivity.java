@@ -153,6 +153,8 @@ public class EXforUActivity extends ActionBarActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(2, -1), true, favxs));
         
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
+        
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(4, -1)));
          
  
         // Recycle the typed array
@@ -420,6 +422,24 @@ public class EXforUActivity extends ActionBarActivity {
 
 	            break;
 	            
+	            
+	        case 5:
+
+        		if (android.os.Build.VERSION.SDK_INT>=16) {
+        		
+                Intent slideactivity = new Intent(EXforUActivity.this, CreateDemoActivity.class);
+          	   
+  				Bundle bndlanimation =
+  						ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.animation_toleft,R.anim.animation_toleft2).toBundle();
+  				startActivity(slideactivity, bndlanimation);
+            	}else{
+            	
+                    Intent ih = new Intent(getApplicationContext(), CreateDemoActivity.class);
+                    startActivity(ih);
+            	}
+        	
+        		break;
+	            
 
 	            /*
 	        	//Toast.makeText(EXforUActivity.this, "4", Toast.LENGTH_SHORT).show();
@@ -480,22 +500,19 @@ public class EXforUActivity extends ActionBarActivity {
 	        
 	        navDrawerItems = new ArrayList<NavDrawerItem>();
 	        
-	        // adding nav drawer items to array
-	        // Home
 	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-	        // Find People
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-	        // Photos
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-	        // Communities, Will add a counter here
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-	        // Communities, Will add a counter here
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-	        // Pages
+	        
+	        String nav1 = String.format(navMenuTitles[1], myfavpair);
+	        navDrawerItems.add(new NavDrawerItem(nav1, navMenuIcons.getResourceId(1, -1)));
+	        
+	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1)));
+	 
 	        String favxs=favx + "";
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1), true, favxs));
-	        // What's hot, We  will add a counter here
-	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
+	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(2, -1), true, favxs));
+	        
+	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
+	        
+	        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(4, -1)));
 	        
 	        // Recycle the typed array
 	        navMenuIcons.recycle();

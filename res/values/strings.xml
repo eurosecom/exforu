@@ -5,6 +5,7 @@
     <string name="xfavorite">Set favorite</string>
     <string name="myfavorite">My favorite pairs</string>
     <string name="candleshistory">Candles history</string>
+    <string name="create_demo">Create DEMO account</string>
     <string name="add">Add</string>
     <string name="del">Del</string>
     <string name="again">Again</string>
@@ -87,6 +88,7 @@
         <item >Candles history</item>
         <item >Set favorite</item>
         <item >Settings</item>
+        <item >Create Demo</item>
         <!-- <item >Test</item> -->
     </string-array>
      
@@ -97,6 +99,7 @@
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
+        <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>
         <item>@drawable/item_circle</item>
@@ -152,7 +155,7 @@
     <string name="modify">Modify</string>
     <string name="closeall">Close all at system</string>
     <string name="modifyall">Modify all at system</string>
-    
+    <string name="attention">Trading FX and/or CFDs on margin are high risk and not suitable for everyone. Losses can exceed investment.</string>
 
 
 </resources>
