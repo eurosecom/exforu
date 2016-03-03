@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+    	xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tool_barlearning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+        
+    	<!-- android:background="?attr/colorPrimary" ????? Where define colorPrimary-->
+    	<!-- android:background="#3DC49D" ????? Where define colorPrimary-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:textSize="18sp"
+        		android:textStyle="bold"
+                android:text="@string/app_name"/>
+            
+
+
+            
+
+        </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>
