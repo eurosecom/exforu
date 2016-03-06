@@ -3,6 +3,7 @@
 
 package com.eusecom.exforu;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 
  
+@SuppressLint("SetJavaScriptEnabled")
 public class CreateDemoActivity extends Activity {
  
 	TextView title, geturl;

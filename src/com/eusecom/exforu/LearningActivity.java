@@ -42,7 +42,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast; 
 
 @SuppressWarnings("deprecation")
 public class LearningActivity extends FragmentActivity {
@@ -145,16 +144,16 @@ public class LearningActivity extends FragmentActivity {
             	strana=stranai + "";
 
             	if( stranai == 1 ) {
-            		Toast.makeText(LearningActivity.this, " " + strana + ". " + str1, Toast.LENGTH_SHORT).show();
+            		//Toast.makeText(LearningActivity.this, " " + strana + ". " + str1, Toast.LENGTH_SHORT).show();
             			}
             	if( stranai == 2 ) {
-                    Toast.makeText(LearningActivity.this, " " + strana + ". " + str2, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LearningActivity.this, " " + strana + ". " + str2, Toast.LENGTH_SHORT).show();
                 			}
             	if( stranai == 3 ) {
-                    Toast.makeText(LearningActivity.this, " " + strana + ". " + str3, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LearningActivity.this, " " + strana + ". " + str3, Toast.LENGTH_SHORT).show();
                 			}
             	if( stranai == 4 ) {
-                    Toast.makeText(LearningActivity.this, " " + strana + ". " + str4, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LearningActivity.this, " " + strana + ". " + str4, Toast.LENGTH_SHORT).show();
                 			}
             	
             	if( changeorient == 0 ) {
@@ -529,7 +528,7 @@ public class LearningActivity extends FragmentActivity {
 	        super.onActivityResult(requestCode, resultCode, data);
 
 	        if (resultCode == 101) {
-	        	Toast.makeText(LearningActivity.this, "Trade Sell has made", Toast.LENGTH_LONG).show();
+	        	//Toast.makeText(LearningActivity.this, "Trade Sell has made", Toast.LENGTH_LONG).show();
 	        	//may be will be better start learningactivity again and set page 2
 	        	//vpPager.setCurrentItem(2);
 	        	sendValueToFragments("1", 1);
@@ -537,7 +536,7 @@ public class LearningActivity extends FragmentActivity {
 
 	        }
 	        if (resultCode == 102) {
-	        	Toast.makeText(LearningActivity.this, "Trade Buy has made", Toast.LENGTH_LONG).show();
+	        	//Toast.makeText(LearningActivity.this, "Trade Buy has made", Toast.LENGTH_LONG).show();
 	        	//vpPager.setCurrentItem(2);
 	        	sendValueToFragments("2", 2);
 	        	callAgain(2);

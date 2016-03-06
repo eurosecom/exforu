@@ -750,7 +750,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
     @Override
    	public void onPauseFragment() {
    		Log.i("BuySellFragment", "onPauseFragment()");
-   		Toast.makeText(getActivity(), "onPauseFragment():" + "BuySellFragment", Toast.LENGTH_SHORT).show();
+   		//Toast.makeText(getActivity(), "onPauseFragment():" + "BuySellFragment", Toast.LENGTH_SHORT).show();
    		
    		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
@@ -767,7 +767,7 @@ public class BuySellFragment extends Fragment implements DoSomething, FragmentLi
    	@Override
    	public void onResumeFragment() {
    		Log.i("BuySellFragment", "onResumeFragment()");
-   		Toast.makeText(getActivity(), "onResumeFragment():" + "BuySellFragment", Toast.LENGTH_SHORT).show();
+   		//Toast.makeText(getActivity(), "onResumeFragment():" + "BuySellFragment", Toast.LENGTH_SHORT).show();
    		
    		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='1', trade='0' WHERE _id > 0 ";

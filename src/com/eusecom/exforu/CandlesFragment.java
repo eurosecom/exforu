@@ -936,7 +936,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
     	whatspage=0;
    	 	
 		    	 Log.i("CandlesFragment", "onPauseFragment()");
-		    	 Toast.makeText(getActivity(), "onPauseFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
+		    	 //Toast.makeText(getActivity(), "onPauseFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
 		    	 constantsCursor3.close();
 		 		 db4.close();
 		 		 
@@ -952,7 +952,7 @@ public class CandlesFragment extends Fragment implements DoSomething, FragmentLi
 	@Override
 	public void onResumeFragment() {
 		Log.i("CandlesFragment", "onResumeFragment()");
-		Toast.makeText(getActivity(), "onResumeFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(getActivity(), "onResumeFragment():" + "CandlesFragment", Toast.LENGTH_SHORT).show();
 		
 		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='1', buse='0', trade='0' WHERE _id > 0 ";

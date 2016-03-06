@@ -823,7 +823,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
     @Override
    	public void onPauseFragment() {
    		Log.i("TradesFragment", "onPauseFragment()");
-   		Toast.makeText(getActivity(), "onPauseFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show();
+   		//Toast.makeText(getActivity(), "onPauseFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show();
 
    		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='0' WHERE _id > 0 ";
@@ -840,7 +840,7 @@ public class TradesFragment extends Fragment implements DoSomething, DoSomething
    	@Override
    	public void onResumeFragment() {
    		Log.i("TradesFragment", "onResumeFragment()");
-   		Toast.makeText(getActivity(), "onResumeFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show();
+   		//Toast.makeText(getActivity(), "onResumeFragment():" + "TradesFragment", Toast.LENGTH_SHORT).show();
    		   	
    		db7=(new DatabaseTemp(getActivity())).getWritableDatabase();        
         String UpdateSql7 = "UPDATE temppar SET favact='0', candl='0', buse='0', trade='1' WHERE _id > 0 ";
