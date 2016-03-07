@@ -36,7 +36,7 @@ public class DatabaseFavpairs extends SQLiteOpenHelper {
 	
 	public DatabaseFavpairs(Context context) {
 		//ta 3ka je verzia databaze, nesmiem dat nizsiu ak zvysim vymaze tabulku a znovu ju vytvori
-		super(context, DATABASE_NAME2, null, 3);
+		super(context, DATABASE_NAME2, null, 4);
 	}
 	
 	@Override
@@ -54,6 +54,15 @@ public class DatabaseFavpairs extends SQLiteOpenHelper {
 		cv2.put(UZID2, "uzid xxx");
 		cv2.put(NAME2, "name xxx");
 		cv2.put(PSWD2, "memo 1");
+		cv2.put(DRUH2, "druh xxx");
+		db2.insert("favpairs", PAIR2, cv2);
+		
+		cv2.put(PAIR2, "GBPUSD");
+		cv2.put(NICK2, "nnn4");
+		cv2.put(MAIL2, "mmm4");
+		cv2.put(UZID2, "uzid xxx");
+		cv2.put(NAME2, "name xxx");
+		cv2.put(PSWD2, "memo 4");
 		cv2.put(DRUH2, "druh xxx");
 		db2.insert("favpairs", PAIR2, cv2);
 		

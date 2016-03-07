@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -58,7 +59,7 @@ public class LearningActivity extends FragmentActivity {
 	static int whatspage;
     
     TextView title, idpage;
-    Spinner spinner;
+    Spinner spinner, spinpair;
     Button btnAgain;
     int repeat=60000;
     
@@ -95,7 +96,7 @@ public class LearningActivity extends FragmentActivity {
         }
         
         title = (TextView) findViewById(R.id.title);
-        title.setText(pairx + " " + accountname);      
+        title.setText(accountname);      
         
         idpage = (TextView) findViewById(R.id.idpage);
         
@@ -104,7 +105,8 @@ public class LearningActivity extends FragmentActivity {
         
         repeat=1000*Integer.parseInt(SettingsActivity.getStreamf(this));
         
-        String repeats = getResources().getString(R.string.again) + " " + SettingsActivity.getStreamf(this) + " sec.";
+        //String repeats = getResources().getString(R.string.again) + " " + SettingsActivity.getStreamf(this) + " sec.";
+        String repeats = getResources().getString(R.string.again);
         btnAgain.setText(repeats);
 
         numless = "numless";
@@ -196,8 +198,32 @@ public class LearningActivity extends FragmentActivity {
 
         spinner.setAdapter(spinnerAdapter);
         
+        spinpair = (Spinner) findViewById(R.id.spinpair);
+        ArrayAdapter<String> spinpairAdapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+                
+                SQLiteDatabase db2=(new DatabaseFavpairs(this)).getWritableDatabase();
+
+                Cursor constantsCursor2=db2.rawQuery("SELECT _ID, pair2, pswd2, name2 "+
+        				"FROM  favpairs WHERE _id > 0 ORDER BY _id DESC ",
+        				null);
+                
+                constantsCursor2.moveToFirst();
+                
+
+                while(!constantsCursor2.isAfterLast()) {
+                	
+                	spinpairAdapter.add(constantsCursor2.getString(constantsCursor2.getColumnIndex("pair2")));
+                	constantsCursor2.moveToNext();
+                }
+                constantsCursor2.close();
+                db2.close();
+
+        spinpair.setAdapter(spinpairAdapter);
+        
         String periodxy =SettingsActivity.getPeriodx(this);
         spinner.setSelection(spinnerAdapter.getPosition(periodxy),true);
+        spinpair.setSelection(spinpairAdapter.getPosition(pairx),true);
         
         IntentFilter filter = new IntentFilter(ACTION_INTENT);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
@@ -272,18 +298,18 @@ public class LearningActivity extends FragmentActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) 
             {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                System.out.println("click " + selectedItem);
+                //System.out.println("click " + selectedItem);
                 //save to preferences and send to CandlesFragment.java
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
              	Editor editor = prefs.edit();
                 editor.putString("periodx", selectedItem).apply();
                 editor.commit();
                 
-                System.out.println("strana " + strana);
+                //System.out.println("strana " + strana);
 
                 	//problems with restarting GetLearningStreamAsyncTask.java
                 	//sendValueToFragments(selectedItem, 1);
-                	callAgain(0);
+                	callAgain(0, pairx);
    
             }
 
@@ -292,17 +318,41 @@ public class LearningActivity extends FragmentActivity {
 
             }           
         });
-        }
+	    
+	    spinpair.setOnItemSelectedListener(new OnItemSelectedListener() 
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) 
+            {
+                String selectedPairx = parent.getItemAtPosition(position).toString();
+                
+                //System.out.println("strana " + strana);
+
+                	//problems with restarting GetLearningStreamAsyncTask.java
+                	//sendValueToFragments(selectedItem, 1);
+                	callAgain(0, selectedPairx);
+   
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) 
+            {
+
+            }           
+        });
+	    
+	    
+	    
+	    
+        }//if is online
 
 	}
 	//onresume
 	
 		//call again learnactivity
-		protected void callAgain(int whatspagex) {
+		protected void callAgain(int whatspagex, String pairxy) {
 	        
 	        Intent i = new Intent(this, LearningActivity.class);
 	    	Bundle extras = new Bundle();
-	        extras.putString("pairx", pairx);
+	        extras.putString("pairx", pairxy);
 	        extras.putInt("whatspage", whatspagex);
 	        i.putExtras(extras);                
 	        startActivity(i);
@@ -532,14 +582,14 @@ public class LearningActivity extends FragmentActivity {
 	        	//may be will be better start learningactivity again and set page 2
 	        	//vpPager.setCurrentItem(2);
 	        	sendValueToFragments("1", 1);
-	        	callAgain(2);
+	        	callAgain(2, pairx);
 
 	        }
 	        if (resultCode == 102) {
 	        	//Toast.makeText(LearningActivity.this, "Trade Buy has made", Toast.LENGTH_LONG).show();
 	        	//vpPager.setCurrentItem(2);
 	        	sendValueToFragments("2", 2);
-	        	callAgain(2);
+	        	callAgain(2, pairx);
 
 	        }
 

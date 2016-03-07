@@ -256,6 +256,10 @@ public class EXforUActivity extends ActionBarActivity {
          	accountx="0";
     		accountname="DEMO";
     		title.setText(getResources().getString(R.string.app_name) + " " + accountname);
+    		
+    		SQLiteDatabase db81=(new DatabaseTrades(this)).getWritableDatabase();
+    		db81.delete("trades", "_ID > 0", null);
+    		db81.close();
 
 			return(true);
 			
@@ -270,6 +274,10 @@ public class EXforUActivity extends ActionBarActivity {
          	accountx="1";
     		accountname="REAL";
     		title.setText(getResources().getString(R.string.app_name) + " " + accountname);
+    		
+    		SQLiteDatabase db82=(new DatabaseTrades(this)).getWritableDatabase();
+    		db82.delete("trades", "_ID > 0", null);
+    		db82.close();
 
 			return(true);
 			
@@ -284,6 +292,10 @@ public class EXforUActivity extends ActionBarActivity {
          	accountx="2";
     		accountname="MODEL";
     		title.setText(getResources().getString(R.string.app_name) + " " + accountname);
+    		
+    		SQLiteDatabase db83=(new DatabaseTrades(this)).getWritableDatabase();
+    		db83.delete("trades", "_ID > 0", null);
+    		db83.close();
 
 			return(true);
 			
